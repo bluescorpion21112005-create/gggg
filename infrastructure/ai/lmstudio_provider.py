@@ -1,0 +1,14 @@
+"""LM Studio local provider (OpenAI-compatible endpoint)."""
+from __future__ import annotations
+
+from infrastructure.ai.openai_compatible_provider import OpenAICompatibleProvider
+
+
+class LMStudioProvider(OpenAICompatibleProvider):
+    def __init__(self, model: str, host: str = "http://localhost:1234/v1"):
+        super().__init__(
+            provider_name="lm_studio",
+            model=model,
+            api_key_env=None,
+            base_url=host,
+        )

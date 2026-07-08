@@ -1,0 +1,1 @@
+# Implementation omitted for brevity, but would be a QFrame that slides in.

@@ -1,0 +1,24 @@
+app:
+  name: Cybrix AI
+  version: 0.1.0
+default_model: llama3
+ai_providers:
+  ollama:
+    enabled: true
+    model: llama3
+    host: http://localhost:11434
+  fireworks:
+    enabled: false
+    model: accounts/fireworks/models/llama-v3-70b-instruct
+    api_key_env: FIREWORKS_API_KEY
+ui:
+  theme: dark
+  language: en
+logging:
+  level: INFO
+  file: cybrix.log
+gpu:
+  prefer_rocm: true
+  fallback_to_cpu: true
+database_url: sqlite:///cybrix.db
+plugins_dir: plugins

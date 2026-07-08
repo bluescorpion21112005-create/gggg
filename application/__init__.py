@@ -1,0 +1,1 @@
+"""Application layer: orchestration, agents, use cases, and DTOs."""

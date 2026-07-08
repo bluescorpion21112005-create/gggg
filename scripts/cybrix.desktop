@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Cybrix AI
+Comment=AI-Powered Cybersecurity Desktop Assistant
+Exec=/opt/cybrix-ai/cybrix-ai
+Icon=/opt/cybrix-ai/icons/cybrix.png
+Terminal=false
+Type=Application
+Categories=Security;System;

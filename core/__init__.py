@@ -1,0 +1,1 @@
+"""Core engine: configuration, DI, plugin system, event bus, and bootstrap."""
