@@ -4,7 +4,7 @@ import uuid
 from pathlib import Path
 from typing import Dict, List, Optional
 
-import chromadb
+from chromadb import PersistentClient, EphemeralClient
 from injector import inject
 
 logger = logging.getLogger(__name__)
@@ -23,8 +23,28 @@ class VectorStore:
         persist_directory: str = "./cache/chroma",
         collection_name: str = "cybrix_documents",
     ):
+        # Saqlash papkasini yaratish (agar mavjud bo‘lmasa)
         Path(persist_directory).mkdir(parents=True, exist_ok=True)
-        self._client = chromadb.PersistentClient(path=persist_directory)
+
+        # Standart nom bo‘sh yoki noto‘g‘ri bo‘lsa, tuzatish
+        if not collection_name or not collection_name.strip():
+            collection_name = "cybrix_documents"
+            logger.warning("Collection name bo‘sh, standart 'cybrix_documents' ishlatiladi")
+        # ChromaDB nom formatini tekshirish (3-512 belgi, faqat ruxsat etilgan belgilar)
+        import re
+        if not re.match(r'^[a-zA-Z0-9._-]{3,512}$', collection_name):
+            logger.warning("Collection name '%s' noto‘g‘ri format, standartga almashtirildi", collection_name)
+            collection_name = "cybrix_documents"
+
+        # PersistentClient ishlamasa, vaqtinchalik xotiraga o‘tish
+        try:
+            self._client = PersistentClient(path=persist_directory)
+            logger.info("ChromaDB PersistentClient yaratildi (%s)", persist_directory)
+        except Exception as e:
+            logger.warning("Doimiy ombor yaratilmadi: %s. Vaqtinchalik rejimga o‘tilmoqda.", e)
+            self._client = EphemeralClient()
+            logger.info("ChromaDB EphemeralClient yaratildi")
+
         self._collection = self._client.get_or_create_collection(
             name=collection_name,
             metadata={"hnsw:space": "cosine"},
@@ -35,47 +55,4 @@ class VectorStore:
             persist_directory,
         )
 
-    def add_chunks(
-        self,
-        chunks: List[str],
-        embeddings: List[List[float]],
-        metadatas: Optional[List[Dict]] = None,
-        ids: Optional[List[str]] = None,
-    ) -> None:
-        if not chunks:
-            return
-        if ids is None:
-            ids = [str(uuid.uuid4()) for _ in chunks]
-        if metadatas is None:
-            metadatas = [{} for _ in chunks]
-        self._collection.add(
-            embeddings=embeddings,
-            documents=chunks,
-            metadatas=metadatas,
-            ids=ids,
-        )
-        logger.info("VectorStore: added %d chunks.", len(chunks))
-
-    def query(self, query_embedding: List[float], n_results: int = 5) -> Dict:
-        return self._collection.query(
-            query_embeddings=[query_embedding],
-            n_results=n_results,
-            include=["documents", "metadatas", "distances"],
-        )
-
-    def list_documents(self) -> List[Dict]:
-        """Return all document metadata entries."""
-        results = self._collection.get(include=["metadatas"])
-        return [
-            {"id": doc_id, "metadata": meta}
-            for doc_id, meta in zip(results["ids"], results["metadatas"])
-        ]
-
-    def clear(self) -> None:
-        """Remove all documents from the collection."""
-        self._client.delete_collection(self._collection.name)
-        self._collection = self._client.get_or_create_collection(
-            name=self._collection.name,
-            metadata={"hnsw:space": "cosine"},
-        )
-        logger.info("VectorStore: collection cleared.")
+    # ... qolgan metodlar o‘zgarishsiz

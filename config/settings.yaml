@@ -1,16 +1,16 @@
 app:
   name: Cybrix AI
   version: 0.1.0
-default_model: llama3
+default_model: accounts/fireworks/models/qwen2p5-coder-32b-instruct
 ai_providers:
+  fireworks:
+    enabled: true
+    model: accounts/fireworks/models/qwen2p5-coder-32b-instruct
+    api_key_env: FIREWORKS_API_KEY
   ollama:
     enabled: true
     model: llama3
     host: http://localhost:11434
-  fireworks:
-    enabled: false
-    model: accounts/fireworks/models/llama-v3-70b-instruct
-    api_key_env: FIREWORKS_API_KEY
 ui:
   theme: dark
   language: en

@@ -3506,3 +3506,667 @@ Traceback (most recent call last):
     )
     ^
 chromadb.errors.InternalError: error returned from database: (code: 14) unable to open database file
+2026-07-09 11:07:16 [INFO    ] cybrix:46 — Starting Cybrix AI v0.1.0
+2026-07-09 11:07:16 [INFO    ] core.di:146 — Activating AI provider: ollama (model: llama3)
+2026-07-09 11:07:16 [INFO    ] infrastructure.ai.ollama_provider:42 — OllamaProvider initialised: host=http://localhost:11434 model=llama3
+2026-07-09 11:07:16 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: ollama model=llama3
+2026-07-09 11:07:16 [INFO    ] infrastructure.db.sqlite_repository:43 — SQLiteRepository initialised: cybrix.db (WAL mode)
+2026-07-09 11:07:16 [INFO    ] infrastructure.rag.embedder:30 — Embedder created (model='', loading deferred)
+2026-07-09 11:07:17 [CRITICAL] root:102 — Failed to start application: error returned from database: (code: 14) unable to open database file
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 894, in get
+    return self._context[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: <class 'application.agents.rag_agent.RAGAgent'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 894, in get
+    return self._context[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: <class 'application.use_cases.rag_use_case.RAGUseCase'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 894, in get
+    return self._context[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: <class 'infrastructure.rag.vector_store.VectorStore'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\core\bootstrap.py", line 96, in main
+    app = CybrixApp()
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\core\bootstrap.py", line 72, in __init__
+    orchestrator.register_agent("rag_query", self.injector.get(RAGAgent))
+                                             ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1070, in get
+    provider_instance = scope_instance.get(interface, binding.provider)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 896, in get
+    instance = self._get_instance(key, provider, self.injector)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 907, in _get_instance
+    return provider.get(injector)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 272, in get
+    return injector.create_object(self._cls)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1094, in create_object
+    self.call_with_injection(init, self_=instance, kwargs=additional_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1135, in call_with_injection
+    dependencies = self.args_to_inject(
+        function=callable,
+        bindings=needed,
+        owner_key=self_.__class__ if self_ is not None else callable.__module__,
+    )
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1183, in args_to_inject
+    instance: Any = self.get(interface)
+                    ~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1070, in get
+    provider_instance = scope_instance.get(interface, binding.provider)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 896, in get
+    instance = self._get_instance(key, provider, self.injector)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 907, in _get_instance
+    return provider.get(injector)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 272, in get
+    return injector.create_object(self._cls)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1094, in create_object
+    self.call_with_injection(init, self_=instance, kwargs=additional_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1135, in call_with_injection
+    dependencies = self.args_to_inject(
+        function=callable,
+        bindings=needed,
+        owner_key=self_.__class__ if self_ is not None else callable.__module__,
+    )
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1183, in args_to_inject
+    instance: Any = self.get(interface)
+                    ~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1070, in get
+    provider_instance = scope_instance.get(interface, binding.provider)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 896, in get
+    instance = self._get_instance(key, provider, self.injector)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 907, in _get_instance
+    return provider.get(injector)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 272, in get
+    return injector.create_object(self._cls)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1094, in create_object
+    self.call_with_injection(init, self_=instance, kwargs=additional_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1144, in call_with_injection
+    return callable(*full_args, **dependencies)
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\rag\vector_store.py", line 27, in __init__
+    self._client = chromadb.PersistentClient(path=persist_directory)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\__init__.py", line 228, in PersistentClient
+    return ClientCreator(tenant=tenant, database=database, settings=settings)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\client.py", line 69, in __init__
+    super().__init__(settings=settings)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\shared_system_client.py", line 25, in __init__
+    SharedSystemClient._create_system_if_not_exists(self._identifier, settings)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\shared_system_client.py", line 39, in _create_system_if_not_exists
+    new_system.start()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\config.py", line 467, in start
+    component.start()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\rust.py", line 122, in start
+    self.bindings = chromadb_rust_bindings.Bindings(
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        allow_reset=self._system.settings.require("allow_reset"),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        hnsw_cache_size=self.hnsw_cache_size,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+chromadb.errors.InternalError: error returned from database: (code: 14) unable to open database file
+2026-07-09 11:11:15 [INFO    ] cybrix:46 — Starting Cybrix AI v0.1.0
+2026-07-09 11:11:15 [INFO    ] core.di:146 — Activating AI provider: ollama (model: llama3)
+2026-07-09 11:11:16 [INFO    ] infrastructure.ai.ollama_provider:42 — OllamaProvider initialised: host=http://localhost:11434 model=llama3
+2026-07-09 11:11:16 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: ollama model=llama3
+2026-07-09 11:11:16 [INFO    ] infrastructure.db.sqlite_repository:43 — SQLiteRepository initialised: cybrix.db (WAL mode)
+2026-07-09 11:11:16 [INFO    ] infrastructure.rag.embedder:30 — Embedder created (model='', loading deferred)
+2026-07-09 11:11:16 [WARNING ] infrastructure.rag.vector_store:34 — Doimiy ombor yaratilmadi: error returned from database: (code: 14) unable to open database file. Vaqtinchalik rejimga o‘tilmoqda.
+2026-07-09 11:11:16 [INFO    ] infrastructure.rag.vector_store:36 — ChromaDB EphemeralClient yaratildi
+2026-07-09 11:11:16 [CRITICAL] root:102 — Failed to start application: Validation error: name: Expected a name containing 3-512 characters from [a-zA-Z0-9._-], starting and ending with a character in [a-zA-Z0-9]. Got: 
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 894, in get
+    return self._context[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: <class 'application.agents.rag_agent.RAGAgent'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 894, in get
+    return self._context[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: <class 'application.use_cases.rag_use_case.RAGUseCase'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 894, in get
+    return self._context[key]
+           ~~~~~~~~~~~~~^^^^^
+KeyError: <class 'infrastructure.rag.vector_store.VectorStore'>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\core\bootstrap.py", line 96, in main
+    app = CybrixApp()
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\core\bootstrap.py", line 72, in __init__
+    orchestrator.register_agent("rag_query", self.injector.get(RAGAgent))
+                                             ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1070, in get
+    provider_instance = scope_instance.get(interface, binding.provider)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 896, in get
+    instance = self._get_instance(key, provider, self.injector)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 907, in _get_instance
+    return provider.get(injector)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 272, in get
+    return injector.create_object(self._cls)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1094, in create_object
+    self.call_with_injection(init, self_=instance, kwargs=additional_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1135, in call_with_injection
+    dependencies = self.args_to_inject(
+        function=callable,
+        bindings=needed,
+        owner_key=self_.__class__ if self_ is not None else callable.__module__,
+    )
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1183, in args_to_inject
+    instance: Any = self.get(interface)
+                    ~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1070, in get
+    provider_instance = scope_instance.get(interface, binding.provider)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 896, in get
+    instance = self._get_instance(key, provider, self.injector)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 907, in _get_instance
+    return provider.get(injector)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 272, in get
+    return injector.create_object(self._cls)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1094, in create_object
+    self.call_with_injection(init, self_=instance, kwargs=additional_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1135, in call_with_injection
+    dependencies = self.args_to_inject(
+        function=callable,
+        bindings=needed,
+        owner_key=self_.__class__ if self_ is not None else callable.__module__,
+    )
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1183, in args_to_inject
+    instance: Any = self.get(interface)
+                    ~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1070, in get
+    provider_instance = scope_instance.get(interface, binding.provider)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 95, in wrapper
+    return function(*args, **kwargs)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 896, in get
+    instance = self._get_instance(key, provider, self.injector)
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 907, in _get_instance
+    return provider.get(injector)
+           ~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 272, in get
+    return injector.create_object(self._cls)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1094, in create_object
+    self.call_with_injection(init, self_=instance, kwargs=additional_kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\injector\__init__.py", line 1144, in call_with_injection
+    return callable(*full_args, **dependencies)
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\rag\vector_store.py", line 38, in __init__
+    self._collection = self._client.get_or_create_collection(
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        name=collection_name,
+        ^^^^^^^^^^^^^^^^^^^^^
+        metadata={"hnsw:space": "cosine"},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\client.py", line 361, in get_or_create_collection
+    model = self._server.get_or_create_collection(
+        name=name,
+    ...<4 lines>...
+        configuration=configuration,
+    )
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\rust.py", line 313, in get_or_create_collection
+    return self.create_collection(
+           ~~~~~~~~~~~~~~~~~~~~~~^
+        name, schema, configuration, metadata, True, tenant, database
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\chromadb\api\rust.py", line 244, in create_collection
+    collection = self.bindings.create_collection(
+        name,
+    ...<5 lines>...
+        database,
+    )
+chromadb.errors.InvalidArgumentError: Validation error: name: Expected a name containing 3-512 characters from [a-zA-Z0-9._-], starting and ending with a character in [a-zA-Z0-9]. Got: 
+2026-07-09 11:15:02 [INFO    ] cybrix:46 — Starting Cybrix AI v0.1.0
+2026-07-09 11:15:02 [INFO    ] core.di:146 — Activating AI provider: ollama (model: llama3)
+2026-07-09 11:15:03 [INFO    ] infrastructure.ai.ollama_provider:42 — OllamaProvider initialised: host=http://localhost:11434 model=llama3
+2026-07-09 11:15:03 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: ollama model=llama3
+2026-07-09 11:15:03 [INFO    ] infrastructure.db.sqlite_repository:43 — SQLiteRepository initialised: cybrix.db (WAL mode)
+2026-07-09 11:15:03 [INFO    ] infrastructure.rag.embedder:30 — Embedder created (model='', loading deferred)
+2026-07-09 11:15:03 [WARNING ] infrastructure.rag.vector_store:32 — Collection name bo‘sh, standart 'cybrix_documents' ishlatiladi
+2026-07-09 11:15:03 [WARNING ] infrastructure.rag.vector_store:44 — Doimiy ombor yaratilmadi: error returned from database: (code: 14) unable to open database file. Vaqtinchalik rejimga o‘tilmoqda.
+2026-07-09 11:15:03 [INFO    ] infrastructure.rag.vector_store:46 — ChromaDB EphemeralClient yaratildi
+2026-07-09 11:15:03 [INFO    ] infrastructure.rag.vector_store:52 — VectorStore initialised: collection='cybrix_documents', path=''
+2026-07-09 11:15:03 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-09 11:15:03 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-09 11:15:03 [INFO    ] core.session:55 — Created session e95f9307-78ef-4229-b279-4552d37f8326
+2026-07-09 11:15:05 [INFO    ] cybrix:98 — ROCm available: False
+2026-07-09 11:15:19 [INFO    ] cybrix:99 — PyTorch ROCm available: False
+2026-07-09 11:34:15 [INFO    ] cybrix:89 — Shutting down Cybrix AI
+2026-07-10 17:42:49 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-10 17:42:49 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-10 17:42:49 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-10 17:42:49 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-10 17:42:49 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-10 17:42:49 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-10 17:42:49 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-10 17:43:34 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-10 17:43:37 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-f3db19bfcf6d406e9024d54866e09921'}
+2026-07-10 17:43:37 [ERROR   ] cybrix.backend:181 — Chat generation failed (provider=fireworks): fireworks provider error: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-f3db19bfcf6d406e9024d54866e09921'}
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-f3db19bfcf6d406e9024d54866e09921'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\backend\main.py", line 176, in event_stream
+    async for token in ai_provider.generate(req.message, model=model, temperature=req.temperature):
+    ...<2 lines>...
+        yield _sse({"event": "token", "data": token})
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 54, in generate
+    raise AIProviderError(f"{self._provider_name} provider error: {exc}") from exc
+core.exceptions.AIProviderError: fireworks provider error: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-f3db19bfcf6d406e9024d54866e09921'}
+2026-07-10 17:44:13 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-10 17:50:12 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-10 18:03:15 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-10 18:03:15 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-10 18:03:15 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-10 18:03:15 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-10 18:03:15 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-10 18:03:15 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-10 18:03:15 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-10 18:03:46 [INFO    ] infrastructure.ai.ollama_provider:42 — OllamaProvider initialised: host=http://localhost:11434 model=llama3
+2026-07-10 18:03:46 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: ollama model=llama3
+2026-07-11 12:23:58 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 12:23:58 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 12:23:58 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 12:23:58 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 12:23:58 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 12:23:58 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 12:23:58 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 12:37:11 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-11 12:37:13 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-a263cff3e8b1430697e3b80adb787559'}
+2026-07-11 12:37:13 [ERROR   ] cybrix.backend:181 — Chat generation failed (provider=fireworks): fireworks provider error: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-a263cff3e8b1430697e3b80adb787559'}
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-a263cff3e8b1430697e3b80adb787559'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\backend\main.py", line 176, in event_stream
+    async for token in ai_provider.generate(req.message, model=model, temperature=req.temperature):
+    ...<2 lines>...
+        yield _sse({"event": "token", "data": token})
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 54, in generate
+    raise AIProviderError(f"{self._provider_name} provider error: {exc}") from exc
+core.exceptions.AIProviderError: fireworks provider error: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-a263cff3e8b1430697e3b80adb787559'}
+2026-07-11 12:39:17 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 12:39:26 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 12:39:26 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 12:39:26 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 12:39:26 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 12:39:26 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 12:39:26 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 12:39:26 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 12:39:55 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 12:40:00 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 12:40:00 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 12:40:00 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 12:40:00 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 12:40:00 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 12:40:00 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 12:40:00 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 12:41:09 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 12:41:14 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 12:41:14 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 12:41:14 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 12:41:14 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 12:41:14 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 12:41:14 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 12:41:14 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 12:42:52 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 12:42:58 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 12:42:58 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 12:42:58 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 12:42:58 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 12:42:58 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 12:42:58 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 12:42:58 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 12:44:03 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-11 12:46:01 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 12:46:08 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 12:46:08 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 12:46:08 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 12:46:08 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 12:46:08 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 12:46:08 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 12:46:08 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 13:10:08 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 13:10:15 [INFO    ] cybrix.backend:66 — Cybrix AI backend boot sequence started.
+2026-07-11 13:10:15 [INFO    ] cybrix.backend:67 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 13:10:15 [INFO    ] cybrix.backend:68 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 13:10:15 [INFO    ] cybrix.backend:69 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 13:10:15 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 13:10:15 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 13:10:15 [INFO    ] cybrix.backend:75 — Local ROCm tooling detected on this host: False
+2026-07-11 13:10:36 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-11 13:11:15 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-6cbd14ebce0e485991e2f5bedcecf419'}
+2026-07-11 13:11:15 [ERROR   ] cybrix.backend:181 — Chat generation failed (provider=fireworks): fireworks provider error: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-6cbd14ebce0e485991e2f5bedcecf419'}
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-6cbd14ebce0e485991e2f5bedcecf419'}
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\backend\main.py", line 176, in event_stream
+    async for token in ai_provider.generate(req.message, model=model, temperature=req.temperature):
+    ...<2 lines>...
+        yield _sse({"event": "token", "data": token})
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 54, in generate
+    raise AIProviderError(f"{self._provider_name} provider error: {exc}") from exc
+core.exceptions.AIProviderError: fireworks provider error: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-6cbd14ebce0e485991e2f5bedcecf419'}
+2026-07-11 13:15:11 [INFO    ] cybrix.backend:79 — Cybrix AI backend shutting down.
+2026-07-11 13:15:16 [INFO    ] cybrix.backend:76 — Cybrix AI backend boot sequence started.
+2026-07-11 13:15:16 [INFO    ] cybrix.backend:77 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 13:15:16 [INFO    ] cybrix.backend:78 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 13:15:16 [INFO    ] cybrix.backend:79 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 13:15:16 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 13:15:16 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 13:15:16 [INFO    ] cybrix.backend:85 — Local ROCm tooling detected on this host: False
+2026-07-11 13:16:20 [INFO    ] cybrix.backend:89 — Cybrix AI backend shutting down.
+2026-07-11 13:16:25 [INFO    ] cybrix.backend:76 — Cybrix AI backend boot sequence started.
+2026-07-11 13:16:25 [INFO    ] cybrix.backend:77 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 13:16:25 [INFO    ] cybrix.backend:78 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 13:16:25 [INFO    ] cybrix.backend:79 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 13:16:25 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 13:16:25 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 13:16:25 [INFO    ] cybrix.backend:85 — Local ROCm tooling detected on this host: False
+2026-07-11 13:17:01 [INFO    ] cybrix.backend:76 — Cybrix AI backend boot sequence started.
+2026-07-11 13:17:01 [INFO    ] cybrix.backend:77 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 13:17:01 [INFO    ] cybrix.backend:78 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 13:17:01 [INFO    ] cybrix.backend:79 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 13:17:01 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 13:17:01 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 13:17:01 [INFO    ] cybrix.backend:85 — Local ROCm tooling detected on this host: False
+2026-07-11 13:17:21 [INFO    ] cybrix.backend:76 — Cybrix AI backend boot sequence started.
+2026-07-11 13:17:21 [INFO    ] cybrix.backend:77 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 13:17:21 [INFO    ] cybrix.backend:78 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 13:17:21 [INFO    ] cybrix.backend:79 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 13:17:21 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 13:17:21 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 13:17:21 [INFO    ] cybrix.backend:85 — Local ROCm tooling detected on this host: False
+2026-07-11 13:17:21 [INFO    ] cybrix.backend:89 — Cybrix AI backend shutting down.
+2026-07-11 13:17:36 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-11 13:17:38 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-d587dae40db24e70a3eb3ce68d637f13'}
+2026-07-11 13:17:38 [WARNING ] cybrix.backend:201 — Model 'accounts/fireworks/models/qwen2p5-coder-32b-instruct' unavailable on this Fireworks account — retrying with fallback 'accounts/fireworks/models/gpt-oss-120b'
+2026-07-11 13:17:39 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-11 13:17:57 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-11 13:17:58 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-be08c107d9f54d0d831cf830ff70da8b'}
+2026-07-11 13:17:58 [WARNING ] cybrix.backend:201 — Model 'accounts/fireworks/models/qwen2p5-coder-32b-instruct' unavailable on this Fireworks account — retrying with fallback 'accounts/fireworks/models/gpt-oss-120b'
+2026-07-11 13:17:58 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-11 13:19:18 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-11 13:19:18 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-6e7573a2005341e39ccf7c79de462a1f'}
+2026-07-11 13:19:18 [WARNING ] cybrix.backend:201 — Model 'accounts/fireworks/models/qwen2p5-coder-32b-instruct' unavailable on this Fireworks account — retrying with fallback 'accounts/fireworks/models/gpt-oss-120b'
+2026-07-11 13:19:19 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-11 13:20:13 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/qwen2p5-coder-32b-instruct
+2026-07-11 13:20:14 [ERROR   ] infrastructure.ai.openai_compatible_provider:53 — Provider fireworks streaming failed
+Traceback (most recent call last):
+  File "C:\Users\Furb-X\Desktop\cybrix_ai_\infrastructure\ai\openai_compatible_provider.py", line 40, in generate
+    stream = await self._client.chat.completions.create(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\resources\chat\completions\completions.py", line 2714, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+    ...<49 lines>...
+    )
+    ^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1884, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Furb-X\AppData\Roaming\Python\Python314\site-packages\openai\_base_client.py", line 1669, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.NotFoundError: Error code: 404 - {'error': {'message': 'Model not found, inaccessible, and/or not deployed', 'param': 'model', 'code': 'NOT_FOUND', 'type': 'error'}, 'request_id': 'chatcmpl-1ff11978073b4899966798fe71e19ac4'}
+2026-07-11 13:20:14 [WARNING ] cybrix.backend:201 — Model 'accounts/fireworks/models/qwen2p5-coder-32b-instruct' unavailable on this Fireworks account — retrying with fallback 'accounts/fireworks/models/gpt-oss-120b'
+2026-07-11 13:20:15 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: fireworks model=accounts/fireworks/models/gpt-oss-120b
+2026-07-11 13:22:25 [INFO    ] cybrix.backend:76 — Cybrix AI backend boot sequence started.
+2026-07-11 13:22:25 [INFO    ] cybrix.backend:77 — AMD ROCm runtime alignment detected via Fireworks AI Compute Grid.
+2026-07-11 13:22:25 [INFO    ] cybrix.backend:78 — ProviderFactory: creating default provider 'fireworks' with AMD Instinct GPU acceleration.
+2026-07-11 13:22:25 [INFO    ] cybrix.backend:79 — Validated Fireworks models on AMD Instinct MI300X / ROCm: accounts/fireworks/models/qwen2p5-coder-32b-instruct, accounts/fireworks/models/deepseek-r1
+2026-07-11 13:22:25 [INFO    ] core.gpu_monitor:52 — rocminfo not found — ROCm not available
+2026-07-11 13:22:25 [INFO    ] core.gpu_monitor:42 — GPU Manager initialised. ROCm available: False
+2026-07-11 13:22:25 [INFO    ] cybrix.backend:85 — Local ROCm tooling detected on this host: False
+2026-07-11 13:22:49 [INFO    ] infrastructure.ai.ollama_provider:42 — OllamaProvider initialised: host=http://localhost:11434 model=llama3
+2026-07-11 13:22:49 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: ollama model=llama3
+2026-07-11 13:23:14 [INFO    ] infrastructure.ai.ollama_provider:42 — OllamaProvider initialised: host=http://localhost:11434 model=llama3
+2026-07-11 13:23:14 [INFO    ] infrastructure.ai.provider_factory:65 — Provider selected: ollama model=llama3
+2026-07-11 13:23:36 [INFO    ] cybrix.backend:89 — Cybrix AI backend shutting down.
