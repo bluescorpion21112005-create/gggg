@@ -60,6 +60,8 @@ class BackendConfig:
     # Network connections (remote IP/port/process) for threat matching — opt-in only.
     share_network_flows: bool = False
     netflow_interval: float = 60.0
+    # SHA-256 + file name of running programs for known-malware matching — opt-in only.
+    share_process_hashes: bool = False
     # Rotate the device token when fewer than this many days remain.
     token_refresh_days: int = 7
     # Sending the device token over plain http/ws to a non-local host is refused unless enabled.
@@ -230,6 +232,7 @@ class ConfigLoader:
             telemetry_interval=float(backend_raw.get("telemetry_interval", BackendConfig.telemetry_interval)),
             share_network_flows=bool(backend_raw.get("share_network_flows", False)),
             netflow_interval=float(backend_raw.get("netflow_interval", BackendConfig.netflow_interval)),
+            share_process_hashes=bool(backend_raw.get("share_process_hashes", False)),
             token_refresh_days=int(backend_raw.get("token_refresh_days", BackendConfig.token_refresh_days)),
             allow_insecure=bool(backend_raw.get("allow_insecure", False)),
             data_dir=str(backend_raw.get("data_dir", BackendConfig.data_dir)),

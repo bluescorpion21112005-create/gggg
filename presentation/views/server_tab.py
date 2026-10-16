@@ -68,6 +68,11 @@ class ServerTab(QWidget):
         self.netflows.toggled.connect(self._vm.set_netflow_sharing)
         self._vm.netflow_sharing_changed.connect(self.netflows.setChecked)
         form.addRow(self.tr("Connections:"), self.netflows)
+        self.hashes = QCheckBox(self.tr("Check running programs against known malware hashes (opt-in)"))
+        self.hashes.setChecked(self._vm.hash_sharing)
+        self.hashes.toggled.connect(self._vm.set_hash_sharing)
+        self._vm.hash_sharing_changed.connect(self.hashes.setChecked)
+        form.addRow(self.tr("Programs:"), self.hashes)
         layout.addLayout(form)
 
         layout.addWidget(QLabel(self.tr("Devices signed in to your account:")))

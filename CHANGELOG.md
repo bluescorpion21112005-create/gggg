@@ -19,6 +19,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   widget text), complete light theme.
 - **Per-user OS directories** for settings, database, logs and caches (`core/paths.py`, `CYBRIX_HOME`).
 - Dashboard severity chart from real analyses.
+- **Malware hash check** (opt-in, off by default; Settings → Server, Server page, first-run wizard): the
+  SHA-256 and file name of running programs are sent as `process.hashes` — hashed once per path/size/mtime,
+  only new or changed files, files over 200 MB skipped, never the path or contents. Matches appear in the
+  suspicious-activity list and open their alert.
 - Suspicious-connection hits link to their server-side alert (double-click opens it in the browser).
 - CI: ruff + pytest on Linux, Windows and macOS.
 

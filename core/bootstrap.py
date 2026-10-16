@@ -31,6 +31,7 @@ from application.orchestrator import Orchestrator
 from application.services.connection_service import ConnectionService
 from application.services.command_executor import CommandExecutor
 from application.services.netflow_service import NetflowService
+from application.services.process_hash_service import ProcessHashService
 
 logger = logging.getLogger("cybrix")
 
@@ -100,6 +101,7 @@ class CybrixApp:
         # reconnect in the background if a device token is stored.
         self.injector.get(CommandExecutor)
         self.injector.get(NetflowService)  # subscribes to connection state; runs only with consent
+        self.injector.get(ProcessHashService)  # same, for the opt-in malware hash check
         self._connection = self.injector.get(ConnectionService)
         # Deferred until the qasync loop is running — qasync cannot schedule tasks before that.
         QTimer.singleShot(0, lambda: asyncio.ensure_future(self._connection.auto_connect()))

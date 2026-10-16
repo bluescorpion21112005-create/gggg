@@ -238,6 +238,10 @@ class ServerView(QWidget):
         self.netflow_status = QLabel(self.tr("Not sharing") if not self._vm.netflow_sharing else self.tr("Waiting for first batch…"))
         self.netflow_status.setObjectName("mutedText")
         layout.addWidget(self.netflow_status)
+        self.hash_box = QCheckBox(self.tr("Check running programs against known malware hashes"))
+        self.hash_box.setToolTip(self.tr("Sends only the SHA-256 and file name of each running program, never the file"))
+        self.hash_box.setChecked(self._vm.hash_sharing)
+        layout.addWidget(self.hash_box)
         self.hits_list = QListWidget()
         self.hits_list.setMinimumHeight(110)
         self.hits_list.setToolTip(self.tr("Double-click to open the alert in the web app"))
@@ -300,6 +304,8 @@ class ServerView(QWidget):
         vm.audit_appended.connect(self._append_audit)
         self.netflow_box.toggled.connect(vm.set_netflow_sharing)
         vm.netflow_sharing_changed.connect(self._apply_netflow_sharing)
+        self.hash_box.toggled.connect(vm.set_hash_sharing)
+        vm.hash_sharing_changed.connect(self.hash_box.setChecked)
         vm.netflow_batch.connect(lambda b: self.netflow_status.setText(
             f"Last check {datetime.now():%H:%M:%S}: {b.get('open', 0)} open, {b.get('sent', 0)} new shared"))
         vm.intel_hit.connect(self._add_hit)
@@ -372,9 +378,14 @@ class ServerView(QWidget):
 
     @Slot(dict)
     def _add_hit(self, hit: dict) -> None:
-        self.hits_list.insertItem(0, f"{datetime.now():%H:%M:%S}  {hit.get('process') or '?'} → "
-                                     f"{hit.get('dst_ip')}:{hit.get('dst_port')}  score {hit.get('score')}  "
-                                     f"({', '.join(hit.get('sources') or [])})")
+        if hit.get("sha256"):                 # known-malware program (process.hashes)
+            text = (f"{datetime.now():%H:%M:%S}  {hit.get('process') or '?'}  sha256 {hit['sha256'][:16]}…  "
+                    f"({', '.join(hit.get('categories') or [])})")
+        else:
+            text = (f"{datetime.now():%H:%M:%S}  {hit.get('process') or '?'} → "
+                    f"{hit.get('dst_ip')}:{hit.get('dst_port')}  score {hit.get('score')}  "
+                    f"({', '.join(hit.get('sources') or [])})")
+        self.hits_list.insertItem(0, text)
         url = str(hit.get("url") or "")
         if url.startswith("/alerts/"):        # only server-relative alert links are opened
             self.hits_list.item(0).setData(Qt.UserRole, url)

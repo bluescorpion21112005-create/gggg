@@ -91,6 +91,15 @@ class AgentSettings:
         self._save()
 
     @property
+    def share_process_hashes(self) -> bool:
+        return bool(self._data.get("share_process_hashes", self._defaults.share_process_hashes))
+
+    @share_process_hashes.setter
+    def share_process_hashes(self, value: bool) -> None:
+        self._data["share_process_hashes"] = bool(value)
+        self._save()
+
+    @property
     def always_allowed(self) -> frozenset[str]:
         return frozenset(self._data.get("always_allowed", []))
 

@@ -9,6 +9,7 @@ from injector import inject
 
 from application.services.connection_service import ConnectionService
 from application.services.netflow_service import NetflowService
+from application.services.process_hash_service import ProcessHashService
 from application.services.telemetry_service import TelemetryService
 from core.config import AppConfig
 from core.event_bus import EventBus
@@ -37,13 +38,15 @@ class ConnectionViewModel(BaseViewModel):
     intel_hit = Signal(dict)             # server flagged one of our connections
     netflow_batch = Signal(dict)         # {"sent", "open", "flows"} last shared batch
     netflow_sharing_changed = Signal(bool)
+    hash_sharing_changed = Signal(bool)
 
     @inject
     def __init__(self, service: ConnectionService, config: AppConfig, event_bus: EventBus,
                  telemetry: TelemetryService, settings: AgentSettings, audit: AgentAuditLog,
-                 netflow: NetflowService):
+                 netflow: NetflowService, hashes: ProcessHashService):
         super().__init__()
         self._netflow = netflow
+        self._hashes = hashes
         self._service = service
         self._config = config
         self._bus = event_bus
@@ -105,6 +108,18 @@ class ConnectionViewModel(BaseViewModel):
         self._netflow.set_sharing(enabled)
         self.netflow_sharing_changed.emit(enabled)
         self.status_message.emit("Network connection sharing " + ("enabled" if enabled else "disabled"))
+
+    @property
+    def hash_sharing(self) -> bool:
+        return self._hashes.sharing
+
+    @Slot(bool)
+    def set_hash_sharing(self, enabled: bool):
+        if enabled == self._hashes.sharing:
+            return
+        self._hashes.set_sharing(enabled)
+        self.hash_sharing_changed.emit(enabled)
+        self.status_message.emit("Malware hash check " + ("enabled" if enabled else "disabled"))
 
     @property
     def command_policy(self) -> str:

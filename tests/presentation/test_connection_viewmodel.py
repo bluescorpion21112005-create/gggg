@@ -21,7 +21,7 @@ def make_vm(tmp_path):
     settings = AgentSettings(config)
     audit = AgentAuditLog(config, bus)
     netflow = MagicMock(sharing=False)
-    vm = ConnectionViewModel(service, config, bus, telemetry, settings, audit, netflow)
+    vm = ConnectionViewModel(service, config, bus, telemetry, settings, audit, netflow, MagicMock(sharing=False))
     return vm, service, bus, telemetry, settings
 
 

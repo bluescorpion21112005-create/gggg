@@ -14,6 +14,7 @@ COMMAND_ACK = "command.ack"
 COMMAND_PROGRESS = "command.progress"
 COMMAND_RESULT = "command.result"
 NETFLOW_BATCH = "netflow.batch"
+PROCESS_HASHES = "process.hashes"
 
 # ── Server → client ──────────────────────────────────────────────────────────
 AUTH_OK = "auth.ok"
@@ -25,6 +26,8 @@ SCAN_COMPLETED = "scan.completed"
 NOTIFICATION = "notification"
 DEVICE_REVOKED = "device.revoked"
 NETFLOW_ACK = "netflow.ack"
+PROCESS_HASHES_ACK = "process.hashes.ack"
+MAX_PROCESS_HASHES = 200   # files per process.hashes batch (server rejects the rest)
 
 # ── Telemetry ────────────────────────────────────────────────────────────────
 TELEMETRY_KEYFRAME_INTERVAL = 60.0  # send a full sample at least this often; deltas in between

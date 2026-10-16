@@ -61,6 +61,7 @@ from infrastructure.remote.agent_settings import AgentSettings
 from infrastructure.remote.audit_log import AgentAuditLog
 from application.services.telemetry_service import TelemetryService
 from application.services.netflow_service import NetflowService
+from application.services.process_hash_service import ProcessHashService
 from presentation.widgets.command_approval_dialog import QtCommandApprover
 from infrastructure.remote.token_store import TokenStore
 from infrastructure.remote.http_client import HttpBackendGateway
@@ -132,6 +133,7 @@ class CybrixModule(Module):
         binder.bind(CommandExecutor, to=CommandExecutor, scope=singleton)
         binder.bind(TelemetryService, to=TelemetryService, scope=singleton)
         binder.bind(NetflowService, to=NetflowService, scope=singleton)
+        binder.bind(ProcessHashService, to=ProcessHashService, scope=singleton)
         binder.bind(CommandApprover, to=QtCommandApprover, scope=singleton)
 
     # ── Provider methods (complex construction logic) ─────────────────────────

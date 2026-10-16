@@ -107,6 +107,7 @@ def test_invalid_preferences_are_rejected(tmp_path):
 def test_privacy_defaults_are_off(tmp_path):
     settings = AgentSettings(make_config(tmp_path))
     assert settings.crash_reports is False and settings.share_network_flows is False
+    assert settings.share_process_hashes is False
     assert settings.onboarding_done is False
 
 
@@ -159,11 +160,13 @@ def test_onboarding_wizard_saves_choices(qtbot, tmp_path):
     qtbot.addWidget(wizard)
     wizard.server.url.setText("https://cybrix.example.com")
     wizard.privacy.netflows.setChecked(True)
+    wizard.privacy.hashes.setChecked(True)
     wizard.commands.group.buttons()[2].setChecked(True)      # deny_all
     wizard.save()
     reloaded = AgentSettings(config)
     assert reloaded.get_pref("server_url") == "https://cybrix.example.com"
     assert reloaded.share_network_flows is True and reloaded.share_telemetry is False
+    assert reloaded.share_process_hashes is True
     assert reloaded.command_policy == "deny_all" and reloaded.onboarding_done
 
 

@@ -76,9 +76,10 @@ class PrivacyPage(QWizardPage):
         layout = QVBoxLayout(self)
         self.telemetry = QCheckBox(self.tr("Health metrics: CPU, memory, disk and network usage"))
         self.netflows = QCheckBox(self.tr("Network connections (remote address, port, program) for threat detection"))
+        self.hashes = QCheckBox(self.tr("Fingerprints (SHA-256) and names of running programs, to spot known malware"))
         self.crash = QCheckBox(self.tr("Anonymous crash reports"))
         self.crash.setEnabled(bool(config.sentry_dsn))
-        for box in (self.telemetry, self.netflows, self.crash):
+        for box in (self.telemetry, self.netflows, self.hashes, self.crash):
             layout.addWidget(box)
         note = QLabel(self.tr("File contents, documents and passwords are never sent."))
         note.setWordWrap(True)
@@ -132,6 +133,7 @@ class OnboardingWizard(QWizard):
         s.set_pref("server_url", self.server.url.text())
         s.share_telemetry = self.privacy.telemetry.isChecked()
         s.share_network_flows = self.privacy.netflows.isChecked()
+        s.share_process_hashes = self.privacy.hashes.isChecked()
         s.set_pref("crash_reports", self.privacy.crash.isChecked())
         s.command_policy = self.commands.policy
         s.set_pref("onboarding_done", True)
