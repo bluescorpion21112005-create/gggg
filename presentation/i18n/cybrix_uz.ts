@@ -23,17 +23,17 @@
 <context>
     <name>CommandApprovalDialog</name>
     <message>
-        <location filename="../widgets/command_approval_dialog.py" line="31"/>
+        <location filename="../widgets/command_approval_dialog.py" line="32"/>
         <source>Server command — approval required</source>
         <translation>Server buyrug‘i — tasdiqlash kerak</translation>
     </message>
     <message>
-        <location filename="../widgets/command_approval_dialog.py" line="61"/>
+        <location filename="../widgets/command_approval_dialog.py" line="62"/>
         <source>Deny</source>
         <translation>Rad etish</translation>
     </message>
     <message>
-        <location filename="../widgets/command_approval_dialog.py" line="64"/>
+        <location filename="../widgets/command_approval_dialog.py" line="65"/>
         <source>Allow once</source>
         <translation>Bir marta ruxsat</translation>
     </message>
@@ -302,7 +302,7 @@
     <message>
         <location filename="../views/onboarding_wizard.py" line="79"/>
         <source>Fingerprints (SHA-256) and names of running programs, to spot known malware</source>
-        <translation>Ishlayotgan dasturlarning barmoq izlari (SHA-256) va nomlari — ma'lum zararli dasturlarni aniqlash uchun</translation>
+        <translation>Ishlayotgan dasturlarning barmoq izlari (SHA-256) va nomlari — ma&apos;lum zararli dasturlarni aniqlash uchun</translation>
     </message>
     <message>
         <location filename="../views/onboarding_wizard.py" line="80"/>
@@ -521,7 +521,7 @@
     <message>
         <location filename="../views/server_tab.py" line="71"/>
         <source>Check running programs against known malware hashes (opt-in)</source>
-        <translation>Ishlayotgan dasturlarni ma'lum zararli dastur xeshlari bilan tekshirish (ixtiyoriy)</translation>
+        <translation>Ishlayotgan dasturlarni ma&apos;lum zararli dastur xeshlari bilan tekshirish (ixtiyoriy)</translation>
     </message>
     <message>
         <location filename="../views/server_tab.py" line="75"/>
@@ -688,40 +688,55 @@
     </message>
     <message>
         <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="377"/>
+        <location filename="../views/server_view.py" line="383"/>
         <source>Not sharing</source>
         <translation>Ulashilmayapti</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="377"/>
+        <location filename="../views/server_view.py" line="383"/>
         <source>Waiting for first batch…</source>
         <translation>Birinchi to‘plam kutilmoqda…</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="241"/>
         <source>Check running programs against known malware hashes</source>
-        <translation>Ishlayotgan dasturlarni ma'lum zararli dastur xeshlari bilan tekshirish</translation>
+        <translation>Ishlayotgan dasturlarni ma&apos;lum zararli dastur xeshlari bilan tekshirish</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="242"/>
         <source>Sends only the SHA-256 and file name of each running program, never the file</source>
-        <translation>Har bir ishlayotgan dasturning faqat SHA-256 va fayl nomi yuboriladi, faylning o'zi hech qachon</translation>
+        <translation>Har bir ishlayotgan dasturning faqat SHA-256 va fayl nomi yuboriladi, faylning o&apos;zi hech qachon</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="247"/>
+        <source>Signed YARA/Sigma rules from the server; used only for scans you approve</source>
+        <translation>Serverdan kelgan imzolangan YARA/Sigma qoidalari; faqat siz tasdiqlagan skanlarda ishlatiladi</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="252"/>
         <source>Double-click to open the alert in the web app</source>
         <translation>Alertni veb-ilovada ochish uchun ikki marta bosing</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="253"/>
+        <location filename="../views/server_view.py" line="258"/>
         <source>Commands from the server</source>
         <translation>Serverdan kelgan buyruqlar</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="275"/>
+        <location filename="../views/server_view.py" line="280"/>
         <source>Local audit trail</source>
         <translation>Lokal audit jurnali</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="388"/>
+        <source>Detection rules: none yet (signed bundle arrives after sign-in)</source>
+        <translation>Aniqlash qoidalari: hali yo'q (imzolangan to'plam tizimga kirgandan keyin keladi)</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="390"/>
+        <source>Detection rules: v%1 — %2 YARA, %3 Sigma</source>
+        <translation>Aniqlash qoidalari: v%1 — %2 YARA, %3 Sigma</translation>
     </message>
 </context>
 <context>

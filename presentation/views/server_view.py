@@ -242,6 +242,11 @@ class ServerView(QWidget):
         self.hash_box.setToolTip(self.tr("Sends only the SHA-256 and file name of each running program, never the file"))
         self.hash_box.setChecked(self._vm.hash_sharing)
         layout.addWidget(self.hash_box)
+        self.rules_status = QLabel()
+        self.rules_status.setObjectName("mutedText")
+        self.rules_status.setToolTip(self.tr("Signed YARA/Sigma rules from the server; used only for scans you approve"))
+        layout.addWidget(self.rules_status)
+        self._apply_rules(self._vm.rules_summary)
         self.hits_list = QListWidget()
         self.hits_list.setMinimumHeight(110)
         self.hits_list.setToolTip(self.tr("Double-click to open the alert in the web app"))
@@ -306,6 +311,7 @@ class ServerView(QWidget):
         vm.netflow_sharing_changed.connect(self._apply_netflow_sharing)
         self.hash_box.toggled.connect(vm.set_hash_sharing)
         vm.hash_sharing_changed.connect(self.hash_box.setChecked)
+        vm.rules_changed.connect(self._apply_rules)
         vm.netflow_batch.connect(lambda b: self.netflow_status.setText(
             f"Last check {datetime.now():%H:%M:%S}: {b.get('open', 0)} open, {b.get('sent', 0)} new shared"))
         vm.intel_hit.connect(self._add_hit)
@@ -377,6 +383,14 @@ class ServerView(QWidget):
         self.netflow_status.setText(self.tr("Waiting for first batch…") if enabled else self.tr("Not sharing"))
 
     @Slot(dict)
+    def _apply_rules(self, summary: dict) -> None:
+        if not summary.get("version"):
+            self.rules_status.setText(self.tr("Detection rules: none yet (signed bundle arrives after sign-in)"))
+            return
+        self.rules_status.setText(self.tr("Detection rules: v%1 — %2 YARA, %3 Sigma").replace(
+            "%1", str(summary["version"])).replace("%2", str(summary.get("yara", 0))).replace(
+            "%3", str(summary.get("sigma", 0))))
+
     def _add_hit(self, hit: dict) -> None:
         if hit.get("sha256"):                 # known-malware program (process.hashes)
             text = (f"{datetime.now():%H:%M:%S}  {hit.get('process') or '?'}  sha256 {hit['sha256'][:16]}…  "

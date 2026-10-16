@@ -19,6 +19,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   widget text), complete light theme.
 - **Per-user OS directories** for settings, database, logs and caches (`core/paths.py`, `CYBRIX_HOME`).
 - Dashboard severity chart from real analyses.
+- **Signed detection rules**: YARA/Sigma bundles are fetched from the server, verified against the pinned
+  `rules.public_key`, never rolled back, and re-verified at start. New approved `yara_scan` command (file or
+  folder inside `command_allowed_dirs`); `log_analysis` also reports Sigma matches. Built-in Sigma evaluator
+  (selections, modifiers, and/or/not, `1 of`/`all of`); rules it cannot evaluate are skipped, not half-run.
+  Server page shows the installed rules version.
 - **Malware hash check** (opt-in, off by default; Settings → Server, Server page, first-run wizard): the
   SHA-256 and file name of running programs are sent as `process.hashes` — hashed once per path/size/mtime,
   only new or changed files, files over 200 MB skipped, never the path or contents. Matches appear in the

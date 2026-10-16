@@ -127,6 +127,9 @@ class HttpBackendGateway(BackendGateway):
         return await self._request("POST", "/feedback/", json={
             "message": message, "category": category, "app_version": app_version, "page": page})
 
+    async def get_rules(self, have: int = 0) -> Dict[str, Any]:
+        return await self._request("GET", "/rules/latest/", params={"have": int(have)})
+
     async def post_command_result(self, command_id: str, success: bool,
                                   result: Optional[Dict[str, Any]] = None, error: str = "",
                                   rejected: bool = False) -> None:

@@ -30,6 +30,7 @@ a = Analysis(
         "qasync", "injector", "keyring.backends", "platformdirs",
         "sentry_sdk.integrations.logging", "sentry_sdk.integrations.threading",
         "cryptography.hazmat.primitives.asymmetric.ed25519",
+        "yara",                                             # imported lazily by RuleService
         # parsers/analyzers/reporters are wired in core/di.py; listed so a refactor to dynamic
         # loading cannot silently drop them from the bundle
         "infrastructure.parsers.evtx_parser", "infrastructure.parsers.syslog_parser",

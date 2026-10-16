@@ -10,6 +10,7 @@ from injector import inject
 from application.services.connection_service import ConnectionService
 from application.services.netflow_service import NetflowService
 from application.services.process_hash_service import ProcessHashService
+from application.services.rule_service import RuleService
 from application.services.telemetry_service import TelemetryService
 from core.config import AppConfig
 from core.event_bus import EventBus
@@ -39,12 +40,14 @@ class ConnectionViewModel(BaseViewModel):
     netflow_batch = Signal(dict)         # {"sent", "open", "flows"} last shared batch
     netflow_sharing_changed = Signal(bool)
     hash_sharing_changed = Signal(bool)
+    rules_changed = Signal(dict)         # {"version", "yara", "sigma", "skipped"} verified detection rules
 
     @inject
     def __init__(self, service: ConnectionService, config: AppConfig, event_bus: EventBus,
                  telemetry: TelemetryService, settings: AgentSettings, audit: AgentAuditLog,
-                 netflow: NetflowService, hashes: ProcessHashService):
+                 netflow: NetflowService, hashes: ProcessHashService, rules: RuleService):
         super().__init__()
+        self._rules = rules
         self._netflow = netflow
         self._hashes = hashes
         self._service = service
@@ -66,6 +69,7 @@ class ConnectionViewModel(BaseViewModel):
         self._bus.subscribe(P.BUS_AGENT_AUDIT, self.audit_appended.emit)
         self._bus.subscribe(P.BUS_INTEL_HIT, self.intel_hit.emit)
         self._bus.subscribe(P.BUS_AGENT_NETFLOW, self.netflow_batch.emit)
+        self._bus.subscribe(P.BUS_AGENT_RULES, self.rules_changed.emit)
 
     # ── Properties ───────────────────────────────────────────────────────────
 
@@ -108,6 +112,10 @@ class ConnectionViewModel(BaseViewModel):
         self._netflow.set_sharing(enabled)
         self.netflow_sharing_changed.emit(enabled)
         self.status_message.emit("Network connection sharing " + ("enabled" if enabled else "disabled"))
+
+    @property
+    def rules_summary(self) -> Dict[str, Any]:
+        return self._rules.summary()
 
     @property
     def hash_sharing(self) -> bool:

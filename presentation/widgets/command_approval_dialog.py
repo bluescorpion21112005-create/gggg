@@ -19,6 +19,7 @@ COMMAND_DESCRIPTIONS = {
     "threat_hunting": "Run a threat-hunting query with the local AI agent",
     "report": "Generate a report from a stored analysis",
     "system_snapshot": "Share running processes, listening ports and disks",
+    "yara_scan": "Scan a file or folder with the signed YARA rules (only inside your allowed folders)",
 }
 
 

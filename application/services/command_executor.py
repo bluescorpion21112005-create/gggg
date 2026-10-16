@@ -19,6 +19,7 @@ from core.config import AppConfig
 from core.event_bus import EventBus
 from core.exceptions import BackendError
 from application.orchestrator import Orchestrator
+from application.services.rule_service import RuleService, RulesUnavailable
 from application.services.telemetry_service import TelemetryService
 from domain.interfaces.backend import (
     ApprovalDecision, BackendGateway, CommandApprover, ConnectionState, RealtimeChannel,
@@ -37,6 +38,7 @@ COMMAND_AGENTS: Dict[str, Optional[str]] = {
     "threat_hunting": "threat_hunting",
     "report": "generate_report",
     "system_snapshot": None,
+    "yara_scan": None,            # signed YARA rules over a file or folder (RuleService)
 }
 FILE_COMMANDS = {"log_analysis", "malware_analysis"}
 DEFAULT_TIMEOUT = 900.0
@@ -53,7 +55,7 @@ class CommandExecutor:
     def __init__(self, orchestrator: Orchestrator, realtime: RealtimeChannel,
                  gateway: BackendGateway, config: AppConfig, event_bus: EventBus,
                  approver: CommandApprover, settings: AgentSettings, audit: AgentAuditLog,
-                 telemetry: TelemetryService):
+                 telemetry: TelemetryService, rules: RuleService):
         self._orchestrator = orchestrator
         self._realtime = realtime
         self._gateway = gateway
@@ -63,6 +65,7 @@ class CommandExecutor:
         self._settings = settings
         self._audit = audit
         self._telemetry = telemetry
+        self._rules = rules
         self._running: Dict[str, asyncio.Task] = {}
         self._completed: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
         self._bus.subscribe(P.bus_event(P.COMMAND_DISPATCH), self._on_dispatch)
@@ -106,11 +109,17 @@ class CommandExecutor:
         await self._progress(command_id, type_, 10, P.STAGE_APPROVED)
         timeout = self._timeout(data.get("timeout_seconds"))
         try:
-            if agent is None:
+            if type_ == "yara_scan":
+                loop = asyncio.get_running_loop()
+                result = await asyncio.wait_for(loop.run_in_executor(
+                    None, self._rules.yara_scan, Path(payload["file_path"]), self._is_allowed), timeout)
+            elif agent is None:
                 result = await asyncio.wait_for(self._telemetry.snapshot(), timeout)
             else:
                 report = await asyncio.wait_for(self._orchestrator.dispatch(agent, payload), timeout)
                 result = {"report": report}
+                if type_ == "log_analysis":
+                    result.update(await self._sigma(Path(payload["file_path"])))
         except asyncio.TimeoutError:
             await self._finish(command_id, type_, success=False, error=f"timed out on device after {timeout:.0f}s")
             return
@@ -164,18 +173,37 @@ class CommandExecutor:
             payload.pop("output_dir", None)  # the server never chooses where we write
         if type_ == "system_snapshot":
             payload = {}
+        if type_ == "yara_scan":
+            if not self._rules.summary()["yara"]:
+                raise CommandRejected("no verified YARA rules on this computer")
+            payload = {"file_path": str(self._check_path(payload.get("file_path"), allow_dir=True))}
         return COMMAND_AGENTS[type_], payload
 
-    def _check_path(self, raw: Optional[str]) -> Path:
+    async def _sigma(self, path: Path) -> Dict[str, Any]:
+        """Sigma matches for a log file; never fails the log analysis itself."""
+        try:
+            matches = await asyncio.get_running_loop().run_in_executor(None, self._rules.sigma_scan, path)
+        except (OSError, RulesUnavailable) as exc:
+            logger.warning("CommandExecutor: Sigma scan of %s failed: %s", path, exc)
+            return {}
+        return {"rules_version": self._rules.version, "sigma_matches": matches} if self._rules.version else {}
+
+    def _roots(self) -> list[Path]:
+        return [Path(d).expanduser().resolve() for d in self._config.command_allowed_dirs]
+
+    def _is_allowed(self, path: Path) -> bool:
+        return any(Path(path).is_relative_to(root) for root in self._roots())
+
+    def _check_path(self, raw: Optional[str], allow_dir: bool = False) -> Path:
         if not raw:
             raise CommandRejected("file_path is required")
-        roots = [Path(d).expanduser().resolve() for d in self._config.command_allowed_dirs]
+        roots = self._roots()
         if not roots:
             raise CommandRejected("no command_allowed_dirs configured for file commands")
         path = Path(raw).expanduser().resolve()
         if not any(path.is_relative_to(root) for root in roots):
             raise CommandRejected("file_path is outside command_allowed_dirs")
-        if not path.is_file():
+        if not (path.is_file() or (allow_dir and path.is_dir())):
             raise CommandRejected("file not found")
         return path
 

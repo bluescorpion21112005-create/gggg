@@ -23,17 +23,17 @@
 <context>
     <name>CommandApprovalDialog</name>
     <message>
-        <location filename="../widgets/command_approval_dialog.py" line="31"/>
+        <location filename="../widgets/command_approval_dialog.py" line="32"/>
         <source>Server command — approval required</source>
         <translation>Команда сервера — требуется подтверждение</translation>
     </message>
     <message>
-        <location filename="../widgets/command_approval_dialog.py" line="61"/>
+        <location filename="../widgets/command_approval_dialog.py" line="62"/>
         <source>Deny</source>
         <translation>Отклонить</translation>
     </message>
     <message>
-        <location filename="../widgets/command_approval_dialog.py" line="64"/>
+        <location filename="../widgets/command_approval_dialog.py" line="65"/>
         <source>Allow once</source>
         <translation>Разрешить один раз</translation>
     </message>
@@ -688,13 +688,13 @@
     </message>
     <message>
         <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="377"/>
+        <location filename="../views/server_view.py" line="383"/>
         <source>Not sharing</source>
         <translation>Не передаётся</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="377"/>
+        <location filename="../views/server_view.py" line="383"/>
         <source>Waiting for first batch…</source>
         <translation>Ожидание первой партии…</translation>
     </message>
@@ -710,18 +710,33 @@
     </message>
     <message>
         <location filename="../views/server_view.py" line="247"/>
+        <source>Signed YARA/Sigma rules from the server; used only for scans you approve</source>
+        <translation>Подписанные правила YARA/Sigma с сервера; используются только в одобренных вами проверках</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="252"/>
         <source>Double-click to open the alert in the web app</source>
         <translation>Дважды щёлкните, чтобы открыть оповещение в веб-приложении</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="253"/>
+        <location filename="../views/server_view.py" line="258"/>
         <source>Commands from the server</source>
         <translation>Команды от сервера</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="275"/>
+        <location filename="../views/server_view.py" line="280"/>
         <source>Local audit trail</source>
         <translation>Локальный журнал аудита</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="388"/>
+        <source>Detection rules: none yet (signed bundle arrives after sign-in)</source>
+        <translation>Правила обнаружения: пока нет (подписанный набор придёт после входа)</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="390"/>
+        <source>Detection rules: v%1 — %2 YARA, %3 Sigma</source>
+        <translation>Правила обнаружения: v%1 — %2 YARA, %3 Sigma</translation>
     </message>
 </context>
 <context>

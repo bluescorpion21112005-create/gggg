@@ -55,4 +55,5 @@ BUS_AGENT_COMMAND = "agent.command"      # local command lifecycle updates for t
 BUS_AGENT_TELEMETRY = "agent.telemetry"  # local metrics sample for the UI
 BUS_AGENT_AUDIT = "agent.audit"          # appended local audit entry
 BUS_AGENT_NETFLOW = "agent.netflow"      # {"sent": n, "flows": [...]} last batch shared
+BUS_AGENT_RULES = "agent.rules"        # {"version", "yara", "sigma", "skipped"} installed rules
 BUS_INTEL_HIT = "agent.intel_hit"        # server flagged one of our connections

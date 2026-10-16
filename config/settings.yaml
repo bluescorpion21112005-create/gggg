@@ -41,3 +41,5 @@ diagnostics:
 updates:
   channel: stable                   # stable | beta (user can change it in Settings)
   public_key: ""                    # Ed25519 key that signs release manifests (set by the release build)
+rules:
+  public_key: ""                    # Ed25519 key that signs YARA/Sigma bundles (set by the release build)

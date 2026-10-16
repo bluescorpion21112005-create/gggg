@@ -110,6 +110,8 @@ class AppConfig:
     sentry_dsn: str = ""
     # Ed25519 public key (base64) that signs update manifests; pinned in the shipped settings.yaml.
     update_public_key: str = ""
+    # Ed25519 public key (base64) that signs YARA/Sigma rule bundles; pinned like update_public_key.
+    rules_public_key: str = ""
 
 
 class ConfigLoader:
@@ -253,4 +255,5 @@ class ConfigLoader:
             plugins_dir=raw.get("plugins_dir", "plugins"),
             sentry_dsn=os.getenv("CYBRIX_SENTRY_DSN") or (raw.get("diagnostics") or {}).get("sentry_dsn", "") or "",
             update_public_key=(raw.get("updates") or {}).get("public_key", "") or "",
+            rules_public_key=os.getenv("CYBRIX_RULES_PUBLIC_KEY") or (raw.get("rules") or {}).get("public_key", "") or "",
         )
