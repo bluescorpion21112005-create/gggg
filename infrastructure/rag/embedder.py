@@ -8,7 +8,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import threading
-from typing import List, Optional
+from typing import List
 
 from injector import inject
 
@@ -50,7 +50,14 @@ class Embedder:
             if self._model is not None:  # double-checked locking
                 return
             logger.info("Embedder: loading model '%s' (first use)...", self._model_name)
-            from sentence_transformers import SentenceTransformer  # import deferred
+            try:
+                from sentence_transformers import SentenceTransformer  # optional extra, import deferred
+            except ImportError as exc:
+                from core.exceptions import RagUnavailableError
+
+                raise RagUnavailableError(
+                    "Knowledge base (RAG) is not installed. Install the optional RAG components "
+                    "(requirements-rag.txt) to enable it.") from exc
             self._model = SentenceTransformer(self._model_name)
             logger.info("Embedder: model '%s' loaded OK", self._model_name)
 

@@ -8,7 +8,7 @@ class QuickActionsWidget(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        title = QLabel("Quick Actions")
+        title = QLabel(self.tr("Quick Actions"))
         title.setObjectName("sectionTitle")
         layout.addWidget(title)
 

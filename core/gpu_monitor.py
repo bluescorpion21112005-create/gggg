@@ -41,6 +41,10 @@ class GPUManager:
         self._rocm_available = self._detect_rocm()
         logger.info("GPU Manager initialised. ROCm available: %s", self._rocm_available)
 
+    @property
+    def rocm_available(self) -> bool:
+        return self._rocm_available and self._prefer_rocm
+
     def _detect_rocm(self) -> bool:
         """One-time synchronous check at startup — acceptable blocking."""
         try:

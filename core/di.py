@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-from typing import List
 
 from injector import Module, provider, singleton
 
@@ -14,7 +13,6 @@ from core.gpu_monitor import GPUManager
 from core.event_bus import EventBus, event_bus
 from domain.interfaces.ai_provider import AIProvider
 from domain.interfaces.repository import Repository
-from domain.interfaces.log_parser import LogParser
 from infrastructure.ai.provider_factory import ProviderFactory
 from infrastructure.ai.model_registry import ModelRegistry
 from infrastructure.db.sqlite_repository import SQLiteRepository
@@ -40,7 +38,8 @@ from application.use_cases.threat_hunting_use_case import ThreatHuntingUseCase
 from application.use_cases.rag_use_case import RAGUseCase
 from application.use_cases.report_use_case import ReportUseCase
 from infrastructure.rag.embedder import Embedder
-from infrastructure.rag.vector_store import VectorStore
+from infrastructure.rag.vector_store import LazyVectorStore, VectorStore
+from application.services.update_service import UpdateService
 from infrastructure.reporting.pdf_generator import PdfReportGenerator
 from infrastructure.reporting.markdown_generator import MarkdownReportGenerator
 from infrastructure.reporting.html_generator import HtmlReportGenerator
@@ -54,6 +53,20 @@ from presentation.viewmodels.malware_analysis_viewmodel import MalwareAnalysisVi
 from presentation.viewmodels.ioc_viewmodel import IOCViewModel
 from presentation.viewmodels.rag_viewmodel import RAGViewModel
 from presentation.viewmodels.report_viewmodel import ReportViewModel
+from presentation.viewmodels.connection_viewmodel import ConnectionViewModel
+
+# Server connection (REST + WebSocket)
+from domain.interfaces.backend import BackendGateway, CommandApprover, RealtimeChannel
+from infrastructure.remote.agent_settings import AgentSettings
+from infrastructure.remote.audit_log import AgentAuditLog
+from application.services.telemetry_service import TelemetryService
+from application.services.netflow_service import NetflowService
+from presentation.widgets.command_approval_dialog import QtCommandApprover
+from infrastructure.remote.token_store import TokenStore
+from infrastructure.remote.http_client import HttpBackendGateway
+from infrastructure.remote.ws_client import WebSocketRealtimeChannel
+from application.services.connection_service import ConnectionService
+from application.services.command_executor import CommandExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +91,8 @@ class CybrixModule(Module):
 
         # ── RAG components ───────────────────────────────────────────────────
         binder.bind(Embedder, to=Embedder, scope=singleton)
-        binder.bind(VectorStore, to=VectorStore, scope=singleton)
+        binder.bind(VectorStore, to=LazyVectorStore, scope=singleton)
+        binder.bind(UpdateService, to=UpdateService, scope=singleton)  # chromadb loads on first RAG use
 
         # ── Report generators ────────────────────────────────────────────────
         binder.bind(PdfReportGenerator, to=PdfReportGenerator, scope=singleton)
@@ -109,8 +123,36 @@ class CybrixModule(Module):
         binder.bind(IOCViewModel, to=IOCViewModel, scope=singleton)
         binder.bind(RAGViewModel, to=RAGViewModel, scope=singleton)
         binder.bind(ReportViewModel, to=ReportViewModel, scope=singleton)
+        binder.bind(ConnectionViewModel, to=ConnectionViewModel, scope=singleton)
+
+        # ── Server connection ─────────────────────────────────────────────────
+        binder.bind(TokenStore, to=TokenStore, scope=singleton)
+        binder.bind(RealtimeChannel, to=WebSocketRealtimeChannel, scope=singleton)
+        binder.bind(ConnectionService, to=ConnectionService, scope=singleton)
+        binder.bind(CommandExecutor, to=CommandExecutor, scope=singleton)
+        binder.bind(TelemetryService, to=TelemetryService, scope=singleton)
+        binder.bind(NetflowService, to=NetflowService, scope=singleton)
+        binder.bind(CommandApprover, to=QtCommandApprover, scope=singleton)
 
     # ── Provider methods (complex construction logic) ─────────────────────────
+
+    @provider
+    @singleton
+    def provide_agent_settings(self, config: AppConfig) -> AgentSettings:
+        return AgentSettings(config)
+
+    @provider
+    @singleton
+    def provide_agent_audit_log(self, config: AppConfig, bus: EventBus) -> AgentAuditLog:
+        return AgentAuditLog(config, bus)
+
+    @provider
+    @singleton
+    def provide_backend_gateway(
+        self, config: AppConfig, token_store: TokenStore, bus: EventBus
+    ) -> BackendGateway:
+        """REST client for the Cybrix server."""
+        return HttpBackendGateway(config, token_store, bus)
 
     @provider
     @singleton

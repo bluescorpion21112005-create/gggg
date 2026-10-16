@@ -1,7 +1,7 @@
 """IOC analysis UI with type selector, input, and report."""
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-                               QLabel, QComboBox, QLineEdit, QSplitter, QProgressBar)
-from PySide6.QtCore import Qt, Slot
+                               QLabel, QComboBox, QLineEdit, QProgressBar)
+from PySide6.QtCore import Slot
 from presentation.viewmodels.ioc_viewmodel import IOCViewModel
 from presentation.widgets.markdown_viewer import MarkdownViewer
 
@@ -20,14 +20,14 @@ class IOCView(QWidget):
         input_layout = QHBoxLayout()
         self.type_combo = QComboBox()
         self.type_combo.addItems(["IP", "Domain", "URL", "Hash", "Email", "Filename"])
-        input_layout.addWidget(QLabel("IOC Type:"))
+        input_layout.addWidget(QLabel(self.tr("IOC Type:")))
         input_layout.addWidget(self.type_combo)
 
         self.value_edit = QLineEdit()
-        self.value_edit.setPlaceholderText("Enter IOC value...")
+        self.value_edit.setPlaceholderText(self.tr("Enter IOC value..."))
         input_layout.addWidget(self.value_edit, 1)
 
-        self.analyze_btn = QPushButton("Analyze")
+        self.analyze_btn = QPushButton(self.tr("Analyze"))
         self.analyze_btn.clicked.connect(self._start_analysis)
         input_layout.addWidget(self.analyze_btn)
         layout.addLayout(input_layout)

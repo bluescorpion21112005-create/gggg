@@ -1,8 +1,7 @@
 """Log Analysis view with drag-drop, table, and report."""
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                                QLabel, QFileDialog, QSplitter, QTableWidget,
-                               QTableWidgetItem, QHeaderView, QProgressBar,
-                               QFrame)
+                               QTableWidgetItem, QHeaderView, QProgressBar)
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtGui import QDragEnterEvent, QDropEvent
 from presentation.viewmodels.log_analysis_viewmodel import LogAnalysisViewModel
@@ -23,12 +22,12 @@ class LogAnalysisView(QWidget):
 
         # Toolbar
         toolbar = QHBoxLayout()
-        self.file_label = QLabel("No file selected")
+        self.file_label = QLabel(self.tr("No file selected"))
         toolbar.addWidget(self.file_label)
-        browse_btn = QPushButton("Browse...")
+        browse_btn = QPushButton(self.tr("Browse..."))
         browse_btn.clicked.connect(self._browse_file)
         toolbar.addWidget(browse_btn)
-        self.analyze_btn = QPushButton("Analyze")
+        self.analyze_btn = QPushButton(self.tr("Analyze"))
         self.analyze_btn.clicked.connect(self._start_analysis)
         self.analyze_btn.setEnabled(False)
         toolbar.addWidget(self.analyze_btn)
@@ -47,7 +46,7 @@ class LogAnalysisView(QWidget):
         # Entries table
         self.table = QTableWidget()
         self.table.setColumnCount(4)
-        self.table.setHorizontalHeaderLabels(["Timestamp", "Level", "Source", "Message"])
+        self.table.setHorizontalHeaderLabels([self.tr("Timestamp"), self.tr("Level"), self.tr("Source"), self.tr("Message")])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         splitter.addWidget(self.table)
 

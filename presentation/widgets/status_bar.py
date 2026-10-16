@@ -6,7 +6,7 @@ class StatusBarWidget(QWidget):
         super().__init__()
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0,0,0,0)
-        self.label = QLabel("Ready")
+        self.label = QLabel(self.tr("Ready"))
         layout.addWidget(self.label)
 
     @Slot(str)

@@ -1,0 +1,6 @@
+# Optional FastAPI gateway for the A2A pentest pipeline (backend/main.py) and its standalone client
+# (cybrix_ai.py). Not part of the desktop installers.
+-r requirements.txt
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+python-dotenv>=1.0.0

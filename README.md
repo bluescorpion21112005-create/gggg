@@ -92,17 +92,41 @@ are authorised to test (lab environments, CTFs, your own systems).
 
 ## Running it
 
-### 1. Backend
+> **Python version:** use **Python 3.13** (3.10–3.13 supported). On Python 3.14 the
+> qasync event loop that drives the MVVM app (`main.py`) never runs async tasks, so the
+> window opens but buttons, analyses and the server connection silently do nothing.
+>
+> ```bash
+> uv venv --python 3.13 .venv   # or: python3.13 -m venv .venv
+> source .venv/bin/activate
+> ```
+
+### Desktop app (MVVM, connects to the Cybrix server)
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt          # add -r requirements-rag.txt for the local knowledge base (~2 GB)
+CYBRIX_CONFIG_DIR=config python main.py  # first run opens the setup wizard
+```
+
+Settings, the database and logs live in per-user OS folders (`core/paths.py`); set `CYBRIX_HOME=<dir>`
+for a portable/self-contained setup. Tests: `pip install -r requirements-dev.txt` then
+`QT_QPA_PLATFORM=offscreen python -m pytest -c tests/pytest.ini --rootdir=. tests`.
+
+**Installers:** `scripts/build.sh` (AppImage + .deb), `scripts/build_windows.ps1` (Inno Setup),
+`scripts/build_macos.sh` (DMG, signing/notarization); tags `v*` build all three in CI
+(`.github/workflows/release.yml`). See `CHANGELOG.md`.
+
+### 1. Backend (optional A2A pentest gateway)
+
+```bash
+pip install -r requirements-gateway.txt
 cp .env.example .env   # then fill in FIREWORKS_API_KEY
 uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ```
 
 Verify: `curl http://127.0.0.1:8000/api/v1/agents`
 
-### 2. Desktop client
+### 2. Standalone gateway client
 
 ```bash
 python cybrix_ai.py
@@ -123,6 +147,7 @@ See [.env.example](.env.example):
 | `OLLAMA_HOST` | Local Ollama runtime, optional secondary provider |
 | `DATABASE_URL` | SQLite path used by the desktop app |
 | `CYBRIX_BACKEND_HOST` / `CYBRIX_BACKEND_PORT` | Where the PySide6 client looks for the FastAPI backend |
+| `CYBRIX_SERVER_URL` | Cybrix Django server for the MVVM app (`main.py`): REST + WebSocket, log in under Settings → Server |
 
 `.env` is git-ignored — never commit real API keys. `.env.example` only ever holds
 placeholders.

@@ -1,0 +1,4 @@
+# Optional local knowledge base (RAG). The app runs without it; RAG pages then say it is not installed.
+-r requirements.txt
+chromadb>=0.4.0
+sentence-transformers>=2.2.0

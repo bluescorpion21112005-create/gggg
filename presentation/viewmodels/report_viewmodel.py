@@ -3,9 +3,8 @@
 Communicates exclusively through the Orchestrator — no direct repository access.
 """
 import logging
-from typing import List
 
-from PySide6.QtCore import Signal, Slot
+from PySide6.QtCore import Signal
 from qasync import asyncSlot
 from injector import inject
 

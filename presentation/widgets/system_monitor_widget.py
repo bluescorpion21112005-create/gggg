@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QProgressBar, QHBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QProgressBar
 from PySide6.QtCore import Slot
 from core.gpu_monitor import GPUMetrics
 
@@ -7,32 +7,32 @@ class SystemMonitorWidget(QWidget):
         super().__init__()
         layout = QVBoxLayout(self)
 
-        title = QLabel("System Resources")
+        title = QLabel(self.tr("System Resources"))
         title.setObjectName("sectionTitle")
         layout.addWidget(title)
 
         # CPU
-        self.cpu_label = QLabel("CPU: 0%")
+        self.cpu_label = QLabel(self.tr("CPU: 0%"))
         layout.addWidget(self.cpu_label)
 
         # RAM
-        self.ram_label = QLabel("RAM: 0%")
+        self.ram_label = QLabel(self.tr("RAM: 0%"))
         layout.addWidget(self.ram_label)
 
         # GPU
-        self.gpu_label = QLabel("GPU: N/A")
+        self.gpu_label = QLabel(self.tr("GPU: N/A"))
         layout.addWidget(self.gpu_label)
         self.gpu_util_bar = QProgressBar()
         self.gpu_util_bar.setRange(0, 100)
-        layout.addWidget(QLabel("GPU Utilization:"))
+        layout.addWidget(QLabel(self.tr("GPU Utilization:")))
         layout.addWidget(self.gpu_util_bar)
 
         self.gpu_mem_bar = QProgressBar()
         self.gpu_mem_bar.setRange(0, 100)
-        layout.addWidget(QLabel("GPU Memory:"))
+        layout.addWidget(QLabel(self.tr("GPU Memory:")))
         layout.addWidget(self.gpu_mem_bar)
 
-        self.gpu_temp_label = QLabel("Temp: N/A")
+        self.gpu_temp_label = QLabel(self.tr("Temp: N/A"))
         layout.addWidget(self.gpu_temp_label)
 
         self.gpu_model_label = QLabel("")
@@ -49,7 +49,7 @@ class SystemMonitorWidget(QWidget):
             self.gpu_mem_bar.setValue(int(mem_percent))
             self.gpu_temp_label.setText(f"Temp: {metrics.temperature:.1f}°C")
         else:
-            self.gpu_label.setText("GPU: CPU only")
+            self.gpu_label.setText(self.tr("GPU: CPU only"))
             self.gpu_util_bar.setValue(0)
             self.gpu_mem_bar.setValue(0)
-            self.gpu_temp_label.setText("Temp: N/A")
+            self.gpu_temp_label.setText(self.tr("Temp: N/A"))

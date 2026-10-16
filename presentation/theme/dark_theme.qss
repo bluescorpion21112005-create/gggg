@@ -140,3 +140,74 @@ QStatusBar {
     color: #d1d5db;
     border-top: 1px solid #2a3b4c;
 }
+/* ── Server page, toasts and approval dialog ─────────────────────────────── */
+QLabel#pageTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #e0e6ed;
+}
+QGroupBox#card {
+    background-color: #1a2733;
+    border: 1px solid #2a3b4c;
+    border-radius: 8px;
+    padding: 12px 10px 10px 10px;
+}
+QLabel#mutedText {
+    color: #8b98a5;
+    font-size: 11px;
+}
+QLabel#errorText, QLabel#approvalCountdown {
+    color: #ef4444;
+}
+QLabel#metricValue {
+    color: #2d9cdb;
+    font-weight: bold;
+}
+QPushButton#primaryButton {
+    background-color: #0078d4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+}
+QPushButton#primaryButton:hover { background-color: #1a8ae0; }
+QPushButton#primaryButton:disabled { background-color: #2a3b4c; color: #8b98a5; }
+QPushButton#dangerButton {
+    background-color: #3a1d24;
+    color: #fca5a5;
+    border: 1px solid #7f1d1d;
+    border-radius: 4px;
+    padding: 6px 14px;
+}
+QTableView {
+    background-color: #15202b;
+    alternate-background-color: #1a2733;
+    gridline-color: #2a3b4c;
+    color: #d1d5db;
+    border: 1px solid #2a3b4c;
+    selection-background-color: #0078d4;
+}
+QHeaderView::section {
+    background-color: #1a2733;
+    color: #8b98a5;
+    border: none;
+    border-bottom: 1px solid #2a3b4c;
+    padding: 4px 8px;
+}
+QDialog#approvalDialog {
+    background-color: #0f1923;
+}
+QFrame#toast {
+    background-color: #1a2733;
+    border: 1px solid #2a3b4c;
+    border-left: 4px solid #2d9cdb;
+    border-radius: 6px;
+}
+QFrame#toast[level="success"] { border-left-color: #22c55e; }
+QFrame#toast[level="warning"] { border-left-color: #f59e0b; }
+QFrame#toast[level="error"]   { border-left-color: #ef4444; }
+QLabel#toastTitle { color: #e0e6ed; font-weight: bold; }
+QLabel#toastBody  { color: #b6c2cf; }
+QGroupBox#card QLabel, QGroupBox#card QCheckBox {
+    background: transparent;
+}

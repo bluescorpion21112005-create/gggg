@@ -2,7 +2,7 @@
 import os
 import logging
 from injector import inject
-from typing import List, Dict, AsyncGenerator
+from typing import Dict, AsyncGenerator
 from domain.interfaces.ai_provider import AIProvider
 from infrastructure.rag.document_loader import DocumentLoader
 from infrastructure.rag.chunker import Chunker

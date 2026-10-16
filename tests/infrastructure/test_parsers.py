@@ -1,10 +1,8 @@
 """Integration tests for log parsers with sample data."""
-import pytest
 import tempfile
 import os
 from infrastructure.parsers.syslog_parser import SyslogParser
 from infrastructure.parsers.apache_parser import ApacheParser
-from infrastructure.parsers.evtx_parser import EVTXParser  # will test with real .evtx? skip if no file
 
 def test_syslog_parser():
     parser = SyslogParser()

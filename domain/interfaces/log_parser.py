@@ -1,7 +1,6 @@
 """Interface for log parsers."""
 from abc import ABC, abstractmethod
 from typing import Iterator
-from domain.entities import AnalysisResult
 
 
 class LogParser(ABC):

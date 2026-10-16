@@ -1,8 +1,7 @@
 """Chat interface similar to ChatGPT."""
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QScrollArea, QTextEdit,
-                               QPushButton, QHBoxLayout, QLabel, QFrame)
+                               QPushButton, QHBoxLayout)
 from PySide6.QtCore import Qt, Signal, Slot
-from PySide6.QtGui import QFont
 from presentation.viewmodels.chat_viewmodel import ChatViewModel
 from presentation.widgets.chat_bubble import ChatBubble
 
@@ -34,11 +33,11 @@ class ChatView(QWidget):
         # Input area
         input_layout = QHBoxLayout()
         self.message_input = QTextEdit()
-        self.message_input.setPlaceholderText("Type your cybersecurity question...")
+        self.message_input.setPlaceholderText(self.tr("Type your cybersecurity question..."))
         self.message_input.setMaximumHeight(100)
         input_layout.addWidget(self.message_input)
 
-        self.send_button = QPushButton("Send")
+        self.send_button = QPushButton(self.tr("Send"))
         self.send_button.setObjectName("sendButton")
         self.send_button.clicked.connect(self._send_message)
         input_layout.addWidget(self.send_button)
@@ -77,6 +76,6 @@ class ChatView(QWidget):
     def _set_busy_state(self, busy: bool):
         self.send_button.setEnabled(not busy)
         if busy:
-            self.message_input.setPlaceholderText("Cybrix is thinking...")
+            self.message_input.setPlaceholderText(self.tr("Cybrix is thinking..."))
         else:
-            self.message_input.setPlaceholderText("Type your cybersecurity question...")
+            self.message_input.setPlaceholderText(self.tr("Type your cybersecurity question..."))
