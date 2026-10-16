@@ -19,6 +19,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   widget text), complete light theme.
 - **Per-user OS directories** for settings, database, logs and caches (`core/paths.py`, `CYBRIX_HOME`).
 - Dashboard severity chart from real analyses.
+- Suspicious-connection hits link to their server-side alert (double-click opens it in the browser).
 - CI: ruff + pytest on Linux, Windows and macOS.
 
 ### Changed

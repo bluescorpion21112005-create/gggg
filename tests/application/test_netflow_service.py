@@ -69,3 +69,10 @@ async def test_with_consent_sends_batch_and_surfaces_hits(tmp_path):
     bus.emit("backend.notification", {"kind": "intel_hit", "hit": {"dst_ip": "185.215.113.50", "score": 90}})
     assert bus.of("agent.intel_hit") == [{"dst_ip": "185.215.113.50", "score": 90}]
     assert any(e["event"] == "intel_hit" for e in svc._audit.recent())
+
+
+def test_hit_carries_the_server_alert_link(tmp_path):
+    svc, _, bus = make_service(tmp_path, consent=True)
+    bus.emit("backend.notification", {"kind": "intel_hit", "url": "/alerts/7/",
+                                      "hit": {"dst_ip": "185.215.113.50", "score": 90}})
+    assert bus.of("agent.intel_hit") == [{"dst_ip": "185.215.113.50", "score": 90, "url": "/alerts/7/"}]

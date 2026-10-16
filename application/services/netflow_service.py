@@ -147,7 +147,9 @@ class NetflowService:
 
     def _on_notification(self, data: Dict[str, Any]) -> None:
         if (data or {}).get("kind") == "intel_hit":
-            hit = data.get("hit") or {}
+            hit = dict(data.get("hit") or {})
+            if data.get("url"):
+                hit["url"] = data["url"]           # the server-side alert for this hit
             self._audit.record("intel_hit", dst_ip=hit.get("dst_ip"), process=hit.get("process"),
                                score=hit.get("score"), sources=hit.get("sources"))
             self._bus.emit(P.BUS_INTEL_HIT, hit)

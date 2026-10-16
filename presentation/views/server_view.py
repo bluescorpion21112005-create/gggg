@@ -4,8 +4,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict, List
 
-from PySide6.QtCore import QT_TRANSLATE_NOOP, QAbstractTableModel, QModelIndex, Qt, Slot
-from PySide6.QtGui import QColor
+from PySide6.QtCore import QT_TRANSLATE_NOOP, QAbstractTableModel, QModelIndex, Qt, QUrl, Slot
+from PySide6.QtGui import QColor, QDesktopServices
 from PySide6.QtWidgets import (
     QCheckBox, QComboBox, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout, QHeaderView, QLabel,
     QLineEdit, QListWidget, QPlainTextEdit, QPushButton, QScrollArea, QSizePolicy, QTableView, QVBoxLayout,
@@ -240,6 +240,8 @@ class ServerView(QWidget):
         layout.addWidget(self.netflow_status)
         self.hits_list = QListWidget()
         self.hits_list.setMinimumHeight(110)
+        self.hits_list.setToolTip(self.tr("Double-click to open the alert in the web app"))
+        self.hits_list.itemDoubleClicked.connect(self._open_hit_alert)
         layout.addWidget(self.hits_list)
         return box
 
@@ -373,6 +375,14 @@ class ServerView(QWidget):
         self.hits_list.insertItem(0, f"{datetime.now():%H:%M:%S}  {hit.get('process') or '?'} → "
                                      f"{hit.get('dst_ip')}:{hit.get('dst_port')}  score {hit.get('score')}  "
                                      f"({', '.join(hit.get('sources') or [])})")
+        url = str(hit.get("url") or "")
+        if url.startswith("/alerts/"):        # only server-relative alert links are opened
+            self.hits_list.item(0).setData(Qt.UserRole, url)
+
+    def _open_hit_alert(self, item) -> None:
+        url = item.data(Qt.UserRole)
+        if url:
+            QDesktopServices.openUrl(QUrl(self._vm.server_url.rstrip("/") + url))
 
     @Slot(dict)
     def _append_audit(self, entry: dict) -> None:

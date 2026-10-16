@@ -3,18 +3,18 @@
 <context>
     <name>ChatView</name>
     <message>
-        <location filename="../views/chat_view.py" line="37" />
-        <location filename="../views/chat_view.py" line="82" />
+        <location filename="../views/chat_view.py" line="36" />
+        <location filename="../views/chat_view.py" line="81" />
         <source>Type your cybersecurity question...</source>
         <translation>Kiberxavfsizlik savolingizni yozing...</translation>
     </message>
     <message>
-        <location filename="../views/chat_view.py" line="41" />
+        <location filename="../views/chat_view.py" line="40" />
         <source>Send</source>
         <translation>Yuborish</translation>
     </message>
     <message>
-        <location filename="../views/chat_view.py" line="80" />
+        <location filename="../views/chat_view.py" line="79" />
         <source>Cybrix is thinking...</source>
         <translation>Cybrix o‘ylamoqda...</translation>
     </message>
@@ -137,37 +137,37 @@
 <context>
     <name>LogAnalysisView</name>
     <message>
-        <location filename="../views/log_analysis_view.py" line="26" />
+        <location filename="../views/log_analysis_view.py" line="25" />
         <source>No file selected</source>
         <translation>Fayl tanlanmagan</translation>
     </message>
     <message>
-        <location filename="../views/log_analysis_view.py" line="28" />
+        <location filename="../views/log_analysis_view.py" line="27" />
         <source>Browse...</source>
         <translation>Tanlash...</translation>
     </message>
     <message>
-        <location filename="../views/log_analysis_view.py" line="31" />
+        <location filename="../views/log_analysis_view.py" line="30" />
         <source>Analyze</source>
         <translation>Tahlil qilish</translation>
     </message>
     <message>
-        <location filename="../views/log_analysis_view.py" line="50" />
+        <location filename="../views/log_analysis_view.py" line="49" />
         <source>Timestamp</source>
         <translation>Vaqt belgisi</translation>
     </message>
     <message>
-        <location filename="../views/log_analysis_view.py" line="50" />
+        <location filename="../views/log_analysis_view.py" line="49" />
         <source>Level</source>
         <translation>Daraja</translation>
     </message>
     <message>
-        <location filename="../views/log_analysis_view.py" line="50" />
+        <location filename="../views/log_analysis_view.py" line="49" />
         <source>Source</source>
         <translation>Manba</translation>
     </message>
     <message>
-        <location filename="../views/log_analysis_view.py" line="50" />
+        <location filename="../views/log_analysis_view.py" line="49" />
         <source>Message</source>
         <translation>Xabar</translation>
     </message>
@@ -343,7 +343,7 @@
 <context>
     <name>RecentAnalysesWidget</name>
     <message>
-        <location filename="../widgets/recent_analyses_widget.py" line="10" />
+        <location filename="../widgets/recent_analyses_widget.py" line="9" />
         <source>Recent Analyses</source>
         <translation>So‘nggi tahlillar</translation>
     </message>
@@ -351,47 +351,47 @@
 <context>
     <name>ReportView</name>
     <message>
-        <location filename="../views/report_view.py" line="21" />
+        <location filename="../views/report_view.py" line="20" />
         <source>Select Analysis</source>
         <translation>Tahlilni tanlang</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="24" />
+        <location filename="../views/report_view.py" line="23" />
         <source>Analysis:</source>
         <translation>Tahlil:</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="29" />
+        <location filename="../views/report_view.py" line="28" />
         <source>Output Format</source>
         <translation>Chiqish formati</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="33" />
+        <location filename="../views/report_view.py" line="32" />
         <source>Format:</source>
         <translation>Format:</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="40" />
+        <location filename="../views/report_view.py" line="39" />
         <source>./reports</source>
         <translation>./reports</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="41" />
+        <location filename="../views/report_view.py" line="40" />
         <source>Output Directory:</source>
         <translation>Saqlash papkasi:</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="43" />
+        <location filename="../views/report_view.py" line="42" />
         <source>Browse...</source>
         <translation>Tanlash...</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="50" />
+        <location filename="../views/report_view.py" line="49" />
         <source>Additional analyst notes (will be expanded by AI)...</source>
         <translation>Tahlilchining qo‘shimcha izohlari (AI kengaytiradi)...</translation>
     </message>
     <message>
-        <location filename="../views/report_view.py" line="55" />
+        <location filename="../views/report_view.py" line="54" />
         <source>Generate Report</source>
         <translation>Hisobot yaratish</translation>
     </message>
@@ -672,23 +672,28 @@
     </message>
     <message>
         <location filename="../views/server_view.py" line="238" />
-        <location filename="../views/server_view.py" line="369" />
+        <location filename="../views/server_view.py" line="371" />
         <source>Not sharing</source>
         <translation>Ulashilmayapti</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="238" />
-        <location filename="../views/server_view.py" line="369" />
+        <location filename="../views/server_view.py" line="371" />
         <source>Waiting for first batch…</source>
         <translation>Birinchi to‘plam kutilmoqda…</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="247" />
+        <location filename="../views/server_view.py" line="243" />
+        <source>Double-click to open the alert in the web app</source>
+        <translation>Alertni veb-ilovada ochish uchun ikki marta bosing</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="249" />
         <source>Commands from the server</source>
         <translation>Serverdan kelgan buyruqlar</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="269" />
+        <location filename="../views/server_view.py" line="271" />
         <source>Local audit trail</source>
         <translation>Lokal audit jurnali</translation>
     </message>
