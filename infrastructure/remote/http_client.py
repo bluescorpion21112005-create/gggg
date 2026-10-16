@@ -88,11 +88,13 @@ class HttpBackendGateway(BackendGateway):
     # ── API ───────────────────────────────────────────────────────────────────
 
     async def login(self, username: str, password: str, device_name: str,
-                    platform: str = "", app_version: str = "", install_id: str = "") -> Dict[str, Any]:
-        data = await self._request("POST", "/auth/login/", auth=False, json={
-            "username": username, "password": password, "device_name": device_name,
-            "platform": platform, "app_version": app_version, "install_id": install_id,
-        })
+                    platform: str = "", app_version: str = "", install_id: str = "",
+                    otp: str = "") -> Dict[str, Any]:
+        payload = {"username": username, "password": password, "device_name": device_name,
+                   "platform": platform, "app_version": app_version, "install_id": install_id}
+        if otp:
+            payload["otp"] = otp
+        data = await self._request("POST", "/auth/login/", auth=False, json=payload)
         self._tokens.save(data["token"], data["device_id"], data.get("token_expires_at"))
         return data
 

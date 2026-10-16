@@ -622,119 +622,134 @@
         <translation>parol</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="162"/>
+        <location filename="../views/server_view.py" line="165"/>
+        <source>Two-factor code:</source>
+        <translation>Ikki bosqichli kod:</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="166"/>
         <source>Log in</source>
         <translation>Kirish</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="167"/>
+        <location filename="../views/server_view.py" line="171"/>
         <source>Username:</source>
         <translation>Foydalanuvchi:</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="168"/>
+        <location filename="../views/server_view.py" line="172"/>
         <source>Password:</source>
         <translation>Parol:</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="175"/>
+        <location filename="../views/server_view.py" line="182"/>
         <source>Log out this device</source>
         <translation>Bu qurilmadan chiqish</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="182"/>
+        <location filename="../views/server_view.py" line="189"/>
         <source>Shared with the server</source>
         <translation>Server bilan ulashilmoqda</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="185"/>
+        <location filename="../views/server_view.py" line="192"/>
         <source>Exactly these values are sent every few seconds while connected. Nothing else leaves this computer unless you approve a command.</source>
         <translation>Ulangan paytda har bir necha soniyada aynan shu qiymatlar yuboriladi. Siz buyruqni tasdiqlamaguningizcha boshqa hech narsa bu kompyuterdan chiqmaydi.</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="201"/>
+        <location filename="../views/server_view.py" line="208"/>
         <source>Share telemetry with the server</source>
         <translation>Telemetriyani server bilan ulashish</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="207"/>
+        <location filename="../views/server_view.py" line="214"/>
         <source>Server scan</source>
         <translation>Server skani</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="214"/>
+        <location filename="../views/server_view.py" line="221"/>
         <source>Text, URL or payload to analyse on the server…</source>
         <translation>Serverda tahlil qilinadigan matn, URL yoki payload…</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="217"/>
+        <location filename="../views/server_view.py" line="224"/>
         <source>Run on server</source>
         <translation>Serverda ishga tushirish</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="226"/>
+        <location filename="../views/server_view.py" line="233"/>
         <source>Suspicious connections</source>
         <translation>Shubhali ulanishlar</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="229"/>
+        <location filename="../views/server_view.py" line="236"/>
         <source>When enabled, this computer&apos;s open connections (remote IP/port, local port and process name — never contents) are checked against threat-intelligence feeds on the server.</source>
         <translation>Yoqilganda bu kompyuterning ochiq ulanishlari (masofaviy IP/port, lokal port va jarayon nomi — hech qachon mazmuni emas) serverdagi tahdid razvedkasi manbalari bilan tekshiriladi.</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="235"/>
+        <location filename="../views/server_view.py" line="242"/>
         <source>Share network connections for threat detection</source>
         <translation>Tahdidlarni aniqlash uchun tarmoq ulanishlarini ulashish</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="383"/>
+        <location filename="../views/server_view.py" line="245"/>
+        <location filename="../views/server_view.py" line="403"/>
         <source>Not sharing</source>
         <translation>Ulashilmayapti</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="383"/>
+        <location filename="../views/server_view.py" line="245"/>
+        <location filename="../views/server_view.py" line="403"/>
         <source>Waiting for first batch…</source>
         <translation>Birinchi to‘plam kutilmoqda…</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="241"/>
+        <location filename="../views/server_view.py" line="248"/>
         <source>Check running programs against known malware hashes</source>
         <translation>Ishlayotgan dasturlarni ma&apos;lum zararli dastur xeshlari bilan tekshirish</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="242"/>
+        <location filename="../views/server_view.py" line="249"/>
         <source>Sends only the SHA-256 and file name of each running program, never the file</source>
         <translation>Har bir ishlayotgan dasturning faqat SHA-256 va fayl nomi yuboriladi, faylning o&apos;zi hech qachon</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="247"/>
+        <location filename="../views/server_view.py" line="254"/>
         <source>Signed YARA/Sigma rules from the server; used only for scans you approve</source>
         <translation>Serverdan kelgan imzolangan YARA/Sigma qoidalari; faqat siz tasdiqlagan skanlarda ishlatiladi</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="252"/>
+        <location filename="../views/server_view.py" line="259"/>
         <source>Double-click to open the alert in the web app</source>
         <translation>Alertni veb-ilovada ochish uchun ikki marta bosing</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="258"/>
+        <location filename="../views/server_view.py" line="265"/>
         <source>Commands from the server</source>
         <translation>Serverdan kelgan buyruqlar</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="280"/>
+        <location filename="../views/server_view.py" line="287"/>
         <source>Local audit trail</source>
         <translation>Lokal audit jurnali</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="388"/>
-        <source>Detection rules: none yet (signed bundle arrives after sign-in)</source>
-        <translation>Aniqlash qoidalari: hali yo'q (imzolangan to'plam tizimga kirgandan keyin keladi)</translation>
+        <location filename="../views/server_view.py" line="339"/>
+        <source>That code is not valid. Try again.</source>
+        <translation>Kod noto'g'ri. Qayta urinib ko'ring.</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="390"/>
+        <location filename="../views/server_view.py" line="340"/>
+        <source>Enter the code from your authenticator app (or a backup code).</source>
+        <translation>Autentifikator ilovangizdagi kodni (yoki zaxira kodni) kiriting.</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="408"/>
+        <source>Detection rules: none yet (signed bundle arrives after sign-in)</source>
+        <translation>Aniqlash qoidalari: hali yo&apos;q (imzolangan to&apos;plam tizimga kirgandan keyin keladi)</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="410"/>
         <source>Detection rules: v%1 — %2 YARA, %3 Sigma</source>
         <translation>Aniqlash qoidalari: v%1 — %2 YARA, %3 Sigma</translation>
     </message>

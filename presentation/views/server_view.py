@@ -159,6 +159,10 @@ class ServerView(QWidget):
         self.password = QLineEdit()
         self.password.setEchoMode(QLineEdit.Password)
         self.password.setPlaceholderText(self.tr("password"))
+        self.otp = QLineEdit()
+        self.otp.setPlaceholderText("123456")
+        self.otp.setMaxLength(32)
+        self.otp_label = QLabel(self.tr("Two-factor code:"))
         self.login_btn = QPushButton(self.tr("Log in"))
         self.login_btn.setObjectName("primaryButton")
         self.login_error = QLabel()
@@ -166,6 +170,9 @@ class ServerView(QWidget):
         self.login_error.setWordWrap(True)
         form.addRow(self.tr("Username:"), self.username)
         form.addRow(self.tr("Password:"), self.password)
+        form.addRow(self.otp_label, self.otp)
+        self.otp_label.hide()
+        self.otp.hide()                       # shown only when the account has 2FA
         form.addRow(self.login_btn)
         form.addRow(self.login_error)
         layout.addWidget(self.login_box, 2)
@@ -295,6 +302,8 @@ class ServerView(QWidget):
         vm = self._vm
         self.login_btn.clicked.connect(self._login)
         self.password.returnPressed.connect(self._login)
+        self.otp.returnPressed.connect(self._login)
+        vm.otp_required.connect(self._ask_otp)
         self.logout_btn.clicked.connect(vm.logout)
         self.share_box.toggled.connect(vm.set_sharing)
         self.scan_btn.clicked.connect(self._start_scan)
@@ -320,7 +329,15 @@ class ServerView(QWidget):
 
     def _login(self) -> None:
         self.login_error.clear()
-        self._vm.login(self.username.text(), self.password.text())
+        self._vm.login(self.username.text(), self.password.text(), self.otp.text())
+
+    def _ask_otp(self, reason: str) -> None:
+        self.otp_label.show()
+        self.otp.show()
+        self.otp.clear()
+        self.otp.setFocus()
+        self.login_error.setText(self.tr("That code is not valid. Try again.") if reason == "invalid" else
+                                 self.tr("Enter the code from your authenticator app (or a backup code)."))
 
     def _start_scan(self) -> None:
         self._vm.start_scan(self.scan_tool.currentText(), self.scan_input.toPlainText())
@@ -342,6 +359,9 @@ class ServerView(QWidget):
         self.session_box.setVisible(logged_in)
         if logged_in:
             self.password.clear()
+            self.otp.clear()
+            self.otp_label.hide()
+            self.otp.hide()
         else:
             self.device_label.setText("–")
             self.expiry_label.setText("–")

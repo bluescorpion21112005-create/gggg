@@ -19,6 +19,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   widget text), complete light theme.
 - **Per-user OS directories** for settings, database, logs and caches (`core/paths.py`, `CYBRIX_HOME`).
 - Dashboard severity chart from real analyses.
+- **Two-factor sign-in**: when the account has 2FA, the Server page asks for the authenticator (or backup)
+  code; a team that requires 2FA gets a clear message to enable it in the web app first.
 - **Signed detection rules**: YARA/Sigma bundles are fetched from the server, verified against the pinned
   `rules.public_key`, never rolled back, and re-verified at start. New approved `yara_scan` command (file or
   folder inside `command_allowed_dirs`); `log_analysis` also reports Sigma matches. Built-in Sigma evaluator

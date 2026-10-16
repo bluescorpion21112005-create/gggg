@@ -66,6 +66,25 @@ async def test_401_clears_token_and_emits_auth_lost():
     assert bus.of("backend.auth_lost") == [{"reason": "Invalid or revoked device token."}]
 
 
+async def test_otp_is_sent_only_when_given_and_error_code_is_kept():
+    bodies = []
+
+    def handler(request):
+        bodies.append(json.loads(request.content))
+        if "otp" not in bodies[-1]:
+            return httpx.Response(401, json={"success": False, "message": "Two-factor code required", "data": {},
+                                             "errors": {"code": "otp_required"}, "metadata": {}})
+        return ok({"device_id": "dev-2", "token": "tok-2"}, 201)
+
+    gw, store, bus = make_gateway(handler)
+    with pytest.raises(AuthenticationError) as info:
+        await gw.login("alice", "pw", "laptop")
+    assert info.value.errors == {"code": "otp_required"} and bus.of("backend.auth_lost") == []
+    await gw.login("alice", "pw", "laptop", otp="123456")
+    assert bodies[-1]["otp"] == "123456" and store.token == "tok-2"
+    await gw.close()
+
+
 async def test_wrong_password_does_not_emit_auth_lost():
     gw, _, bus = make_gateway(lambda r: fail("Invalid credentials", 401))
     with pytest.raises(AuthenticationError):

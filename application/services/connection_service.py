@@ -61,14 +61,16 @@ class ConnectionService:
     def is_logged_in(self) -> bool:
         return self._gateway.has_token()
 
-    async def login(self, username: str, password: str) -> Dict[str, Any]:
+    async def login(self, username: str, password: str, otp: str = "") -> Dict[str, Any]:
         await self._realtime.stop()  # never keep a socket authenticated as a previous device
+        extra = {"otp": otp} if otp else {}   # only accounts with two-factor authentication need it
         data = await self._gateway.login(
             username, password,
             device_name=socket.gethostname() or "desktop",
             platform=f"{platform.system()} {platform.release()}".strip(),
             app_version=self._config.version,
             install_id=self._settings.install_id,
+            **extra,
         )
         self._audit.record("login", server=self._config.backend.base_url, device_id=data.get("device_id"),
                            token_expires_at=data.get("token_expires_at"))

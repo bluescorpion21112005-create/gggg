@@ -1,6 +1,6 @@
 from unittest.mock import AsyncMock, MagicMock
 
-from core.exceptions import AuthenticationError, InsecureTransportError
+from core.exceptions import AuthenticationError, BackendError, InsecureTransportError
 from domain.interfaces.backend import ConnectionState
 from infrastructure.remote.agent_settings import AgentSettings
 from infrastructure.remote.audit_log import AgentAuditLog
@@ -62,13 +62,30 @@ async def test_login_success_and_failure(qapp, qtbot, tmp_path):
     vm, service, _, _, _ = make_vm(tmp_path)
     with qtbot.waitSignal(vm.logged_in_changed) as sig:
         await vm.login.__wrapped__(vm, "alice", "pw")  # qasync asyncSlot keeps the coroutine here
-    service.login.assert_awaited_once_with("alice", "pw")
+    service.login.assert_awaited_once_with("alice", "pw", "")
     assert sig.args == [True]
 
     service.login = AsyncMock(side_effect=AuthenticationError("nope", 401))
     with qtbot.waitSignal(vm.login_failed) as sig:
         await vm.login.__wrapped__(vm, "alice", "bad")
     assert "Invalid" in sig.args[0]
+
+    service.login = AsyncMock(side_effect=AuthenticationError("Two-factor code required", 401,
+                                                              errors={"code": "otp_required"}))
+    with qtbot.waitSignal(vm.otp_required) as sig:
+        await vm.login.__wrapped__(vm, "alice", "pw")
+    assert sig.args == ["required"]
+    service.login = AsyncMock(side_effect=AuthenticationError("Invalid two-factor code", 401,
+                                                              errors={"code": "otp_invalid"}))
+    with qtbot.waitSignal(vm.otp_required) as sig:
+        await vm.login.__wrapped__(vm, "alice", "pw", " 123456 ")
+    assert sig.args == ["invalid"]
+    service.login.assert_awaited_once_with("alice", "pw", "123456")
+    service.login = AsyncMock(side_effect=BackendError("Your team requires two-factor authentication.", 403,
+                                                       errors={"code": "2fa_setup_required"}))
+    with qtbot.waitSignal(vm.login_failed) as sig:
+        await vm.login.__wrapped__(vm, "alice", "pw")
+    assert sig.args == ["Your team requires two-factor authentication."]
 
     service.login = AsyncMock(side_effect=InsecureTransportError("Refusing plain HTTP"))
     with qtbot.waitSignal(vm.login_failed) as sig:

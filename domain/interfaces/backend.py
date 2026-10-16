@@ -25,7 +25,8 @@ class BackendGateway(ABC):
 
     @abstractmethod
     async def login(self, username: str, password: str, device_name: str,
-                    platform: str = "", app_version: str = "", install_id: str = "") -> Dict[str, Any]:
+                    platform: str = "", app_version: str = "", install_id: str = "",
+                    otp: str = "") -> Dict[str, Any]:
         """Return {"device_id", "token"}; the token is also persisted by the implementation."""
         ...
 

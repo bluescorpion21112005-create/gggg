@@ -622,119 +622,134 @@
         <translation>пароль</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="162"/>
+        <location filename="../views/server_view.py" line="165"/>
+        <source>Two-factor code:</source>
+        <translation>Код 2FA:</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="166"/>
         <source>Log in</source>
         <translation>Войти</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="167"/>
+        <location filename="../views/server_view.py" line="171"/>
         <source>Username:</source>
         <translation>Пользователь:</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="168"/>
+        <location filename="../views/server_view.py" line="172"/>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="175"/>
+        <location filename="../views/server_view.py" line="182"/>
         <source>Log out this device</source>
         <translation>Выйти на этом устройстве</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="182"/>
+        <location filename="../views/server_view.py" line="189"/>
         <source>Shared with the server</source>
         <translation>Передаётся серверу</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="185"/>
+        <location filename="../views/server_view.py" line="192"/>
         <source>Exactly these values are sent every few seconds while connected. Nothing else leaves this computer unless you approve a command.</source>
         <translation>Пока есть подключение, каждые несколько секунд отправляются ровно эти значения. Больше ничего не покидает компьютер, пока вы не одобрите команду.</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="201"/>
+        <location filename="../views/server_view.py" line="208"/>
         <source>Share telemetry with the server</source>
         <translation>Передавать телеметрию серверу</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="207"/>
+        <location filename="../views/server_view.py" line="214"/>
         <source>Server scan</source>
         <translation>Сканирование на сервере</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="214"/>
+        <location filename="../views/server_view.py" line="221"/>
         <source>Text, URL or payload to analyse on the server…</source>
         <translation>Текст, URL или payload для анализа на сервере…</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="217"/>
+        <location filename="../views/server_view.py" line="224"/>
         <source>Run on server</source>
         <translation>Запустить на сервере</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="226"/>
+        <location filename="../views/server_view.py" line="233"/>
         <source>Suspicious connections</source>
         <translation>Подозрительные подключения</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="229"/>
+        <location filename="../views/server_view.py" line="236"/>
         <source>When enabled, this computer&apos;s open connections (remote IP/port, local port and process name — never contents) are checked against threat-intelligence feeds on the server.</source>
         <translation>Если включено, открытые подключения компьютера (удалённый IP/порт, локальный порт и имя процесса — никогда не содержимое) проверяются по базам угроз на сервере.</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="235"/>
+        <location filename="../views/server_view.py" line="242"/>
         <source>Share network connections for threat detection</source>
         <translation>Передавать сетевые подключения для обнаружения угроз</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="383"/>
+        <location filename="../views/server_view.py" line="245"/>
+        <location filename="../views/server_view.py" line="403"/>
         <source>Not sharing</source>
         <translation>Не передаётся</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="238"/>
-        <location filename="../views/server_view.py" line="383"/>
+        <location filename="../views/server_view.py" line="245"/>
+        <location filename="../views/server_view.py" line="403"/>
         <source>Waiting for first batch…</source>
         <translation>Ожидание первой партии…</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="241"/>
+        <location filename="../views/server_view.py" line="248"/>
         <source>Check running programs against known malware hashes</source>
         <translation>Проверять запущенные программы по хешам известного вредоносного ПО</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="242"/>
+        <location filename="../views/server_view.py" line="249"/>
         <source>Sends only the SHA-256 and file name of each running program, never the file</source>
         <translation>Отправляются только SHA-256 и имя файла каждой запущенной программы, но не сам файл</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="247"/>
+        <location filename="../views/server_view.py" line="254"/>
         <source>Signed YARA/Sigma rules from the server; used only for scans you approve</source>
         <translation>Подписанные правила YARA/Sigma с сервера; используются только в одобренных вами проверках</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="252"/>
+        <location filename="../views/server_view.py" line="259"/>
         <source>Double-click to open the alert in the web app</source>
         <translation>Дважды щёлкните, чтобы открыть оповещение в веб-приложении</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="258"/>
+        <location filename="../views/server_view.py" line="265"/>
         <source>Commands from the server</source>
         <translation>Команды от сервера</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="280"/>
+        <location filename="../views/server_view.py" line="287"/>
         <source>Local audit trail</source>
         <translation>Локальный журнал аудита</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="388"/>
+        <location filename="../views/server_view.py" line="339"/>
+        <source>That code is not valid. Try again.</source>
+        <translation>Неверный код. Попробуйте ещё раз.</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="340"/>
+        <source>Enter the code from your authenticator app (or a backup code).</source>
+        <translation>Введите код из приложения-аутентификатора (или резервный код).</translation>
+    </message>
+    <message>
+        <location filename="../views/server_view.py" line="408"/>
         <source>Detection rules: none yet (signed bundle arrives after sign-in)</source>
         <translation>Правила обнаружения: пока нет (подписанный набор придёт после входа)</translation>
     </message>
     <message>
-        <location filename="../views/server_view.py" line="390"/>
+        <location filename="../views/server_view.py" line="410"/>
         <source>Detection rules: v%1 — %2 YARA, %3 Sigma</source>
         <translation>Правила обнаружения: v%1 — %2 YARA, %3 Sigma</translation>
     </message>

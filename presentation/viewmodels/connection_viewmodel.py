@@ -27,6 +27,7 @@ class ConnectionViewModel(BaseViewModel):
     state_changed = Signal(str)          # disconnected / connecting / connected / auth_failed / upgrade_required
     logged_in_changed = Signal(bool)
     login_failed = Signal(str)
+    otp_required = Signal(str)           # "required" | "invalid": the account has 2FA, ask for the code
     session_changed = Signal(dict)       # auth.ok data (device_id, token_expires_at, …)
     notification = Signal(dict)          # {title, message, level}
     scan_progress = Signal(dict)
@@ -154,23 +155,28 @@ class ConnectionViewModel(BaseViewModel):
 
     # ── Commands ─────────────────────────────────────────────────────────────
 
-    @asyncSlot(str, str)
-    async def login(self, username: str, password: str):
+    @asyncSlot(str, str, str)
+    async def login(self, username: str, password: str, otp: str = ""):
         if not username.strip() or not password:
             self.login_failed.emit("Username and password are required.")
             return
         self.is_busy = True
         try:
-            await self._service.login(username.strip(), password)
+            await self._service.login(username.strip(), password, otp.strip())
             self.logged_in_changed.emit(True)
             self.status_message.emit(f"Logged in to {self.server_url}")
-        except AuthenticationError:
-            self.login_failed.emit("Invalid username or password.")
+        except AuthenticationError as exc:
+            code = exc.errors.get("code") if isinstance(exc.errors, dict) else None
+            if code in ("otp_required", "otp_invalid"):
+                self.otp_required.emit(code.removeprefix("otp_"))
+            else:
+                self.login_failed.emit("Invalid username or password.")
         except InsecureTransportError as exc:
             self.login_failed.emit(str(exc))
         except BackendError as exc:
             logger.warning("ConnectionViewModel: login failed: %s", exc)
-            self.login_failed.emit(f"Login failed: {exc}")
+            code = exc.errors.get("code") if isinstance(exc.errors, dict) else None
+            self.login_failed.emit(str(exc) if code == "2fa_setup_required" else f"Login failed: {exc}")
         finally:
             self.is_busy = False
 
