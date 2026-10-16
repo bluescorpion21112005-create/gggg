@@ -62,6 +62,10 @@ class BackendGateway(ABC):
         """POST /feedback/ — optional for gateways that do not support it."""
         raise NotImplementedError
 
+    async def get_rules(self, have: int = 0) -> Dict[str, Any]:
+        """GET /rules/latest/ — {version, bundle, signature}, or {} when `have` is current."""
+        raise NotImplementedError
+
     async def close(self) -> None:
         """Release network resources."""
 
