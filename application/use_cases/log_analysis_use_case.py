@@ -1,4 +1,5 @@
 """Log analysis use case: parsing, threat detection, AI report generation."""
+import asyncio
 import logging
 import re
 from injector import inject
@@ -66,6 +67,14 @@ class LogAnalysisUseCase:
         else:
             threat_summary = "No predefined threats detected by pattern matching."
 
+        # Unsupervised ML (PyTorch autoencoder on the AMD GPU via ROCm when available, else CPU).
+        yield {'type': 'progress', 'status': 'Looking for unusual lines (ML)...'}
+        ml = await self._ml_anomalies([str(e.get('raw', e)) for e in entries])
+        if ml and ml.get('anomalies'):
+            threat_summary += f"\n\n## Unusual lines (ML autoencoder on {ml['device']})\n"
+            for a in ml['anomalies']:
+                threat_summary += f"- line {a['line_no']} (score {a['score']}): `{a['line'][:200]}`\n"
+
         # Prepare prompt for AI
         # Limit entries sent to AI to avoid token overflow
         sample_entries = entries[:20]  # first 20 for context
@@ -93,4 +102,18 @@ Use markdown formatting."""
             logger.error(f"AI generation failed: {e}")
             report += f"\n\n**AI analysis failed**: {e}"
 
-        yield {'type': 'result', 'report': report, 'threats': detection_results, 'entries_count': len(entries)}
+        if ml and ml.get('anomalies'):
+            report += "\n\n" + threat_summary[threat_summary.index("## Unusual lines"):]
+        yield {'type': 'result', 'report': report, 'threats': detection_results, 'entries_count': len(entries),
+               'ml_anomalies': ml}
+
+    @staticmethod
+    async def _ml_anomalies(lines: List[str]):
+        """Autoencoder anomalies off the event loop; never fails the analysis itself."""
+        from infrastructure.analyzers.log_anomaly_torch import find_anomalies
+
+        try:
+            return await asyncio.get_running_loop().run_in_executor(None, find_anomalies, lines)
+        except Exception as exc:  # GPU/driver trouble must not break log analysis
+            logger.warning("ML anomaly detection skipped: %s", exc)
+            return None

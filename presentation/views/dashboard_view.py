@@ -61,6 +61,7 @@ class DashboardView(QWidget):
 
     def _connect_signals(self):
         self._vm.gpu_metrics_updated.connect(self.system_monitor.update_metrics)
+        self._vm.gpu_ollama_status.connect(self.system_monitor.update_provider)
         self._vm.recent_analyses_updated.connect(self.recent_analyses.update_analyses)
         self._vm.severity_counts_updated.connect(self.update_severity)
         self.quick_actions.action_triggered.connect(self._vm.run_quick_action)

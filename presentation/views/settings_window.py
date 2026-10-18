@@ -1,4 +1,4 @@
-"""Settings dialog: appearance, AI providers, server, diagnostics & updates."""
+"""Settings dialog: appearance, AI providers, GPU (AMD ROCm), server, diagnostics & updates."""
 from PySide6.QtCore import Qt, Slot
 from PySide6.QtWidgets import (QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFileDialog, QFormLayout,
                                QHBoxLayout, QInputDialog, QLabel, QLineEdit, QMessageBox, QProgressBar, QPushButton,
@@ -62,6 +62,8 @@ class SettingsWindow(QDialog):
         ai_layout.addRow(save_btn)
         tabs.addTab(ai_tab, self.tr("AI Providers"))
 
+        tabs.addTab(self._gpu_tab(), self.tr("GPU / ROCm"))
+
         if self._connection_vm is not None:
             tabs.addTab(ServerTab(self._connection_vm, self._vm), self.tr("Server"))
 
@@ -77,6 +79,56 @@ class SettingsWindow(QDialog):
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         main_layout.addWidget(buttons)
+
+    def _gpu_tab(self) -> QWidget:
+        tab = QWidget()
+        form = QFormLayout(tab)
+        self.gpu_device = QComboBox()
+        self.gpu_device.addItem(self.tr("Automatic (AMD GPU via ROCm when available)"), "auto")
+        self.gpu_device.addItem(self.tr("AMD GPU (ROCm)"), "rocm")
+        self.gpu_device.addItem(self.tr("CPU only"), "cpu")
+        self.gpu_device.setCurrentIndex(max(0, self.gpu_device.findData(self._vm.gpu_device)))
+        self.gpu_device.currentIndexChanged.connect(lambda _i: self._vm.set_gpu_device(self.gpu_device.currentData()))
+        form.addRow(self.tr("Compute device:"), self.gpu_device)
+        self.gpu_labels = {}
+        for key, label in (("gpu", self.tr("GPU:")), ("gfx", self.tr("Architecture:")), ("vram", self.tr("VRAM:")),
+                           ("torch", self.tr("PyTorch:")), ("hip", self.tr("HIP (ROCm):")),
+                           ("device", self.tr("PyTorch uses:")), ("env", self.tr("ROCm settings:"))):
+            self.gpu_labels[key] = QLabel("…")
+            self.gpu_labels[key].setTextInteractionFlags(Qt.TextSelectableByMouse)
+            form.addRow(label, self.gpu_labels[key])
+        bench = QPushButton(self.tr("Run benchmark"))
+        bench.setToolTip(self.tr("Matrix multiplication speed on the GPU and the CPU (a few seconds)"))
+        bench.clicked.connect(self._vm.run_benchmark)
+        self.bench_result = QLabel("")
+        form.addRow(bench, self.bench_result)
+        self._vm.gpu_info_ready.connect(self._show_gpu_info)
+        self._vm.benchmark_ready.connect(self._show_benchmark)
+        self._vm.load_gpu_info()
+        return tab
+
+    @Slot(dict)
+    def _show_gpu_info(self, info: dict):
+        sel = info.get("selected") or {}
+        none = self.tr("not found")
+        self.gpu_labels["gpu"].setText(sel.get("product") or info.get("torch_gpu_name") or (sel.get("name") or none))
+        self.gpu_labels["gfx"].setText(sel.get("gfx") or "—")
+        self.gpu_labels["vram"].setText(f"{sel['vram_bytes'] / 2**30:.1f} GB" if sel.get("vram_bytes") else "—")
+        self.gpu_labels["torch"].setText(info.get("torch") or self.tr("not installed (see requirements-rocm.txt)"))
+        self.gpu_labels["hip"].setText(info.get("hip") or "—")
+        self.gpu_labels["device"].setText(info.get("torch_device") or "—")
+        env = info.get("env") or {}
+        self.gpu_labels["env"].setText(", ".join(f"{k}={v}" for k, v in env.items()) or "—")
+
+    @Slot(dict)
+    def _show_benchmark(self, result: dict):
+        gpu, cpu = result.get("gpu_tflops"), result.get("cpu_tflops")
+        parts = []
+        if gpu is not None:
+            parts.append(self.tr("GPU: %1 TFLOPS").replace("%1", f"{gpu:.2f}"))
+        if cpu is not None:
+            parts.append(self.tr("CPU: %1 TFLOPS").replace("%1", f"{cpu:.2f}"))
+        self.bench_result.setText("  ·  ".join(parts) or self.tr("PyTorch is not installed"))
 
     def _diagnostics_tab(self) -> QWidget:
         tab = QWidget()

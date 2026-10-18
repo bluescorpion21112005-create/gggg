@@ -19,6 +19,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   widget text), complete light theme.
 - **Per-user OS directories** for settings, database, logs and caches (`core/paths.py`, `CYBRIX_HOME`).
 - Dashboard severity chart from real analyses.
+- **AMD ROCm + PyTorch**:
+  - `core/accelerator.py` detects AMD GPUs from KFD sysfs (no `rocminfo`), picks the discrete card and sets
+    `HSA_OVERRIDE_GFX_VERSION` (RX 6000 → 10.3.0) and `HIP_VISIBLE_DEVICES` before PyTorch starts;
+  - the GPU monitor reads `rocm-smi` 7.x (bytes) or amdgpu sysfs;
+  - `requirements-rocm.txt` (torch 2.9.1+rocm6.4) and `scripts/install_rocm.sh` install the GPU build;
+  - RAG embeddings run on the GPU;
+  - log analysis gets a PyTorch autoencoder "unusual lines" section;
+  - Settings → GPU / ROCm: device info, benchmark, auto/GPU/CPU choice;
+  - the dashboard shows the GPU's gfx target and how much of each Ollama model sits in VRAM (`scripts/ollama-rocm.conf`);
+  - telemetry sends `gpu_gfx`.
 - **Two-factor sign-in**: when the account has 2FA, the Server page asks for the authenticator (or backup)
   code; a team that requires 2FA gets a clear message to enable it in the web app first.
 - **Signed detection rules**: YARA/Sigma bundles are fetched from the server, verified against the pinned
@@ -39,6 +49,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 - No torch import at startup.
 
 ### Fixed
+- ROCm detection relied on `rocminfo` (often not installed), so AMD GPUs showed as "CPU only"; VRAM was always 0
+  with ROCm-SMI 7.x (keys changed to bytes). Removed the unused duplicate `infrastructure/gpu/gpu_manager.py`.
 - A generic `DATABASE_URL` in the environment (e.g. the Django server's PostgreSQL URL) silently replaced the
   desktop database; the app now only honours `CYBRIX_DATABASE_URL` and logs a warning about the other.
 - `VectorStore` had lost all its methods (RAG was broken).

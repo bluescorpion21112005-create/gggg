@@ -116,7 +116,7 @@ class AgentSettings:
     # ── User preferences set from the UI (applied to the config at the next start) ──
 
     PREF_KEYS = ("server_url", "theme", "language", "ollama_host", "crash_reports", "update_channel",
-                 "onboarding_done")
+                 "onboarding_done", "gpu_device")
 
     def get_pref(self, key: str, default: Any = None) -> Any:
         if key not in self.PREF_KEYS:
@@ -134,6 +134,8 @@ class AgentSettings:
             raise ValueError(f"Unsupported language: {value}")
         elif key == "update_channel" and value not in ("stable", "beta"):
             raise ValueError(f"Unknown update channel: {value}")
+        elif key == "gpu_device" and value not in ("auto", "rocm", "cpu"):
+            raise ValueError(f"Unknown GPU device: {value}")
         elif key in ("crash_reports", "onboarding_done"):
             value = bool(value)
         self._data[key] = value
@@ -181,7 +183,7 @@ def apply_user_overrides(config: AppConfig) -> AppConfig:
         return config
     if not isinstance(data, dict):
         return config
-    backend, ui, providers = config.backend, config.ui, dict(config.ai_providers)
+    backend, ui, gpu, providers = config.backend, config.ui, config.gpu, dict(config.ai_providers)
     try:
         if data.get("server_url") and not os.getenv("CYBRIX_SERVER_URL"):  # env wins (tests, CI)
             backend = dataclasses.replace(backend, base_url=validate_server_url(data["server_url"]))
@@ -194,4 +196,6 @@ def apply_user_overrides(config: AppConfig) -> AppConfig:
     if isinstance(data.get("ollama_host"), str) and data["ollama_host"].startswith(("http://", "https://")) \
             and "ollama" in providers:
         providers["ollama"] = dataclasses.replace(providers["ollama"], host=data["ollama_host"].rstrip("/"))
-    return dataclasses.replace(config, backend=backend, ui=ui, ai_providers=providers)
+    if data.get("gpu_device") in ("auto", "rocm", "cpu"):
+        gpu = dataclasses.replace(gpu, device=data["gpu_device"])
+    return dataclasses.replace(config, backend=backend, ui=ui, gpu=gpu, ai_providers=providers)

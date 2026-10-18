@@ -58,6 +58,8 @@ class TelemetryCollector:
                 sample["gpu_percent"] = metrics.gpu_utilization
                 sample["temperature"] = metrics.temperature
                 sample["gpu_name"] = metrics.gpu_name
+                if metrics.gfx:
+                    sample["gpu_gfx"] = metrics.gfx
                 if metrics.memory_total:
                     sample["gpu_mem_percent"] = round(100 * metrics.memory_used / metrics.memory_total, 1)
         return {k: (round(v, 2) if isinstance(v, float) else v) for k, v in sample.items()}

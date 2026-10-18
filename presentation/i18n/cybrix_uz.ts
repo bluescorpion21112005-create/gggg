@@ -736,7 +736,7 @@
     <message>
         <location filename="../views/server_view.py" line="339"/>
         <source>That code is not valid. Try again.</source>
-        <translation>Kod noto'g'ri. Qayta urinib ko'ring.</translation>
+        <translation>Kod noto&apos;g&apos;ri. Qayta urinib ko&apos;ring.</translation>
     </message>
     <message>
         <location filename="../views/server_view.py" line="340"/>
@@ -803,127 +803,222 @@
         <translation>AI provayderlar</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="66"/>
+        <location filename="../views/settings_window.py" line="65"/>
+        <source>GPU / ROCm</source>
+        <translation>GPU / ROCm</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="68"/>
         <source>Server</source>
         <translation>Server</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="68"/>
+        <location filename="../views/settings_window.py" line="70"/>
         <source>Diagnostics &amp;&amp; updates</source>
         <translation>Diagnostika &amp;&amp; yangilanishlar</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="84"/>
+        <location filename="../views/settings_window.py" line="87"/>
+        <source>Automatic (AMD GPU via ROCm when available)</source>
+        <translation>Avtomatik (mavjud bo'lsa ROCm orqali AMD GPU)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="88"/>
+        <source>AMD GPU (ROCm)</source>
+        <translation>AMD GPU (ROCm)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="89"/>
+        <source>CPU only</source>
+        <translation>Faqat CPU</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="92"/>
+        <source>Compute device:</source>
+        <translation>Hisoblash qurilmasi:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="94"/>
+        <source>GPU:</source>
+        <translation>GPU:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="94"/>
+        <source>Architecture:</source>
+        <translation>Arxitektura:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="94"/>
+        <source>VRAM:</source>
+        <translation>VRAM:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="95"/>
+        <source>PyTorch:</source>
+        <translation>PyTorch:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="95"/>
+        <source>HIP (ROCm):</source>
+        <translation>HIP (ROCm):</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="96"/>
+        <source>PyTorch uses:</source>
+        <translation>PyTorch ishlatadi:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="96"/>
+        <source>ROCm settings:</source>
+        <translation>ROCm sozlamalari:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="100"/>
+        <source>Run benchmark</source>
+        <translation>Benchmark'ni ishga tushirish</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="101"/>
+        <source>Matrix multiplication speed on the GPU and the CPU (a few seconds)</source>
+        <translation>GPU va CPU'da matritsa ko'paytirish tezligi (bir necha soniya)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="113"/>
+        <source>not found</source>
+        <translation>topilmadi</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="117"/>
+        <source>not installed (see requirements-rocm.txt)</source>
+        <translation>o'rnatilmagan (requirements-rocm.txt ga qarang)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="128"/>
+        <source>GPU: %1 TFLOPS</source>
+        <translation>GPU: %1 TFLOPS</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="130"/>
+        <source>CPU: %1 TFLOPS</source>
+        <translation>CPU: %1 TFLOPS</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="131"/>
+        <source>PyTorch is not installed</source>
+        <translation>PyTorch o'rnatilmagan</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="136"/>
         <source>Version:</source>
         <translation>Versiya:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="87"/>
+        <location filename="../views/settings_window.py" line="139"/>
         <source>Stable</source>
         <translation>Barqaror</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="88"/>
+        <location filename="../views/settings_window.py" line="140"/>
         <source>Beta (earlier, less tested)</source>
         <translation>Beta (ertaroq, kamroq sinovdan o‘tgan)</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="91"/>
+        <location filename="../views/settings_window.py" line="143"/>
         <source>Update channel:</source>
         <translation>Yangilanish kanali:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="92"/>
+        <location filename="../views/settings_window.py" line="144"/>
         <source>Check for updates</source>
         <translation>Yangilanishlarni tekshirish</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="99"/>
+        <location filename="../views/settings_window.py" line="151"/>
         <source>Send anonymous crash reports (no personal data, no files)</source>
         <translation>Anonim nosozlik hisobotlarini yuborish (shaxsiy ma’lumot va fayllarsiz)</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="103"/>
+        <location filename="../views/settings_window.py" line="155"/>
         <source>This build has no crash-report endpoint configured.</source>
         <translation>Ushbu versiyada nosozlik hisobotlari manzili sozlanmagan.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="105"/>
+        <location filename="../views/settings_window.py" line="157"/>
         <source>Crash reports:</source>
         <translation>Nosozlik hisobotlari:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="107"/>
+        <location filename="../views/settings_window.py" line="159"/>
         <source>Export diagnostics…</source>
         <translation>Diagnostikani eksport qilish…</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="108"/>
+        <location filename="../views/settings_window.py" line="160"/>
         <source>Logs and system info as a ZIP to attach to a bug report. Contains no passwords or tokens.</source>
         <translation>Xatolik haqidagi xabarga ilova qilish uchun loglar va tizim ma’lumoti (ZIP). Parol va tokenlar kirmaydi.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="111"/>
+        <location filename="../views/settings_window.py" line="163"/>
         <source>Diagnostics:</source>
         <translation>Diagnostika:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="114"/>
+        <location filename="../views/settings_window.py" line="166"/>
         <source>Send feedback…</source>
         <translation>Fikr yuborish…</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="116"/>
+        <location filename="../views/settings_window.py" line="168"/>
         <source>Feedback:</source>
         <translation>Fikr-mulohaza:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="123"/>
+        <location filename="../views/settings_window.py" line="175"/>
         <source>Send feedback</source>
         <translation>Fikr yuborish</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="124"/>
+        <location filename="../views/settings_window.py" line="176"/>
         <source>What happened, or what would you like? (goes to the Cybrix team)</source>
         <translation>Nima bo‘ldi yoki nimani xohlaysiz? (Cybrix jamoasiga yuboriladi)</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="129"/>
+        <location filename="../views/settings_window.py" line="181"/>
         <source>Save diagnostics</source>
         <translation>Diagnostikani saqlash</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="136"/>
+        <location filename="../views/settings_window.py" line="188"/>
         <source>Saved. The new %1 is used after Cybrix restarts.</source>
         <translation>Saqlandi. Yangi %1 Cybrix qayta ishga tushgandan keyin qo‘llanadi.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="141"/>
+        <location filename="../views/settings_window.py" line="193"/>
         <source>Cybrix %1 is available (%2 MB).</source>
         <translation>Cybrix %1 mavjud (%2 MB).</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="143"/>
+        <location filename="../views/settings_window.py" line="195"/>
         <source>This update is required to keep using the server.</source>
         <translation>Server bilan ishlashni davom ettirish uchun bu yangilanish majburiy.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="146"/>
+        <location filename="../views/settings_window.py" line="198"/>
         <source>Update available</source>
         <translation>Yangilanish mavjud</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="148"/>
+        <location filename="../views/settings_window.py" line="200"/>
         <source>Download</source>
         <translation>Yuklab olish</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="162"/>
+        <location filename="../views/settings_window.py" line="214"/>
         <source>Install update</source>
         <translation>Yangilanishni o‘rnatish</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="163"/>
+        <location filename="../views/settings_window.py" line="215"/>
         <source>The update was downloaded and its signature and checksum verified.
 Install it now?</source>
         <translation>Yangilanish yuklab olindi, imzosi va nazorat summasi tekshirildi.
@@ -972,12 +1067,17 @@ Hozir o‘rnatilsinmi?</translation>
     </message>
     <message>
         <location filename="../widgets/system_monitor_widget.py" line="35"/>
-        <location filename="../widgets/system_monitor_widget.py" line="55"/>
+        <location filename="../widgets/system_monitor_widget.py" line="67"/>
         <source>Temp: N/A</source>
         <translation>Harorat: yo‘q</translation>
     </message>
     <message>
-        <location filename="../widgets/system_monitor_widget.py" line="52"/>
+        <location filename="../widgets/system_monitor_widget.py" line="51"/>
+        <source>Ollama: %1</source>
+        <translation>Ollama: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/system_monitor_widget.py" line="64"/>
         <source>GPU: CPU only</source>
         <translation>GPU: faqat CPU</translation>
     </message>

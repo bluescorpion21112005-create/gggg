@@ -20,6 +20,9 @@ logging:
 gpu:
   prefer_rocm: true
   fallback_to_cpu: true
+  device: auto                      # auto | rocm | cpu — PyTorch device (AMD GPU through ROCm when usable)
+  hsa_override: ""                  # "" = automatic (RX 6000 series → 10.3.0), "off", or e.g. "11.0.0"
+  visible_devices: ""               # "" = strongest GPU only (an APU's integrated GPU is skipped)
 backend:
   base_url: http://127.0.0.1:8000   # override with CYBRIX_SERVER_URL
   verify_tls: true

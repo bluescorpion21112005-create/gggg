@@ -3,6 +3,7 @@
 Communicates with infrastructure only through injected services.
 No direct infrastructure imports in this file.
 """
+import asyncio
 import logging
 from pathlib import Path
 
@@ -29,6 +30,8 @@ class SettingsViewModel(BaseViewModel):
     update_available = Signal(dict)       # {version, notes, mandatory, size}
     update_progress = Signal(int, int)    # received, total bytes
     update_ready = Signal(str)            # path of the verified installer
+    gpu_info_ready = Signal(dict)         # core.accelerator.info()
+    benchmark_ready = Signal(dict)        # {gpu_tflops, cpu_tflops}
 
     LANGUAGES = LANGUAGES
 
@@ -92,6 +95,41 @@ class SettingsViewModel(BaseViewModel):
             self.error_occurred.emit(str(exc))
             return
         self.restart_required.emit("language")
+
+    # ── GPU / ROCm ───────────────────────────────────────────────────────────
+
+    @property
+    def gpu_device(self) -> str:
+        return self._settings.get_pref("gpu_device") or self._config.gpu.device
+
+    @Slot(str)
+    def set_gpu_device(self, device: str):
+        try:
+            self._settings.set_pref("gpu_device", device)
+        except ValueError as exc:
+            self.error_occurred.emit(str(exc))
+            return
+        self.restart_required.emit("GPU device")
+
+    @asyncSlot()
+    async def load_gpu_info(self):
+        from core import accelerator
+
+        info = await asyncio.get_running_loop().run_in_executor(None, accelerator.info)
+        self.gpu_info_ready.emit(info)
+
+    @asyncSlot()
+    async def run_benchmark(self):
+        from core import accelerator
+
+        self.status_message.emit("Running GPU benchmark…")
+        try:
+            result = await asyncio.get_running_loop().run_in_executor(None, accelerator.benchmark)
+        except Exception as exc:  # driver/HIP problems are reported, not raised
+            self.error_occurred.emit(f"Benchmark failed: {exc}")
+            return
+        self.benchmark_ready.emit(result)
+        self.status_message.emit("Benchmark finished.")
 
     @property
     def ollama_host(self) -> str:

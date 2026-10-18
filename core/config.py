@@ -39,6 +39,12 @@ class LoggingConfig:
 class GPUConfig:
     prefer_rocm: bool = True
     fallback_to_cpu: bool = True
+    # PyTorch device: auto (AMD GPU through ROCm when usable, else CPU) | rocm | cpu
+    device: str = "auto"
+    # HSA_OVERRIDE_GFX_VERSION: "" = automatic for consumer RDNA chips (gfx103x → 10.3.0), "off", or a version
+    hsa_override: str = ""
+    # HIP_VISIBLE_DEVICES: "" = the strongest GPU only (skips an APU's integrated GPU)
+    visible_devices: str = ""
 
 
 @dataclass(frozen=True)
@@ -218,9 +224,14 @@ class ConfigLoader:
             file=raw.get("logging", {}).get("file", "cybrix.log"),
         )
 
+        gpu_raw = raw.get("gpu", {}) or {}
+        device = str(gpu_raw.get("device", "auto") or "auto").lower()
         gpu = GPUConfig(
-            prefer_rocm=raw.get("gpu", {}).get("prefer_rocm", True),
-            fallback_to_cpu=raw.get("gpu", {}).get("fallback_to_cpu", True),
+            prefer_rocm=gpu_raw.get("prefer_rocm", True),
+            fallback_to_cpu=gpu_raw.get("fallback_to_cpu", True),
+            device=device if device in ("auto", "rocm", "cpu") else "auto",
+            hsa_override=str(gpu_raw.get("hsa_override", "") or ""),
+            visible_devices=str(gpu_raw.get("visible_devices", "") or ""),
         )
 
         backend_raw = raw.get("backend", {}) or {}

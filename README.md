@@ -87,8 +87,47 @@ are authorised to test (lab environments, CTFs, your own systems).
 - Every chat response returns a `compute_backend` field
   (`"AMD Instinct MI300X GPU cluster (ROCm runtime) — Fireworks AI Compute Grid"`) alongside
   token count, elapsed time and tokens/second, shown live in the Chat page status bar.
-- `core/gpu_monitor.py` additionally probes local `rocm-smi` / `rocminfo` tooling for
-  on-host ROCm telemetry (independent of the Fireworks cloud path).
+
+### Local AMD GPU (ROCm) — PyTorch and Ollama on your own Radeon
+
+Besides the cloud path, the app uses a local AMD GPU directly (Linux, amdgpu driver):
+
+- **Detection without `rocminfo`.** `core/accelerator.py` reads the kernel's KFD topology
+  (`/sys/class/kfd`) and picks the strongest GPU, i.e. the discrete card on an APU laptop.
+- **Automatic ROCm settings.** Before PyTorch starts, the app sets two variables, but only if you
+  have not set them yourself:
+  - `HSA_OVERRIDE_GFX_VERSION=10.3.0` for Radeon RX 6000 cards (gfx103x, not on ROCm's list);
+  - `HIP_VISIBLE_DEVICES`, which hides an integrated GPU.
+- **Live metrics.** `core/gpu_monitor.py` shows real GPU load, VRAM and temperature on the
+  dashboard and in telemetry. It reads `rocm-smi` 7.x JSON and falls back to amdgpu sysfs.
+- **PyTorch on the GPU** (`requirements-rocm.txt`, `torch 2.9.1+rocm6.4`; the wheel bundles HIP):
+  - RAG embeddings (sentence-transformers) run on the GPU;
+  - log analysis gains an *ML anomalies* section: a PyTorch autoencoder learns what a file's lines
+    normally look like and lists the strangest ones
+    (`infrastructure/analyzers/log_anomaly_torch.py`);
+  - Settings → **GPU / ROCm** shows the device, gfx, VRAM and PyTorch/HIP versions, and has a
+    benchmark and an auto / AMD GPU / CPU switch.
+- **Ollama on the GPU.** With `scripts/ollama-rocm.conf` installed, the dashboard shows how much
+  of each loaded model sits in VRAM.
+
+```bash
+scripts/install_rocm.sh            # PyTorch ROCm into .venv, then prints the GPU and a TFLOPS benchmark
+# Ollama (local LLM) on the GPU — system-wide with sudo:
+curl -fsSL https://ollama.com/install.sh | sh
+sudo mkdir -p /etc/systemd/system/ollama.service.d
+sudo cp scripts/ollama-rocm.conf /etc/systemd/system/ollama.service.d/rocm.conf
+sudo systemctl daemon-reload && sudo systemctl restart ollama
+# …or without sudo, for your user only:
+mkdir -p ~/.local/opt/ollama
+for f in ollama-linux-amd64 ollama-linux-amd64-rocm; do
+  curl -fL "https://ollama.com/download/$f.tar.zst" | zstd -d | tar -x -C ~/.local/opt/ollama; done
+mkdir -p ~/.config/systemd/user && cp scripts/ollama-rocm.user.service ~/.config/systemd/user/ollama.service
+systemctl --user daemon-reload && systemctl --user enable --now ollama
+ollama run llama3.2:3b "hello" && ollama ps   # PROCESSOR column → "100% GPU"
+```
+
+Without the ROCm extras nothing breaks: everything runs on the CPU and the ML section is skipped.
+`settings.yaml → gpu:` has `device` (auto | rocm | cpu), `hsa_override` and `visible_devices`.
 
 ## Running it
 

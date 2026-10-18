@@ -5,6 +5,10 @@ import os
 
 # Tests must never touch the real per-user directories (settings, DB, logs): see core/paths.py.
 os.environ.setdefault("CYBRIX_HOME", tempfile.mkdtemp(prefix="cybrix-tests-home-"))
+# Same as core/bootstrap.py: ROCm environment (AMD GPU) before any test imports PyTorch.
+from core import accelerator as _accelerator  # noqa: E402
+
+_accelerator.configure_env()
 from typing import AsyncGenerator
 from unittest.mock import AsyncMock
 from domain.interfaces.ai_provider import AIProvider

@@ -803,127 +803,222 @@
         <translation>AI-провайдеры</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="66"/>
+        <location filename="../views/settings_window.py" line="65"/>
+        <source>GPU / ROCm</source>
+        <translation>GPU / ROCm</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="68"/>
         <source>Server</source>
         <translation>Сервер</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="68"/>
+        <location filename="../views/settings_window.py" line="70"/>
         <source>Diagnostics &amp;&amp; updates</source>
         <translation>Диагностика &amp;&amp; обновления</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="84"/>
+        <location filename="../views/settings_window.py" line="87"/>
+        <source>Automatic (AMD GPU via ROCm when available)</source>
+        <translation>Автоматически (AMD GPU через ROCm, если доступен)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="88"/>
+        <source>AMD GPU (ROCm)</source>
+        <translation>AMD GPU (ROCm)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="89"/>
+        <source>CPU only</source>
+        <translation>Только CPU</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="92"/>
+        <source>Compute device:</source>
+        <translation>Вычислительное устройство:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="94"/>
+        <source>GPU:</source>
+        <translation>GPU:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="94"/>
+        <source>Architecture:</source>
+        <translation>Архитектура:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="94"/>
+        <source>VRAM:</source>
+        <translation>VRAM:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="95"/>
+        <source>PyTorch:</source>
+        <translation>PyTorch:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="95"/>
+        <source>HIP (ROCm):</source>
+        <translation>HIP (ROCm):</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="96"/>
+        <source>PyTorch uses:</source>
+        <translation>PyTorch использует:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="96"/>
+        <source>ROCm settings:</source>
+        <translation>Настройки ROCm:</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="100"/>
+        <source>Run benchmark</source>
+        <translation>Запустить тест</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="101"/>
+        <source>Matrix multiplication speed on the GPU and the CPU (a few seconds)</source>
+        <translation>Скорость умножения матриц на GPU и CPU (несколько секунд)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="113"/>
+        <source>not found</source>
+        <translation>не найден</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="117"/>
+        <source>not installed (see requirements-rocm.txt)</source>
+        <translation>не установлен (см. requirements-rocm.txt)</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="128"/>
+        <source>GPU: %1 TFLOPS</source>
+        <translation>GPU: %1 TFLOPS</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="130"/>
+        <source>CPU: %1 TFLOPS</source>
+        <translation>CPU: %1 TFLOPS</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="131"/>
+        <source>PyTorch is not installed</source>
+        <translation>PyTorch не установлен</translation>
+    </message>
+    <message>
+        <location filename="../views/settings_window.py" line="136"/>
         <source>Version:</source>
         <translation>Версия:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="87"/>
+        <location filename="../views/settings_window.py" line="139"/>
         <source>Stable</source>
         <translation>Стабильный</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="88"/>
+        <location filename="../views/settings_window.py" line="140"/>
         <source>Beta (earlier, less tested)</source>
         <translation>Бета (раньше, меньше тестов)</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="91"/>
+        <location filename="../views/settings_window.py" line="143"/>
         <source>Update channel:</source>
         <translation>Канал обновлений:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="92"/>
+        <location filename="../views/settings_window.py" line="144"/>
         <source>Check for updates</source>
         <translation>Проверить обновления</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="99"/>
+        <location filename="../views/settings_window.py" line="151"/>
         <source>Send anonymous crash reports (no personal data, no files)</source>
         <translation>Отправлять анонимные отчёты о сбоях (без личных данных и файлов)</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="103"/>
+        <location filename="../views/settings_window.py" line="155"/>
         <source>This build has no crash-report endpoint configured.</source>
         <translation>В этой сборке не настроен адрес отчётов о сбоях.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="105"/>
+        <location filename="../views/settings_window.py" line="157"/>
         <source>Crash reports:</source>
         <translation>Отчёты о сбоях:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="107"/>
+        <location filename="../views/settings_window.py" line="159"/>
         <source>Export diagnostics…</source>
         <translation>Экспорт диагностики…</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="108"/>
+        <location filename="../views/settings_window.py" line="160"/>
         <source>Logs and system info as a ZIP to attach to a bug report. Contains no passwords or tokens.</source>
         <translation>Журналы и сведения о системе в ZIP для отчёта об ошибке. Пароли и токены не включаются.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="111"/>
+        <location filename="../views/settings_window.py" line="163"/>
         <source>Diagnostics:</source>
         <translation>Диагностика:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="114"/>
+        <location filename="../views/settings_window.py" line="166"/>
         <source>Send feedback…</source>
         <translation>Отправить отзыв…</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="116"/>
+        <location filename="../views/settings_window.py" line="168"/>
         <source>Feedback:</source>
         <translation>Отзыв:</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="123"/>
+        <location filename="../views/settings_window.py" line="175"/>
         <source>Send feedback</source>
         <translation>Отправить отзыв</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="124"/>
+        <location filename="../views/settings_window.py" line="176"/>
         <source>What happened, or what would you like? (goes to the Cybrix team)</source>
         <translation>Что случилось или чего бы вы хотели? (уйдёт команде Cybrix)</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="129"/>
+        <location filename="../views/settings_window.py" line="181"/>
         <source>Save diagnostics</source>
         <translation>Сохранить диагностику</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="136"/>
+        <location filename="../views/settings_window.py" line="188"/>
         <source>Saved. The new %1 is used after Cybrix restarts.</source>
         <translation>Сохранено. Новое значение «%1» применится после перезапуска Cybrix.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="141"/>
+        <location filename="../views/settings_window.py" line="193"/>
         <source>Cybrix %1 is available (%2 MB).</source>
         <translation>Доступна версия Cybrix %1 (%2 МБ).</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="143"/>
+        <location filename="../views/settings_window.py" line="195"/>
         <source>This update is required to keep using the server.</source>
         <translation>Это обновление обязательно для дальнейшей работы с сервером.</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="146"/>
+        <location filename="../views/settings_window.py" line="198"/>
         <source>Update available</source>
         <translation>Доступно обновление</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="148"/>
+        <location filename="../views/settings_window.py" line="200"/>
         <source>Download</source>
         <translation>Скачать</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="162"/>
+        <location filename="../views/settings_window.py" line="214"/>
         <source>Install update</source>
         <translation>Установить обновление</translation>
     </message>
     <message>
-        <location filename="../views/settings_window.py" line="163"/>
+        <location filename="../views/settings_window.py" line="215"/>
         <source>The update was downloaded and its signature and checksum verified.
 Install it now?</source>
         <translation>Обновление загружено, подпись и контрольная сумма проверены.
@@ -972,12 +1067,17 @@ Install it now?</source>
     </message>
     <message>
         <location filename="../widgets/system_monitor_widget.py" line="35"/>
-        <location filename="../widgets/system_monitor_widget.py" line="55"/>
+        <location filename="../widgets/system_monitor_widget.py" line="67"/>
         <source>Temp: N/A</source>
         <translation>Темп.: н/д</translation>
     </message>
     <message>
-        <location filename="../widgets/system_monitor_widget.py" line="52"/>
+        <location filename="../widgets/system_monitor_widget.py" line="51"/>
+        <source>Ollama: %1</source>
+        <translation>Ollama: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/system_monitor_widget.py" line="64"/>
         <source>GPU: CPU only</source>
         <translation>GPU: только CPU</translation>
     </message>

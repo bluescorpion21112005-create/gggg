@@ -52,6 +52,11 @@ class CybrixApp:
         # ── STEP 3: Set up logging
         setup_logging(self.config.logging)
         logger.info("Starting %s v%s", self.config.name, self.config.version)
+        # ROCm environment must be in place before anything initialises PyTorch/HIP.
+        from core import accelerator
+
+        gpu = self.config.gpu
+        accelerator.configure_env(gpu.device if gpu.prefer_rocm else "cpu", gpu.hsa_override, gpu.visible_devices)
         from core import crash
         from infrastructure.remote.agent_settings import AgentSettings
 

@@ -58,8 +58,11 @@ class Embedder:
                 raise RagUnavailableError(
                     "Knowledge base (RAG) is not installed. Install the optional RAG components "
                     "(requirements-rag.txt) to enable it.") from exc
-            self._model = SentenceTransformer(self._model_name)
-            logger.info("Embedder: model '%s' loaded OK", self._model_name)
+            from core.accelerator import torch_device
+
+            device = torch_device()             # the AMD GPU through ROCm when usable, else CPU
+            self._model = SentenceTransformer(self._model_name, device=str(device) if device else None)
+            logger.info("Embedder: model '%s' loaded OK on %s", self._model_name, device)
 
     def _embed_sync(self, texts: List[str]) -> List[List[float]]:
         """Synchronous embedding — called from thread pool executor."""
