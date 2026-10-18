@@ -4,6 +4,7 @@ Loads from YAML and environment variables, merging into a frozen configuration o
 """
 from __future__ import annotations
 
+import logging
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -169,9 +170,13 @@ class ConfigLoader:
 
     @classmethod
     def _merge_env(cls, raw: dict) -> dict:
-        # Database URL
-        if os.getenv("DATABASE_URL"):
-            raw["database_url"] = os.getenv("DATABASE_URL")
+        # Database URL: our own variable only. A generic DATABASE_URL usually belongs to another
+        # program (e.g. the Django server's PostgreSQL) and must not redirect the desktop database.
+        if os.getenv("CYBRIX_DATABASE_URL"):
+            raw["database_url"] = os.getenv("CYBRIX_DATABASE_URL")
+        elif os.getenv("DATABASE_URL"):
+            logging.getLogger(__name__).warning(
+                "Ignoring DATABASE_URL (not meant for the desktop app); use CYBRIX_DATABASE_URL to override")
 
         # AI providers: allow enabling via env
         ai_providers = raw.get("ai_providers", {})

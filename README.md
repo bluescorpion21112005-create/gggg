@@ -145,7 +145,7 @@ See [.env.example](.env.example):
 |---|---|
 | `FIREWORKS_API_KEY` | Fireworks AI key (default chat provider) |
 | `OLLAMA_HOST` | Local Ollama runtime, optional secondary provider |
-| `DATABASE_URL` | SQLite path used by the desktop app |
+| `CYBRIX_DATABASE_URL` | Override the desktop app's SQLite URL (a generic `DATABASE_URL` is ignored) |
 | `CYBRIX_BACKEND_HOST` / `CYBRIX_BACKEND_PORT` | Where the PySide6 client looks for the FastAPI backend |
 | `CYBRIX_SERVER_URL` | Cybrix Django server for the MVVM app (`main.py`): REST + WebSocket, log in under Settings → Server |
 

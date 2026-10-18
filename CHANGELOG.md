@@ -39,6 +39,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 - No torch import at startup.
 
 ### Fixed
+- A generic `DATABASE_URL` in the environment (e.g. the Django server's PostgreSQL URL) silently replaced the
+  desktop database; the app now only honours `CYBRIX_DATABASE_URL` and logs a warning about the other.
 - `VectorStore` had lost all its methods (RAG was broken).
 - Theme, Ollama host and server URL settings were never saved.
 - Stale test fixtures (`_init_db`, missing `provider/singleton` imports); both long-failing tests pass.

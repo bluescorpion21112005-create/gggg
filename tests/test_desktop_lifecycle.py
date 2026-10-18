@@ -16,6 +16,7 @@ def home(tmp_path, monkeypatch):
     monkeypatch.delenv("CYBRIX_CONFIG_DIR", raising=False)
     monkeypatch.delenv("CYBRIX_SERVER_URL", raising=False)
     monkeypatch.delenv("CYBRIX_THEME", raising=False)
+    monkeypatch.delenv("CYBRIX_DATABASE_URL", raising=False)
     monkeypatch.chdir(tmp_path)
     return tmp_path / "home"
 
@@ -39,6 +40,14 @@ def test_relative_paths_resolve_to_user_dirs_not_cwd(home):
     assert config.database_url == f"sqlite:///{home / 'data' / 'cybrix.db'}"
     assert Path(config.logging.file) == home / "logs" / "cybrix.log"
     assert Path(config.plugins_dir) == paths.bundle_dir() / "plugins"
+
+
+def test_generic_database_url_is_ignored(home, tmp_path, monkeypatch, caplog):
+    monkeypatch.setenv("DATABASE_URL", "postgres://cybrix:pw@127.0.0.1:5433/cybrix")   # e.g. the server's
+    assert ConfigLoader.load().database_url == f"sqlite:///{home / 'data' / 'cybrix.db'}"
+    assert "Ignoring DATABASE_URL" in caplog.text
+    monkeypatch.setenv("CYBRIX_DATABASE_URL", f"sqlite:///{tmp_path}/mine.db")
+    assert ConfigLoader.load().database_url == f"sqlite:///{tmp_path}/mine.db"
 
 
 def test_legacy_db_in_working_directory_is_migrated_once(home, tmp_path):
