@@ -7,7 +7,7 @@ import pytest
 from core import accelerator
 from core.gpu_monitor import GPUManager, parse_smi_entry
 
-# Real `rocm-smi --showuse --showmeminfo vram --showtemp --json` (ROCm-SMI 7.6) from an RX 6700 XT laptop.
+# Real `rocm-smi --showuse --showmeminfo vram --showtemp --json` (ROCm-SMI 7.6) from an RX 6800M laptop.
 SMI_7 = {"Temperature (Sensor edge) (C)": "44.0", "Temperature (Sensor junction) (C)": "45.0",
          "GPU use (%)": "7", "VRAM Total Memory (B)": "12868124672", "VRAM Total Used Memory (B)": "285741056"}
 
@@ -26,6 +26,7 @@ def make_sys(root: Path, gpus):
         pci = root / "devices" / f"0000:0{i}:00.0"
         (pci / "hwmon" / "hwmon1").mkdir(parents=True)
         (pci / "device").write_text(dev_id + "\n")
+        (pci / "revision").write_text("0xc3\n")
         (pci / "gpu_busy_percent").write_text("42\n")
         (pci / "mem_info_vram_used").write_text("1073741824\n")
         (pci / "mem_info_vram_total").write_text(f"{vram}\n")
@@ -39,7 +40,7 @@ def make_sys(root: Path, gpus):
 
 @pytest.fixture
 def laptop(tmp_path):
-    """RX 6700 XT (gfx1031, 80 SIMD) + Radeon 680M iGPU (gfx1035, 24 SIMD)."""
+    """RX 6800M (Navi 22, gfx1031, 80 SIMD) + Radeon 680M iGPU (gfx1035, 24 SIMD)."""
     return make_sys(tmp_path, [(100301, 80, 12868124672, "0x73df", 128, "navy_flounder"),
                                (100305, 24, 4294967296, "0x1681", 129, "yellow_carp")])
 
@@ -81,9 +82,15 @@ def test_product_name_from_pci_ids(laptop, tmp_path):
                    "\t1681  Rembrandt [Radeon 680M]\n\t73df  Navi 22 [Radeon RX 6700/6700 XT/6750 XT]\n"
                    "10de  NVIDIA\n\t73df  Not AMD\n")
     first, second = accelerator.discover(laptop)
-    assert accelerator.product_name(first, laptop, (ids,)) == "AMD Radeon RX 6700/6700 XT/6750 XT"
-    assert accelerator.product_name(second, laptop, (ids,)) == "AMD Radeon 680M"
-    assert accelerator.product_name(first, laptop, (tmp_path / "missing",)) == "AMD gfx1031 (navy_flounder)"
+    none = (tmp_path / "no-amdgpu.ids",)
+    assert accelerator.product_name(first, laptop, (ids,), none) == "AMD Radeon RX 6700/6700 XT/6750 XT"
+    assert accelerator.product_name(second, laptop, (ids,), none) == "AMD Radeon 680M"
+    assert accelerator.product_name(first, laptop, (tmp_path / "missing",), none) == "AMD gfx1031 (navy_flounder)"
+    # libdrm's amdgpu.ids tells the exact card from device id + revision (73DF covers 6700 XT … 6800M)
+    drm_ids = tmp_path / "amdgpu.ids"
+    drm_ids.write_text("# List of AMDGPU IDs\n1.0.0\n73DF,\tC1,\tAMD Radeon RX 6700 XT\n"
+                       "73DF,\tC3,\tAMD Radeon RX 6800M\n")
+    assert accelerator.product_name(first, laptop, (ids,), (drm_ids,)) == "AMD Radeon RX 6800M"
 
 
 def test_rocm_smi_7_and_legacy_parsing():

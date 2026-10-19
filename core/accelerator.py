@@ -117,18 +117,42 @@ def discover(root: Path = SYS) -> List[GpuDevice]:
 
 
 PCI_IDS = (Path("/usr/share/misc/pci.ids"), Path("/usr/share/hwdata/pci.ids"))
+# libdrm's table maps device id + PCI revision to the exact product (one chip id covers several cards).
+AMDGPU_IDS = (Path("/usr/share/libdrm/amdgpu.ids"), Path("/opt/amdgpu/share/libdrm/amdgpu.ids"))
 
 
-def product_name(device: GpuDevice, root: Path = SYS, pci_ids=PCI_IDS) -> str:
-    """Marketing name from pci.ids ("AMD Radeon RX 6700/6700 XT/…"), else the gfx code."""
+def _amdgpu_ids_name(dev_id: str, revision: str, paths) -> Optional[str]:
+    for path in paths:
+        try:
+            lines = path.read_text(errors="replace").splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            parts = [p.strip() for p in line.split(",", 2)]
+            if len(parts) == 3 and parts[0].lower() == dev_id and parts[1].lower() == revision:
+                return parts[2]
+    return None
+
+
+def product_name(device: GpuDevice, root: Path = SYS, pci_ids=PCI_IDS, amdgpu_ids=AMDGPU_IDS) -> str:
+    """Exact product from libdrm's amdgpu.ids (id + revision, e.g. "AMD Radeon RX 6800M"), else the
+    pci.ids family ("AMD Radeon RX 6700/6700 XT/…"), else the gfx code."""
     fallback = f"AMD {device.gfx}" + (f" ({device.name})" if device.name else "")
     if not device.card:
         return fallback
+    dev_dir = root / "class" / "drm" / device.card / "device"
     try:
-        dev_id = (root / "class" / "drm" / device.card / "device" / "device").read_text().strip().lower()
+        dev_id = (dev_dir / "device").read_text().strip().lower()
     except OSError:
         return fallback
     dev_id = dev_id.removeprefix("0x")
+    try:
+        revision = (dev_dir / "revision").read_text().strip().lower().removeprefix("0x")
+    except OSError:
+        revision = ""
+    exact = _amdgpu_ids_name(dev_id, revision, amdgpu_ids) if revision else None
+    if exact:
+        return exact
     for path in pci_ids:
         try:
             lines = path.read_text(errors="replace").splitlines()

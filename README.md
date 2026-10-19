@@ -120,7 +120,8 @@ sudo systemctl daemon-reload && sudo systemctl restart ollama
 # …or without sudo, for your user only:
 mkdir -p ~/.local/opt/ollama
 for f in ollama-linux-amd64 ollama-linux-amd64-rocm; do
-  curl -fL "https://ollama.com/download/$f.tar.zst" | zstd -d | tar -x -C ~/.local/opt/ollama; done
+  curl -fL "https://ollama.com/download/$f.tar.zst" | zstd -d |
+    tar -x -C ~/.local/opt/ollama --exclude='lib/ollama/cuda_*'; done   # NVIDIA libs not needed on AMD
 mkdir -p ~/.config/systemd/user && cp scripts/ollama-rocm.user.service ~/.config/systemd/user/ollama.service
 systemctl --user daemon-reload && systemctl --user enable --now ollama
 ollama run llama3.2:3b "hello" && ollama ps   # PROCESSOR column → "100% GPU"
