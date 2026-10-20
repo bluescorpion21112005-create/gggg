@@ -19,6 +19,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   widget text), complete light theme.
 - **Per-user OS directories** for settings, database, logs and caches (`core/paths.py`, `CYBRIX_HOME`).
 - Dashboard severity chart from real analyses.
+- **REA reverse engineering** (github.com/morluto/rea, MIT):
+  - source pinned as the submodule `third_party/rea`;
+  - the `rea-agents@6.7.0` CLI drives static inspections: objdump, Go/Rust metadata, .NET, JS/Electron, artifact graph;
+  - malware analysis adds REA evidence to the prompt and report, and handles non-PE files (ELF, Mach-O, apps) instead of failing;
+  - new approved server command `rea_analysis`, limited to allowed folders.
 - **AMD ROCm + PyTorch**:
   - `core/accelerator.py` detects AMD GPUs from KFD sysfs (no `rocminfo`), picks the discrete card and sets
     `HSA_OVERRIDE_GFX_VERSION` (RX 6000 → 10.3.0) and `HIP_VISIBLE_DEVICES` before PyTorch starts;

@@ -20,6 +20,7 @@ COMMAND_DESCRIPTIONS = {
     "report": "Generate a report from a stored analysis",
     "system_snapshot": "Share running processes, listening ports and disks",
     "yara_scan": "Scan a file or folder with the signed YARA rules (only inside your allowed folders)",
+    "rea_analysis": "Inspect a file or app with REA reverse-engineering tools (static, the file is not run)",
 }
 
 

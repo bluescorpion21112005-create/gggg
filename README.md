@@ -130,6 +130,34 @@ ollama run llama3.2:3b "hello" && ollama ps   # PROCESSOR column → "100% GPU"
 Without the ROCm extras nothing breaks: everything runs on the CPU and the ML section is skipped.
 `settings.yaml → gpu:` has `device` (auto | rocm | cpu), `hsa_override` and `visible_devices`.
 
+## REA — reverse engineering (github.com/morluto/rea)
+
+[REA](https://github.com/morluto/rea) ("Reverse Engineer Anything", MIT) is integrated as a static
+analysis backend and as an MCP server for coding agents.
+
+- **Source:** git submodule `third_party/rea`, pinned to a reviewed commit. Clone with
+  `git clone --recurse-submodules`, or run `git submodule update --init` in an existing checkout.
+- **Runtime:** the official npm package, pinned, needs no sudo and requires Node.js 22.19+ or 24.11+:
+  ```bash
+  npm install --prefix ~/.local/opt/rea rea-agents@6.7.0
+  ```
+  The app looks for `rea` in `CYBRIX_REA_PATH`, then `PATH`, then `~/.local/opt/rea`.
+- **Malware analysis:** `infrastructure/analyzers/rea_analyzer.py` runs the read-only inspections that fit
+  the file:
+  - objdump headers and sections, plus Go/Rust build metadata, for ELF/PE/Mach-O;
+  - .NET metadata;
+  - the JavaScript/Electron module graph;
+  - the artifact graph for anything else.
+
+  The evidence goes into the AI prompt and the report. Non-PE files (ELF, Mach-O, apps) are analysed
+  from REA's evidence instead of failing. The file is never executed.
+- **Server command `rea_analysis`:** the same inspection, run on request from the web app. It works
+  only inside your allowed folders and only after you approve it on this computer.
+- **For agents (MCP):** `rea mcp` serves REA's tools. The ccybrix workspace registers it in `.mcp.json`;
+  use deep native analysis (Ghidra/IDA/Hopper) only where you have them installed and licensed.
+
+Use REA only on software you own or are authorised to examine (see `third_party/rea/DISCLAIMER.md`).
+
 ## Running it
 
 > **Python version:** use **Python 3.13** (3.10–3.13 supported). On Python 3.14 the

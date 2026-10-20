@@ -39,6 +39,7 @@ COMMAND_AGENTS: Dict[str, Optional[str]] = {
     "report": "generate_report",
     "system_snapshot": None,
     "yara_scan": None,            # signed YARA rules over a file or folder (RuleService)
+    "rea_analysis": None,         # REA static reverse-engineering inspection (infrastructure/analyzers/rea_analyzer)
 }
 FILE_COMMANDS = {"log_analysis", "malware_analysis"}
 DEFAULT_TIMEOUT = 900.0
@@ -109,7 +110,14 @@ class CommandExecutor:
         await self._progress(command_id, type_, 10, P.STAGE_APPROVED)
         timeout = self._timeout(data.get("timeout_seconds"))
         try:
-            if type_ == "yara_scan":
+            if type_ == "rea_analysis":
+                from infrastructure.analyzers.rea_analyzer import analyze as rea_analyze
+
+                result = await asyncio.wait_for(asyncio.get_running_loop().run_in_executor(
+                    None, rea_analyze, payload["file_path"]), timeout)
+                if not result.get("available"):
+                    raise RuntimeError("REA is not installed on this computer: " + result["hint"])
+            elif type_ == "yara_scan":
                 loop = asyncio.get_running_loop()
                 result = await asyncio.wait_for(loop.run_in_executor(
                     None, self._rules.yara_scan, Path(payload["file_path"]), self._is_allowed), timeout)
@@ -173,6 +181,8 @@ class CommandExecutor:
             payload.pop("output_dir", None)  # the server never chooses where we write
         if type_ == "system_snapshot":
             payload = {}
+        if type_ == "rea_analysis":
+            payload = {"file_path": str(self._check_path(payload.get("file_path"), allow_dir=True))}
         if type_ == "yara_scan":
             if not self._rules.summary()["yara"]:
                 raise CommandRejected("no verified YARA rules on this computer")
