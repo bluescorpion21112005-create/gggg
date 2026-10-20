@@ -25,8 +25,11 @@ from typing import Any, Dict, List, Optional, Tuple
 logger = logging.getLogger(__name__)
 
 REA_VERSION = "6.7.0"
-DEFAULT_LOCATIONS = (Path.home() / ".local" / "opt" / "rea" / "node_modules" / ".bin" / "rea",)
+OPT = Path.home() / ".local" / "opt"
+DEFAULT_LOCATIONS = (OPT / "rea" / "node_modules" / ".bin" / "rea",)
 TIMEOUT = 180                     # seconds per command
+DEEP_TIMEOUT = 900                # Ghidra headless analysis of a whole binary
+DEEP_MAX_BYTES = 50 * 1024 * 1024
 MAX_STDOUT = 12_000               # characters of raw tool output kept per command
 MAX_NORMALIZED = 6_000            # characters of normalized JSON kept per command
 
@@ -42,6 +45,28 @@ def find_rea() -> Optional[str]:
         if candidate.is_file() and os.access(candidate, os.X_OK):
             return str(candidate)
     return None
+
+
+def ghidra_env(base=None) -> Dict[str, str]:
+    """Child environment with GHIDRA_INSTALL_DIR / JAVA_HOME for REA's Ghidra provider. Values already set
+    win; otherwise the newest Ghidra 12.1.x and a JDK 21+ under ~/.local/opt are used (REA needs a full JDK)."""
+    env = dict(os.environ if base is None else base)
+    if not env.get("GHIDRA_INSTALL_DIR"):
+        ghidras = sorted(OPT.glob("ghidra_12.1*_PUBLIC"))
+        if ghidras and (ghidras[-1] / "support" / "analyzeHeadless").exists():
+            env["GHIDRA_INSTALL_DIR"] = str(ghidras[-1])
+    if not env.get("JAVA_HOME"):
+        jdks = sorted(p for p in OPT.glob("jdk-2[1-9]*") if (p / "bin" / "javac").exists())
+        if jdks:
+            env["JAVA_HOME"] = str(jdks[-1])
+            env["PATH"] = f"{jdks[-1] / 'bin'}{os.pathsep}{env.get('PATH', '')}"
+    return env
+
+
+def ghidra_ready(env=None) -> bool:
+    env = ghidra_env(env)
+    home = env.get("GHIDRA_INSTALL_DIR")
+    return bool(home and (Path(home) / "support" / "analyzeHeadless").exists() and env.get("JAVA_HOME"))
 
 
 def detect_kind(path: Path) -> str:
@@ -72,12 +97,15 @@ def detect_kind(path: Path) -> str:
     return "other"
 
 
-def plan(kind: str, objdump: bool = True) -> List[Tuple[str, List[str]]]:
-    """(command, extra args) to run for this kind of target — static, read-only inspections only."""
+def plan(kind: str, objdump: bool = True, deep: bool = False) -> List[Tuple[str, List[str]]]:
+    """(command, extra args) to run for this kind of target — static, read-only inspections only.
+    deep adds Ghidra headless analysis (functions, entry points, imports) for native binaries."""
     native: List[Tuple[str, List[str]]] = []
     if objdump:
         native += [("inspect-with-objdump", ["file_headers"]), ("inspect-with-objdump", ["section_headers"])]
     native += [("inspect-go-binary", []), ("inspect-rust-binary", [])]
+    if deep:
+        native.append(("analyze", ["--provider", "ghidra"]))
     return {
         "elf": native,
         "pe": native,
@@ -111,7 +139,7 @@ def _condense(evidence: Dict[str, Any]) -> Dict[str, Any]:
 
 def run_command(rea: str, command: str, target: Path, extra: List[str], timeout: int = TIMEOUT) -> Dict[str, Any]:
     args = [rea, command, str(target), *extra, "--json"]
-    env = {**os.environ, "NO_COLOR": "1", "CI": "1"}           # no TTY prompts, plain output
+    env = {**ghidra_env(), "NO_COLOR": "1", "CI": "1"}         # no TTY prompts, plain output
     try:
         proc = subprocess.run(args, capture_output=True, text=True, timeout=timeout, env=env,
                               cwd=tempfile.gettempdir())
@@ -130,18 +158,21 @@ def run_command(rea: str, command: str, target: Path, extra: List[str], timeout:
     return {"command": command, "args": extra, "ok": True, **_condense(evidence)}
 
 
-def analyze(target, rea: Optional[str] = None, timeout: int = TIMEOUT) -> Dict[str, Any]:
-    """Run the fitting REA inspections; {"available": False} when REA is not installed."""
+def analyze(target, rea: Optional[str] = None, timeout: int = TIMEOUT, deep: Optional[bool] = None) -> Dict[str, Any]:
+    """Run the fitting REA inspections; {"available": False} when REA is not installed.
+    deep: None = Ghidra analysis when Ghidra is configured and the file is ≤ DEEP_MAX_BYTES."""
     rea = rea or find_rea()
     if not rea:
         return {"available": False, "tool": "rea",
                 "hint": f"npm install --prefix ~/.local/opt/rea rea-agents@{REA_VERSION}"}
     path = Path(target)
     kind = detect_kind(path)
-    runs = [run_command(rea, cmd, path, extra, timeout)
-            for cmd, extra in plan(kind, shutil.which("objdump") is not None)]
+    if deep is None:
+        deep = ghidra_ready() and path.is_file() and path.stat().st_size <= DEEP_MAX_BYTES
+    runs = [run_command(rea, cmd, path, extra, DEEP_TIMEOUT if cmd == "analyze" else timeout)
+            for cmd, extra in plan(kind, shutil.which("objdump") is not None, bool(deep))]
     return {"available": True, "tool": "rea", "kind": kind, "target": path.name, "runs": runs,
-            "ok": any(r["ok"] for r in runs)}
+            "ok": any(r["ok"] for r in runs), "deep": bool(deep)}
 
 
 def to_markdown(result: Dict[str, Any], max_output_lines: int = 25) -> str:
@@ -160,6 +191,11 @@ def to_markdown(result: Dict[str, Any], max_output_lines: int = 25) -> str:
         if run.get("output"):
             lines += ["```", "\n".join(run["output"].strip().splitlines()[:max_output_lines]), "```"]
         elif run.get("result") is not None:
+            if isinstance(run["result"], dict):
+                counts = {k: run["result"][k] for k in ("procedure_count", "string_count", "segment_count",
+                                                         "image_base") if k in run["result"]}
+                if counts:
+                    lines.append(", ".join(f"{k.replace('_', ' ')}: {v}" for k, v in counts.items()))
             text = run["result"] if isinstance(run["result"], str) else json.dumps(
                 run["result"], indent=1, ensure_ascii=False, default=str)
             lines += ["```json", "\n".join(text.splitlines()[:max_output_lines]), "```"]

@@ -114,7 +114,7 @@ class CommandExecutor:
                 from infrastructure.analyzers.rea_analyzer import analyze as rea_analyze
 
                 result = await asyncio.wait_for(asyncio.get_running_loop().run_in_executor(
-                    None, rea_analyze, payload["file_path"]), timeout)
+                    None, lambda: rea_analyze(payload["file_path"], deep=payload["deep"])), timeout)
                 if not result.get("available"):
                     raise RuntimeError("REA is not installed on this computer: " + result["hint"])
             elif type_ == "yara_scan":
@@ -182,7 +182,9 @@ class CommandExecutor:
         if type_ == "system_snapshot":
             payload = {}
         if type_ == "rea_analysis":
-            payload = {"file_path": str(self._check_path(payload.get("file_path"), allow_dir=True))}
+            deep = payload.get("deep")           # None = Ghidra when configured; true/false forces it
+            payload = {"file_path": str(self._check_path(payload.get("file_path"), allow_dir=True)),
+                       "deep": deep if isinstance(deep, bool) else None}
         if type_ == "yara_scan":
             if not self._rules.summary()["yara"]:
                 raise CommandRejected("no verified YARA rules on this computer")

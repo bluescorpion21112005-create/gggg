@@ -153,6 +153,16 @@ analysis backend and as an MCP server for coding agents.
   from REA's evidence instead of failing. The file is never executed.
 - **Server command `rea_analysis`:** the same inspection, run on request from the web app. It works
   only inside your allowed folders and only after you approve it on this computer.
+- **Ghidra (deep native analysis):**
+  - When Ghidra 12.1.x and a full JDK 21+ are available, native binaries up to 50 MB also get
+    `rea analyze --provider ghidra` (functions, segments, strings). Through MCP or the CLI you can
+    also decompile functions to C pseudocode.
+  - The app finds them via `GHIDRA_INSTALL_DIR` / `JAVA_HOME`, otherwise in `~/.local/opt`.
+  - Sudo-less install, verified against the official SHA-256 sums:
+    - Temurin JDK 21 tarball → `~/.local/opt/jdk-21…`;
+    - `ghidra_12.1.4_PUBLIC_*.zip` (GitHub release) → `~/.local/opt/ghidra_12.1.4_PUBLIC`.
+
+    Then check with `rea doctor --provider ghidra --json`.
 - **For agents (MCP):** `rea mcp` serves REA's tools. The ccybrix workspace registers it in `.mcp.json`;
   use deep native analysis (Ghidra/IDA/Hopper) only where you have them installed and licensed.
 

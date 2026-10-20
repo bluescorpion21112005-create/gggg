@@ -52,6 +52,23 @@ def test_detect_kind_and_plan(tmp_path):
     assert rea_analyzer.plan("other")[0][0] == "inspect-artifact"
 
 
+def test_deep_plan_and_ghidra_env(tmp_path, monkeypatch):
+    assert rea_analyzer.plan("elf", deep=True)[-1] == ("analyze", ["--provider", "ghidra"])
+    assert ("analyze", ["--provider", "ghidra"]) not in rea_analyzer.plan("js_app", deep=True)
+    ghidra = tmp_path / "ghidra_12.1.4_PUBLIC"
+    (ghidra / "support").mkdir(parents=True)
+    (ghidra / "support" / "analyzeHeadless").write_text("#!/bin/sh\n")
+    jdk = tmp_path / "jdk-21.0.12.1+1"
+    (jdk / "bin").mkdir(parents=True)
+    (jdk / "bin" / "javac").write_text("")
+    monkeypatch.setattr(rea_analyzer, "OPT", tmp_path)
+    env = rea_analyzer.ghidra_env({"PATH": "/usr/bin"})
+    assert env["GHIDRA_INSTALL_DIR"] == str(ghidra) and env["JAVA_HOME"] == str(jdk)
+    assert env["PATH"].startswith(str(jdk / "bin"))
+    assert rea_analyzer.ghidra_env({"GHIDRA_INSTALL_DIR": "/mine", "JAVA_HOME": "/j"})["GHIDRA_INSTALL_DIR"] == "/mine"
+    assert rea_analyzer.ghidra_ready({"PATH": "/usr/bin"})
+
+
 def test_not_installed(monkeypatch, tmp_path):
     monkeypatch.setenv("CYBRIX_REA_PATH", str(tmp_path / "nope"))
     monkeypatch.setattr(rea_analyzer, "DEFAULT_LOCATIONS", ())
@@ -65,7 +82,7 @@ def test_evidence_is_condensed(fake_rea, tmp_path, monkeypatch):
     monkeypatch.setattr(rea_analyzer.shutil, "which", lambda n: "/usr/bin/objdump" if n == "objdump" else None)
     elf = tmp_path / "sample"
     elf.write_bytes(b"\x7fELF" + b"\0" * 60)
-    result = rea_analyzer.analyze(elf)
+    result = rea_analyzer.analyze(elf, deep=False)
     assert result["available"] and result["ok"] and result["kind"] == "elf"
     by_cmd = {(r["command"], tuple(r["args"])): r for r in result["runs"]}
     objdump = by_cmd[("inspect-with-objdump", ("file_headers",))]
@@ -110,7 +127,15 @@ async def test_rea_analysis_command_stays_in_allowed_dirs(make_executor, fake_re
 
 @pytest.mark.skipif(not rea_analyzer.find_rea() or os.environ.get("CYBRIX_REA_PATH"), reason="REA not installed")
 def test_real_rea_on_a_system_binary():
-    result = rea_analyzer.analyze(Path("/usr/bin/ls"))
+    result = rea_analyzer.analyze(Path("/usr/bin/ls"), deep=False)
     assert result["kind"] == "elf" and result["ok"]
     assert any(r["ok"] and r["command"] == "inspect-go-binary" for r in result["runs"])
     json.dumps(result)                                               # serialisable for command results
+
+
+@pytest.mark.skipif(not (rea_analyzer.find_rea() and rea_analyzer.ghidra_ready()) or os.environ.get("CYBRIX_REA_PATH"),
+                    reason="REA + Ghidra not installed")
+def test_real_ghidra_deep_analysis():
+    result = rea_analyzer.analyze(Path("/usr/bin/true"), deep=True)
+    ghidra = next(r for r in result["runs"] if r["command"] == "analyze")
+    assert ghidra["ok"], ghidra.get("error")

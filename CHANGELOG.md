@@ -23,7 +23,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
   - source pinned as the submodule `third_party/rea`;
   - the `rea-agents@6.7.0` CLI drives static inspections: objdump, Go/Rust metadata, .NET, JS/Electron, artifact graph;
   - malware analysis adds REA evidence to the prompt and report, and handles non-PE files (ELF, Mach-O, apps) instead of failing;
-  - new approved server command `rea_analysis`, limited to allowed folders.
+  - new approved server command `rea_analysis`, limited to allowed folders;
+  - **Ghidra 12.1.4** deep analysis (`rea analyze --provider ghidra`): automatic when Ghidra and JDK 21+ are found
+    (env vars or `~/.local/opt`); `deep` can be forced on or off per command.
 - **AMD ROCm + PyTorch**:
   - `core/accelerator.py` detects AMD GPUs from KFD sysfs (no `rocminfo`), picks the discrete card and sets
     `HSA_OVERRIDE_GFX_VERSION` (RX 6000 → 10.3.0) and `HIP_VISIBLE_DEVICES` before PyTorch starts;
