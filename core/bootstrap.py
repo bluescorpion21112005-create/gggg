@@ -149,7 +149,7 @@ def main():
     try:
         app = CybrixApp()
         gpu_manager = app.injector.get(GPUManager)
-        logger.info("ROCm available: %s", gpu_manager._rocm_available)  # no torch import at startup
+        logger.info("ROCm available: %s", gpu_manager.rocm_available)  # no torch import at startup
         sys.exit(app.run())
     except Exception as e:
         logging.critical("Failed to start application: %s", e, exc_info=True)

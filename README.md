@@ -191,6 +191,7 @@ for a portable/self-contained setup. Tests: `pip install -r requirements-dev.txt
 `QT_QPA_PLATFORM=offscreen python -m pytest -c tests/pytest.ini --rootdir=. tests`.
 
 **Installers:** `scripts/build.sh` (AppImage + .deb), `scripts/build_windows.ps1` (Inno Setup),
+`scripts/build_windows_wine.sh` (Windows installer built on Linux: PyInstaller under Wine + NSIS, `--setup` the first time),
 `scripts/build_macos.sh` (DMG, signing/notarization); tags `v*` build all three in CI
 (`.github/workflows/release.yml`). See `CHANGELOG.md`.
 

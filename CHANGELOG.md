@@ -5,6 +5,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Windows installer built on Linux**: `scripts/build_windows_wine.sh` (Windows Python 3.13 from NuGet under 64-bit Wine → PyInstaller → NSIS `scripts/cybrix.nsi`, per-user install, en/ru/uz) → `dist/Cybrix-Setup-<version>.exe`, published on the server's `/download/` page.
 - **Installers**: one-folder PyInstaller build → Linux AppImage + .deb (`scripts/build.sh`), Windows Inno
   Setup (`scripts/build_windows.ps1`, Authenticode when a certificate is set), macOS .app/DMG with signing
   and notarization (`scripts/build_macos.sh`); release workflow on tags.
