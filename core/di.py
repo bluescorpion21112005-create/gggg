@@ -54,6 +54,7 @@ from presentation.viewmodels.ioc_viewmodel import IOCViewModel
 from presentation.viewmodels.rag_viewmodel import RAGViewModel
 from presentation.viewmodels.report_viewmodel import ReportViewModel
 from presentation.viewmodels.connection_viewmodel import ConnectionViewModel
+from presentation.viewmodels.pentest_viewmodel import PentestViewModel
 
 # Server connection (REST + WebSocket)
 from domain.interfaces.backend import BackendGateway, CommandApprover, RealtimeChannel
@@ -126,6 +127,7 @@ class CybrixModule(Module):
         binder.bind(RAGViewModel, to=RAGViewModel, scope=singleton)
         binder.bind(ReportViewModel, to=ReportViewModel, scope=singleton)
         binder.bind(ConnectionViewModel, to=ConnectionViewModel, scope=singleton)
+        binder.bind(PentestViewModel, to=PentestViewModel, scope=singleton)
 
         # ── Server connection ─────────────────────────────────────────────────
         binder.bind(TokenStore, to=TokenStore, scope=singleton)

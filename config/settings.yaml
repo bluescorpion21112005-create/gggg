@@ -46,3 +46,7 @@ updates:
   public_key: ""                    # Ed25519 key that signs release manifests (set by the release build)
 rules:
   public_key: ""                    # Ed25519 key that signs YARA/Sigma bundles (set by the release build)
+pentest:
+  enabled: true                     # the local pentest lab (Pentest Lab tab)
+  allow_remote_targets: false       # false = private/loopback targets only. Enable ONLY for systems you own or may test.
+  tool_timeout: 120                 # seconds per tool (nmap, nikto, nuclei, ...)

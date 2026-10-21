@@ -72,6 +72,35 @@ underlying binaries (nmap, sqlmap, metasploit, ...) to be installed, and without
 running an exploit against a host you don't control. Only point it at infrastructure you
 are authorised to test (lab environments, CTFs, your own systems).
 
+## Pentest Lab (desktop, real tools)
+
+The **Pentest Lab** tab (`presentation/views/pentest_view.py`) runs the same A2A idea against
+your own lab with the **real** scanners installed on the machine, so you can find as many
+weaknesses in your own site/app as possible. The engine, agents and safety live in
+`application/pentest/` and are driven by `application/services/pentest_service.py`.
+
+- **Many agents, one shared context, auto-routing.** Nmap seeds open ports/services; the web
+  agents fire on web ports; the TLS agent on 443; WPScan only when WhatWeb fingerprints
+  WordPress; SQLMap only when the URL carries a query parameter; an OWASP Top 10 agent maps
+  every finding to the 2021 categories and runs last. Roster: **nmap** (ports/services),
+  **nmap `--script vuln`**, **whatweb**, **HTTP security headers** (built-in), **nikto**,
+  **sslscan**, **nuclei**, **gobuster**, **wpscan**, **sqlmap**, **dnsrecon**, and the
+  **OWASP Top 10** aggregator.
+- **Real, but gated.** A tool runs only through an argv list (never a shell), with a per-tool
+  timeout, and only after you tick *"I am authorised to test this target"*. When a binary is
+  missing the agent returns a clearly-labelled **simulated** result instead, so the lab still
+  works end-to-end without the toolchain.
+- **Local targets only by default.** `application/pentest/safety.py` accepts only
+  private/loopback/`.local` targets; public targets are refused unless you set
+  `pentest.allow_remote_targets: true` in `config/settings.yaml` (for systems you own or may
+  test). Scope is checked before any tool starts.
+- **Final AI conclusion.** After the chain, the configured LLM writes a Markdown conclusion
+  for the user — an executive summary, the top risks grouped by OWASP category with one-line
+  fixes, and next steps — streamed token by token. The agents themselves never call the LLM.
+
+For authorised local lab / CTF / own-systems use only — defensive and educational, not for
+attacking third-party systems.
+
 ## AMD ecosystem integration
 
 - **Default provider is Fireworks AI** (`config/settings.yaml`, `backend/main.py`), backed

@@ -102,6 +102,14 @@ class BackendConfig:
 
 
 @dataclass(frozen=True)
+class PentestConfig:
+    enabled: bool = True
+    # Only private/loopback targets by default. Turn on ONLY for systems you own or may test.
+    allow_remote_targets: bool = False
+    tool_timeout: float = 120.0       # seconds per tool run
+
+
+@dataclass(frozen=True)
 class AppConfig:
     name: str = "Cybrix AI"
     version: str = "0.1.0"
@@ -111,6 +119,7 @@ class AppConfig:
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     gpu: GPUConfig = field(default_factory=GPUConfig)
     backend: BackendConfig = field(default_factory=BackendConfig)
+    pentest: PentestConfig = field(default_factory=PentestConfig)
     database_url: str = "sqlite:///cybrix.db"
     plugins_dir: str = "plugins"
     # Crash reports go here only if the user opts in (Settings → Diagnostics). Baked in by the build.
@@ -256,6 +265,13 @@ class ConfigLoader:
             data_dir=str(backend_raw.get("data_dir", BackendConfig.data_dir)),
         )
 
+        pentest_raw = raw.get("pentest", {}) or {}
+        pentest = PentestConfig(
+            enabled=bool(pentest_raw.get("enabled", True)),
+            allow_remote_targets=bool(pentest_raw.get("allow_remote_targets", False)),
+            tool_timeout=float(pentest_raw.get("tool_timeout", PentestConfig.tool_timeout)),
+        )
+
         app_section = raw.get("app", {})
 
         return AppConfig(
@@ -267,6 +283,7 @@ class ConfigLoader:
             logging=logging_conf,
             gpu=gpu,
             backend=backend,
+            pentest=pentest,
             database_url=raw.get("database_url", "sqlite:///cybrix.db"),
             plugins_dir=raw.get("plugins_dir", "plugins"),
             sentry_dsn=os.getenv("CYBRIX_SENTRY_DSN") or (raw.get("diagnostics") or {}).get("sentry_dsn", "") or "",

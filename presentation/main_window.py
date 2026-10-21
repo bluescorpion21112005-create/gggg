@@ -20,6 +20,7 @@ from presentation.viewmodels.ioc_viewmodel import IOCViewModel
 from presentation.viewmodels.rag_viewmodel import RAGViewModel
 from presentation.viewmodels.report_viewmodel import ReportViewModel
 from presentation.viewmodels.connection_viewmodel import ConnectionViewModel
+from presentation.viewmodels.pentest_viewmodel import PentestViewModel
 
 from presentation.views.dashboard_view import DashboardView
 from presentation.views.chat_view import ChatView
@@ -29,6 +30,7 @@ from presentation.views.malware_analysis_view import MalwareAnalysisView
 from presentation.views.ioc_view import IOCView
 from presentation.views.rag_view import RAGView
 from presentation.views.report_view import ReportView
+from presentation.views.pentest_view import PentestView
 
 from presentation.widgets.status_bar import StatusBarWidget
 from presentation.widgets.connection_indicator import ConnectionIndicator
@@ -58,6 +60,7 @@ class MainWindow(QMainWindow):
         rag_vm: RAGViewModel,
         report_vm: ReportViewModel,
         connection_vm: ConnectionViewModel,
+        pentest_vm: PentestViewModel,
         approver: CommandApprover,
     ) -> None:
         super().__init__()
@@ -71,6 +74,7 @@ class MainWindow(QMainWindow):
         self._rag_vm = rag_vm
         self._report_vm = report_vm
         self._connection_vm = connection_vm
+        self._pentest_vm = pentest_vm
         if isinstance(approver, QtCommandApprover):
             approver.parent_widget = self  # approval dialogs open centred on the main window
 
@@ -100,6 +104,7 @@ class MainWindow(QMainWindow):
             (QT_TRANSLATE_NOOP("MainWindow", "IOC Analyzer"), "ioc"),
             (QT_TRANSLATE_NOOP("MainWindow", "Document RAG"), "rag"),
             (QT_TRANSLATE_NOOP("MainWindow", "Reports"), "report"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Pentest Lab"), "pentest"),
             (QT_TRANSLATE_NOOP("MainWindow", "Server"), "server"),
         ]
         for label, key in nav_items:
@@ -146,6 +151,7 @@ class MainWindow(QMainWindow):
         self._view_pages["ioc"] = IOCView(self._ioc_vm)
         self._view_pages["rag"] = RAGView(self._rag_vm)
         self._view_pages["report"] = ReportView(self._report_vm)
+        self._view_pages["pentest"] = PentestView(self._pentest_vm)
         self._view_pages["server"] = ServerView(self._connection_vm)
 
         # Add all to stack

@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Pentest Lab (desktop, real tools)**: a new tab that runs an A2A chain of security-tool agents
+  (nmap, nmap `--script vuln`, whatweb, HTTP security headers, nikto, sslscan, nuclei, gobuster,
+  wpscan, sqlmap, dnsrecon) against a scope-checked local target, maps findings to the OWASP Top 10
+  (2021), and has the LLM write a final conclusion for the user. Agents share one context and trigger
+  each other; tools run through argv lists (never a shell) with per-tool timeouts, only after the user
+  confirms authorisation, and fall back to a labelled simulation when a binary is absent. Private/
+  loopback targets only by default (`pentest.allow_remote_targets` to opt in). Code in
+  `application/pentest/` + `application/services/pentest_service.py`, UI in `presentation/…/pentest_*`.
 - **Windows installer built on Linux**: `scripts/build_windows_wine.sh` (Windows Python 3.13 from NuGet under 64-bit Wine → PyInstaller → NSIS `scripts/cybrix.nsi`, per-user install, en/ru/uz) → `dist/Cybrix-Setup-<version>.exe`, published on the server's `/download/` page.
 - **Installers**: one-folder PyInstaller build → Linux AppImage + .deb (`scripts/build.sh`), Windows Inno
   Setup (`scripts/build_windows.ps1`, Authenticode when a certificate is set), macOS .app/DMG with signing
