@@ -249,3 +249,8 @@ core/, domain/, infrastructure/, application/, presentation/
 `cybrix_ai.py` also ships local static analyzers used standalone (no network dependency):
 IOC risk scoring, PE/malware entropy & import analysis, and log/IP anomaly extraction — each
 feeding the Dashboard and the Markdown report generator.
+
+## License
+
+MIT — see [`LICENSE`](LICENSE). Third-party components keep their own licenses: REA (`third_party/rea`) is MIT
+(© morluto); PySide6/Qt is LGPLv3, so the installers ship the Qt libraries as separate shared libraries.
