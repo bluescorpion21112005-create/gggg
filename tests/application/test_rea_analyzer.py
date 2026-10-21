@@ -28,6 +28,8 @@ print(json.dumps(ev))
 
 @pytest.fixture
 def fake_rea(tmp_path, monkeypatch):
+    if sys.platform == "win32":
+        pytest.skip("the fake REA is a POSIX shebang script")
     exe = tmp_path / "rea"
     exe.write_text(FAKE_REA.format(python=sys.executable))
     exe.chmod(exe.stat().st_mode | stat.S_IEXEC)

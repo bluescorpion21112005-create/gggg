@@ -62,7 +62,7 @@ def test_absolute_paths_are_kept(home, tmp_path):
     cfg.write_text(f"database_url: sqlite:///{tmp_path}/abs.db\nlogging:\n  file: {tmp_path}/x.log\n")
     config = ConfigLoader.load(cfg)
     assert config.database_url == f"sqlite:///{tmp_path}/abs.db"
-    assert config.logging.file == f"{tmp_path}/x.log"
+    assert Path(config.logging.file) == tmp_path / "x.log"
 
 
 # ── preferences ──────────────────────────────────────────────────────────────

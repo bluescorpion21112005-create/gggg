@@ -1,5 +1,6 @@
 """AMD ROCm detection without rocminfo (KFD/sysfs), env setup, rocm-smi 7.x parsing, ML log anomalies."""
 import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,8 @@ SMI_7 = {"Temperature (Sensor edge) (C)": "44.0", "Temperature (Sensor junction)
 
 def make_sys(root: Path, gpus):
     """Fake /sys with a CPU node and the given GPUs: (gfx_target_version, simd, vram, device_id, render)."""
+    if sys.platform == "win32":
+        pytest.skip("KFD/sysfs is Linux-only; PCI names like 0000:01:00.0 are not valid Windows paths")
     nodes = root / "class" / "kfd" / "kfd" / "topology" / "nodes"
     (nodes / "0").mkdir(parents=True)
     (nodes / "0" / "properties").write_text("cpu_cores_count 16\nsimd_count 0\ngfx_target_version 0\n")
