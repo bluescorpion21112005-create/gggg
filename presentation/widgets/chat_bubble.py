@@ -1,7 +1,5 @@
 """Chat message bubble with Markdown rendering."""
-from PySide6.QtWidgets import QFrame, QVBoxLayout, QLabel
-from PySide6.QtGui import QColor
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QVBoxLayout
 from presentation.widgets.markdown_viewer import MarkdownViewer
 
 

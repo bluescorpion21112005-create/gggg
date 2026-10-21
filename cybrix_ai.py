@@ -27,18 +27,17 @@ import ipaddress
 import json
 from datetime import datetime
 from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional
 from urllib.parse import urlparse
 
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
     QListWidget, QListWidgetItem, QStackedWidget, QLabel, QPushButton,
-    QLineEdit, QTextEdit, QPlainTextEdit, QComboBox, QFileDialog, QGroupBox,
-    QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QScrollArea,
-    QFrame, QSizePolicy, QSplitter, QCheckBox
+    QLineEdit, QTextEdit, QComboBox, QFileDialog, QGroupBox,
+    QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QSplitter
 )
-from PySide6.QtCore import Qt, Signal, QDateTime, QTimer, QUrl, QByteArray, QObject
-from PySide6.QtGui import QFont, QColor, QTextCursor
+from PySide6.QtCore import Qt, Signal, QDateTime, QUrl, QByteArray, QObject
+from PySide6.QtGui import QFont, QTextCursor
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
 try:

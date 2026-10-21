@@ -1,17 +1,7 @@
 """Application entry point."""
-import sys
-import os
-from pathlib import Path
-
-# For PyInstaller bundles, resources are in _MEIPASS
-if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-    BUNDLE_DIR = Path(sys._MEIPASS)
-else:
-    BUNDLE_DIR = Path(__file__).resolve().parent
-
-# Adjust config path to be relative to bundle
-os.environ['CYBRIX_CONFIG_DIR'] = str(BUNDLE_DIR / 'config')
-
+# Settings, data and logs live in per-user OS directories (core/paths.py); the bundled
+# config/settings.yaml only seeds the user's copy on first run. Set CYBRIX_CONFIG_DIR to use another
+# settings directory (development: CYBRIX_CONFIG_DIR=config) or CYBRIX_HOME for a portable install.
 from core.bootstrap import main
 
 if __name__ == "__main__":

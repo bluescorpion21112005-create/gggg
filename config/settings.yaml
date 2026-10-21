@@ -20,5 +20,33 @@ logging:
 gpu:
   prefer_rocm: true
   fallback_to_cpu: true
+  device: auto                      # auto | rocm | cpu — PyTorch device (AMD GPU through ROCm when usable)
+  hsa_override: ""                  # "" = automatic (RX 6000 series → 10.3.0), "off", or e.g. "11.0.0"
+  visible_devices: ""               # "" = strongest GPU only (an APU's integrated GPU is skipped)
+backend:
+  base_url: http://127.0.0.1:8000   # override with CYBRIX_SERVER_URL
+  verify_tls: true
+  heartbeat_interval: 25
+  reconnect_max_delay: 60
+  accept_remote_commands: true
+  command_allowed_dirs: []          # dirs where server-issued log/malware commands may read files
+  command_policy: ask               # ask | allow_listed | deny_all
+  approval_timeout: 60              # seconds before an unanswered approval dialog denies the command
+  share_telemetry: true             # stream CPU/RAM/disk/network metrics to the server
+  telemetry_interval: 5
+  token_refresh_days: 7
+  allow_insecure: false             # never send the device token over plain http to a remote host
+  data_dir: ~/.cybrix               # override with CYBRIX_DATA_DIR
 database_url: sqlite:///cybrix.db
 plugins_dir: plugins
+diagnostics:
+  sentry_dsn: ""                    # set by the release build; used only if the user opts in
+updates:
+  channel: stable                   # stable | beta (user can change it in Settings)
+  public_key: ""                    # Ed25519 key that signs release manifests (set by the release build)
+rules:
+  public_key: ""                    # Ed25519 key that signs YARA/Sigma bundles (set by the release build)
+pentest:
+  enabled: true                     # the local pentest lab (Pentest Lab tab)
+  allow_remote_targets: false       # false = private/loopback targets only. Enable ONLY for systems you own or may test.
+  tool_timeout: 120                 # seconds per tool (nmap, nikto, nuclei, ...)

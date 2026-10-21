@@ -85,6 +85,22 @@ class OllamaProvider(AIProvider):
             logger.warning("OllamaProvider.list_models failed: %s", exc)
             return [self._model]
 
+    async def _loaded_models(self, session_timeout) -> list:
+        """Models in memory with the share held in GPU VRAM (Ollama /api/ps: size, size_vram)."""
+        try:
+            async with aiohttp.ClientSession(timeout=session_timeout) as session:
+                async with session.get(f"{self._host.rstrip('/')}/api/ps") as resp:
+                    if resp.status != 200:
+                        return []
+                    payload = await resp.json()
+        except Exception:  # older Ollama without /api/ps, or a transient error
+            return []
+        out = []
+        for m in payload.get("models", []):
+            size, vram = m.get("size") or 0, m.get("size_vram") or 0
+            out.append({"name": m.get("name", "?"), "gpu_percent": round(100 * vram / size) if size else 0})
+        return out
+
     async def health_check(self) -> dict:
         """Ping the Ollama /api/tags endpoint to verify server is reachable."""
         tags_url = f"{self._host.rstrip('/')}/api/tags"
@@ -106,6 +122,7 @@ class OllamaProvider(AIProvider):
                 "host": self._host,
                 "models": len(models),
                 "model_list": models,
+                "loaded": await self._loaded_models(session_timeout=timeout),
             }
         except Exception as exc:
             logger.debug("OllamaProvider.health_check failed: %s", exc)

@@ -1,7 +1,6 @@
 """Load text content from various document formats."""
 import logging
 from pathlib import Path
-from typing import List
 import pypdf
 import docx
 import markdown

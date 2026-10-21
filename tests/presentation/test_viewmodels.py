@@ -2,7 +2,6 @@
 import pytest
 from PySide6.QtCore import QTimer
 from presentation.viewmodels.chat_viewmodel import ChatViewModel
-from presentation.viewmodels.log_analysis_viewmodel import LogAnalysisViewModel
 from application.orchestrator import Orchestrator
 from core.session import SessionManager
 
@@ -14,8 +13,8 @@ def session_manager():
     return SessionManager(repo)
 
 @pytest.mark.asyncio
-async def test_chat_viewmodel_send_message(qapp, mock_ai_provider, session_manager):
-    orch = Orchestrator(mock_ai_provider)
+async def test_chat_viewmodel_send_message(qapp, mock_ai_provider, session_manager, test_repo):
+    orch = Orchestrator(mock_ai_provider, repository=test_repo)
     from application.agents.chat_agent import ChatAgent
     orch.register_agent("chat", ChatAgent(mock_ai_provider))
     vm = ChatViewModel(orch, session_manager)

@@ -72,6 +72,35 @@ underlying binaries (nmap, sqlmap, metasploit, ...) to be installed, and without
 running an exploit against a host you don't control. Only point it at infrastructure you
 are authorised to test (lab environments, CTFs, your own systems).
 
+## Pentest Lab (desktop, real tools)
+
+The **Pentest Lab** tab (`presentation/views/pentest_view.py`) runs the same A2A idea against
+your own lab with the **real** scanners installed on the machine, so you can find as many
+weaknesses in your own site/app as possible. The engine, agents and safety live in
+`application/pentest/` and are driven by `application/services/pentest_service.py`.
+
+- **Many agents, one shared context, auto-routing.** Nmap seeds open ports/services; the web
+  agents fire on web ports; the TLS agent on 443; WPScan only when WhatWeb fingerprints
+  WordPress; SQLMap only when the URL carries a query parameter; an OWASP Top 10 agent maps
+  every finding to the 2021 categories and runs last. Roster: **nmap** (ports/services),
+  **nmap `--script vuln`**, **whatweb**, **HTTP security headers** (built-in), **nikto**,
+  **sslscan**, **nuclei**, **gobuster**, **wpscan**, **sqlmap**, **dnsrecon**, and the
+  **OWASP Top 10** aggregator.
+- **Real, but gated.** A tool runs only through an argv list (never a shell), with a per-tool
+  timeout, and only after you tick *"I am authorised to test this target"*. When a binary is
+  missing the agent returns a clearly-labelled **simulated** result instead, so the lab still
+  works end-to-end without the toolchain.
+- **Local targets only by default.** `application/pentest/safety.py` accepts only
+  private/loopback/`.local` targets; public targets are refused unless you set
+  `pentest.allow_remote_targets: true` in `config/settings.yaml` (for systems you own or may
+  test). Scope is checked before any tool starts.
+- **Final AI conclusion.** After the chain, the configured LLM writes a Markdown conclusion
+  for the user — an executive summary, the top risks grouped by OWASP category with one-line
+  fixes, and next steps — streamed token by token. The agents themselves never call the LLM.
+
+For authorised local lab / CTF / own-systems use only — defensive and educational, not for
+attacking third-party systems.
+
 ## AMD ecosystem integration
 
 - **Default provider is Fireworks AI** (`config/settings.yaml`, `backend/main.py`), backed
@@ -87,22 +116,134 @@ are authorised to test (lab environments, CTFs, your own systems).
 - Every chat response returns a `compute_backend` field
   (`"AMD Instinct MI300X GPU cluster (ROCm runtime) — Fireworks AI Compute Grid"`) alongside
   token count, elapsed time and tokens/second, shown live in the Chat page status bar.
-- `core/gpu_monitor.py` additionally probes local `rocm-smi` / `rocminfo` tooling for
-  on-host ROCm telemetry (independent of the Fireworks cloud path).
+
+### Local AMD GPU (ROCm) — PyTorch and Ollama on your own Radeon
+
+Besides the cloud path, the app uses a local AMD GPU directly (Linux, amdgpu driver):
+
+- **Detection without `rocminfo`.** `core/accelerator.py` reads the kernel's KFD topology
+  (`/sys/class/kfd`) and picks the strongest GPU, i.e. the discrete card on an APU laptop.
+- **Automatic ROCm settings.** Before PyTorch starts, the app sets two variables, but only if you
+  have not set them yourself:
+  - `HSA_OVERRIDE_GFX_VERSION=10.3.0` for Radeon RX 6000 cards (gfx103x, not on ROCm's list);
+  - `HIP_VISIBLE_DEVICES`, which hides an integrated GPU.
+- **Live metrics.** `core/gpu_monitor.py` shows real GPU load, VRAM and temperature on the
+  dashboard and in telemetry. It reads `rocm-smi` 7.x JSON and falls back to amdgpu sysfs.
+- **PyTorch on the GPU** (`requirements-rocm.txt`, `torch 2.9.1+rocm6.4`; the wheel bundles HIP):
+  - RAG embeddings (sentence-transformers) run on the GPU;
+  - log analysis gains an *ML anomalies* section: a PyTorch autoencoder learns what a file's lines
+    normally look like and lists the strangest ones
+    (`infrastructure/analyzers/log_anomaly_torch.py`);
+  - Settings → **GPU / ROCm** shows the device, gfx, VRAM and PyTorch/HIP versions, and has a
+    benchmark and an auto / AMD GPU / CPU switch.
+- **Ollama on the GPU.** With `scripts/ollama-rocm.conf` installed, the dashboard shows how much
+  of each loaded model sits in VRAM.
+
+```bash
+scripts/install_rocm.sh            # PyTorch ROCm into .venv, then prints the GPU and a TFLOPS benchmark
+# Ollama (local LLM) on the GPU — system-wide with sudo:
+curl -fsSL https://ollama.com/install.sh | sh
+sudo mkdir -p /etc/systemd/system/ollama.service.d
+sudo cp scripts/ollama-rocm.conf /etc/systemd/system/ollama.service.d/rocm.conf
+sudo systemctl daemon-reload && sudo systemctl restart ollama
+# …or without sudo, for your user only:
+mkdir -p ~/.local/opt/ollama
+for f in ollama-linux-amd64 ollama-linux-amd64-rocm; do
+  curl -fL "https://ollama.com/download/$f.tar.zst" | zstd -d |
+    tar -x -C ~/.local/opt/ollama --exclude='lib/ollama/cuda_*'; done   # NVIDIA libs not needed on AMD
+mkdir -p ~/.config/systemd/user && cp scripts/ollama-rocm.user.service ~/.config/systemd/user/ollama.service
+systemctl --user daemon-reload && systemctl --user enable --now ollama
+ollama run llama3.2:3b "hello" && ollama ps   # PROCESSOR column → "100% GPU"
+```
+
+Without the ROCm extras nothing breaks: everything runs on the CPU and the ML section is skipped.
+`settings.yaml → gpu:` has `device` (auto | rocm | cpu), `hsa_override` and `visible_devices`.
+
+## REA — reverse engineering (github.com/morluto/rea)
+
+[REA](https://github.com/morluto/rea) ("Reverse Engineer Anything", MIT) is integrated as a static
+analysis backend and as an MCP server for coding agents.
+
+- **Source:** git submodule `third_party/rea`, pinned to a reviewed commit. Clone with
+  `git clone --recurse-submodules`, or run `git submodule update --init` in an existing checkout.
+- **Runtime:** the official npm package, pinned, needs no sudo and requires Node.js 22.19+ or 24.11+:
+  ```bash
+  npm install --prefix ~/.local/opt/rea rea-agents@6.7.0
+  ```
+  The app looks for `rea` in `CYBRIX_REA_PATH`, then `PATH`, then `~/.local/opt/rea`.
+- **Malware analysis:** `infrastructure/analyzers/rea_analyzer.py` runs the read-only inspections that fit
+  the file:
+  - objdump headers and sections, plus Go/Rust build metadata, for ELF/PE/Mach-O;
+  - .NET metadata;
+  - the JavaScript/Electron module graph;
+  - the artifact graph for anything else.
+
+  The evidence goes into the AI prompt and the report. Non-PE files (ELF, Mach-O, apps) are analysed
+  from REA's evidence instead of failing. The file is never executed.
+- **Server command `rea_analysis`:** the same inspection, run on request from the web app. It works
+  only inside your allowed folders and only after you approve it on this computer.
+- **Ghidra (deep native analysis):**
+  - When Ghidra 12.1.x and a full JDK 21+ are available, native binaries up to 50 MB also get
+    `rea analyze --provider ghidra` (functions, segments, strings). Through MCP or the CLI you can
+    also decompile functions to C pseudocode.
+  - The app finds them via `GHIDRA_INSTALL_DIR` / `JAVA_HOME`, otherwise in `~/.local/opt`.
+  - Sudo-less install, verified against the official SHA-256 sums:
+    - Temurin JDK 21 tarball → `~/.local/opt/jdk-21…`;
+    - `ghidra_12.1.4_PUBLIC_*.zip` (GitHub release) → `~/.local/opt/ghidra_12.1.4_PUBLIC`.
+
+    Then check with `rea doctor --provider ghidra --json`.
+- **For agents (MCP):** `rea mcp` serves REA's tools. The ccybrix workspace registers it in `.mcp.json`;
+  use deep native analysis (Ghidra/IDA/Hopper) only where you have them installed and licensed.
+
+Use REA only on software you own or are authorised to examine (see `third_party/rea/DISCLAIMER.md`).
+
+## Look & feel
+
+The desktop app ships a **futuristic cyberpunk dark theme** — near-black panels with neon
+cyan/magenta/violet accents, gradient buttons and progress bars, and a neon sidebar. Headings and
+the navigation use **Orbitron**, body text uses **Share Tech Mono** (both bundled under
+`presentation/theme/fonts/`, OFL, registered by `ThemeManager.load_fonts()`); when the fonts are
+missing the QSS falls back to a system monospace. A clean light theme is also available
+(Settings → appearance). Styling is all in `presentation/theme/*.qss`.
 
 ## Running it
 
-### 1. Backend
+> **Python version:** use **Python 3.13** (3.10–3.13 supported). On Python 3.14 the
+> qasync event loop that drives the MVVM app (`main.py`) never runs async tasks, so the
+> window opens but buttons, analyses and the server connection silently do nothing.
+>
+> ```bash
+> uv venv --python 3.13 .venv   # or: python3.13 -m venv .venv
+> source .venv/bin/activate
+> ```
+
+### Desktop app (MVVM, connects to the Cybrix server)
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt          # add -r requirements-rag.txt for the local knowledge base (~2 GB)
+CYBRIX_CONFIG_DIR=config python main.py  # first run opens the setup wizard
+```
+
+Settings, the database and logs live in per-user OS folders (`core/paths.py`); set `CYBRIX_HOME=<dir>`
+for a portable/self-contained setup. Tests: `pip install -r requirements-dev.txt` then
+`QT_QPA_PLATFORM=offscreen python -m pytest -c tests/pytest.ini --rootdir=. tests`.
+
+**Installers:** `scripts/build.sh` (AppImage + .deb), `scripts/build_windows.ps1` (Inno Setup),
+`scripts/build_windows_wine.sh` (Windows installer built on Linux: PyInstaller under Wine + NSIS, `--setup` the first time),
+`scripts/build_macos.sh` (DMG, signing/notarization); tags `v*` build all three in CI
+(`.github/workflows/release.yml`). See `CHANGELOG.md`.
+
+### 1. Backend (optional A2A pentest gateway)
+
+```bash
+pip install -r requirements-gateway.txt
 cp .env.example .env   # then fill in FIREWORKS_API_KEY
 uvicorn backend.main:app --host 127.0.0.1 --port 8000
 ```
 
 Verify: `curl http://127.0.0.1:8000/api/v1/agents`
 
-### 2. Desktop client
+### 2. Standalone gateway client
 
 ```bash
 python cybrix_ai.py
@@ -121,8 +262,9 @@ See [.env.example](.env.example):
 |---|---|
 | `FIREWORKS_API_KEY` | Fireworks AI key (default chat provider) |
 | `OLLAMA_HOST` | Local Ollama runtime, optional secondary provider |
-| `DATABASE_URL` | SQLite path used by the desktop app |
+| `CYBRIX_DATABASE_URL` | Override the desktop app's SQLite URL (a generic `DATABASE_URL` is ignored) |
 | `CYBRIX_BACKEND_HOST` / `CYBRIX_BACKEND_PORT` | Where the PySide6 client looks for the FastAPI backend |
+| `CYBRIX_SERVER_URL` | Cybrix Django server for the MVVM app (`main.py`): REST + WebSocket, log in under Settings → Server |
 
 `.env` is git-ignored — never commit real API keys. `.env.example` only ever holds
 placeholders.
@@ -145,3 +287,10 @@ core/, domain/, infrastructure/, application/, presentation/
 `cybrix_ai.py` also ships local static analyzers used standalone (no network dependency):
 IOC risk scoring, PE/malware entropy & import analysis, and log/IP anomaly extraction — each
 feeding the Dashboard and the Markdown report generator.
+
+## License
+
+MIT — see [`LICENSE`](LICENSE). Third-party components keep their own licenses: REA (`third_party/rea`) is MIT
+(© morluto); PySide6/Qt is LGPLv3, so the installers ship the Qt libraries as separate shared libraries;
+the bundled fonts Orbitron and Share Tech Mono are under the SIL Open Font License
+(`presentation/theme/fonts/OFL.txt`).

@@ -2,11 +2,11 @@
 from typing import Dict
 
 from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QMainWindow, QWidget, QHBoxLayout,
     QListWidget, QListWidgetItem, QStackedWidget,
-    QDockWidget, QStatusBar, QLabel, QToolBar, QMessageBox
+    QMessageBox
 )
-from PySide6.QtCore import Qt, Signal, Slot
+from PySide6.QtCore import QT_TRANSLATE_NOOP, Qt, Slot
 from PySide6.QtGui import QAction
 
 from injector import inject, Injector
@@ -19,6 +19,8 @@ from presentation.viewmodels.malware_analysis_viewmodel import MalwareAnalysisVi
 from presentation.viewmodels.ioc_viewmodel import IOCViewModel
 from presentation.viewmodels.rag_viewmodel import RAGViewModel
 from presentation.viewmodels.report_viewmodel import ReportViewModel
+from presentation.viewmodels.connection_viewmodel import ConnectionViewModel
+from presentation.viewmodels.pentest_viewmodel import PentestViewModel
 
 from presentation.views.dashboard_view import DashboardView
 from presentation.views.chat_view import ChatView
@@ -28,8 +30,14 @@ from presentation.views.malware_analysis_view import MalwareAnalysisView
 from presentation.views.ioc_view import IOCView
 from presentation.views.rag_view import RAGView
 from presentation.views.report_view import ReportView
+from presentation.views.pentest_view import PentestView
 
 from presentation.widgets.status_bar import StatusBarWidget
+from presentation.widgets.connection_indicator import ConnectionIndicator
+from presentation.widgets.notification_widget import ToastManager
+from presentation.widgets.command_approval_dialog import QtCommandApprover
+from presentation.views.server_view import ServerView
+from domain.interfaces.backend import CommandApprover
 from core.event_bus import event_bus
 import logging
 
@@ -51,6 +59,9 @@ class MainWindow(QMainWindow):
         ioc_vm: IOCViewModel,
         rag_vm: RAGViewModel,
         report_vm: ReportViewModel,
+        connection_vm: ConnectionViewModel,
+        pentest_vm: PentestViewModel,
+        approver: CommandApprover,
     ) -> None:
         super().__init__()
         self._injector = injector
@@ -62,6 +73,10 @@ class MainWindow(QMainWindow):
         self._ioc_vm = ioc_vm
         self._rag_vm = rag_vm
         self._report_vm = report_vm
+        self._connection_vm = connection_vm
+        self._pentest_vm = pentest_vm
+        if isinstance(approver, QtCommandApprover):
+            approver.parent_widget = self  # approval dialogs open centred on the main window
 
         self._view_pages: Dict[str, QWidget] = {}
 
@@ -69,7 +84,7 @@ class MainWindow(QMainWindow):
         self._connect_signals()
 
     def _setup_ui(self) -> None:
-        self.setWindowTitle("Cybrix AI - Cybersecurity Platform")
+        self.setWindowTitle(self.tr("Cybrix AI - Cybersecurity Platform"))
         self.resize(1400, 900)
 
         # Central widget with sidebar + stacked views
@@ -82,16 +97,18 @@ class MainWindow(QMainWindow):
         self.nav_list.setFixedWidth(200)
         self.nav_list.setObjectName("navList")
         nav_items = [
-            ("Dashboard", "dashboard"),
-            ("AI Chat", "chat"),
-            ("Log Analyzer", "log_analysis"),
-            ("Malware Analyzer", "malware"),
-            ("IOC Analyzer", "ioc"),
-            ("Document RAG", "rag"),
-            ("Reports", "report"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Dashboard"), "dashboard"),
+            (QT_TRANSLATE_NOOP("MainWindow", "AI Chat"), "chat"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Log Analyzer"), "log_analysis"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Malware Analyzer"), "malware"),
+            (QT_TRANSLATE_NOOP("MainWindow", "IOC Analyzer"), "ioc"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Document RAG"), "rag"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Reports"), "report"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Pentest Lab"), "pentest"),
+            (QT_TRANSLATE_NOOP("MainWindow", "Server"), "server"),
         ]
         for label, key in nav_items:
-            item = QListWidgetItem(label)
+            item = QListWidgetItem(self.tr(label))  # plain strings above, translated here
             item.setData(Qt.UserRole, key)
             self.nav_list.addItem(item)
         self.nav_list.currentItemChanged.connect(self._on_nav_changed)
@@ -108,10 +125,13 @@ class MainWindow(QMainWindow):
         self.status_bar = self.statusBar()
         self.status_widget = StatusBarWidget()
         self.status_bar.addPermanentWidget(self.status_widget)
+        self.connection_indicator = ConnectionIndicator(self._connection_vm.state)
+        self.status_bar.addPermanentWidget(self.connection_indicator)
+        self.toasts = ToastManager(self)
 
         # Toolbar actions
         toolbar = self.addToolBar("Main")
-        settings_action = QAction("Settings", self)
+        settings_action = QAction(self.tr("Settings"), self)
         settings_action.triggered.connect(self._open_settings)
         toolbar.addAction(settings_action)
 
@@ -131,6 +151,8 @@ class MainWindow(QMainWindow):
         self._view_pages["ioc"] = IOCView(self._ioc_vm)
         self._view_pages["rag"] = RAGView(self._rag_vm)
         self._view_pages["report"] = ReportView(self._report_vm)
+        self._view_pages["pentest"] = PentestView(self._pentest_vm)
+        self._view_pages["server"] = ServerView(self._connection_vm)
 
         # Add all to stack
         for page in self._view_pages.values():
@@ -144,7 +166,7 @@ class MainWindow(QMainWindow):
             self.stack.setCurrentWidget(self._view_pages[key])
 
     def _open_settings(self) -> None:
-        dialog = SettingsWindow(self._settings_vm)
+        dialog = SettingsWindow(self._settings_vm, self._connection_vm)
         dialog.exec()
 
     def _connect_signals(self) -> None:
@@ -160,10 +182,26 @@ class MainWindow(QMainWindow):
             self._ioc_vm,
             self._rag_vm,
             self._report_vm,
+            self._connection_vm,
         ]
         for vm in all_vms:
             vm.status_message.connect(self.status_widget.show_message)
             vm.error_occurred.connect(self._show_error_dialog)
+
+        self._connection_vm.state_changed.connect(self.connection_indicator.set_state)
+        self._connection_vm.notification.connect(self._show_server_notification)
+
+    @Slot(dict)
+    def _show_server_notification(self, data: dict) -> None:
+        title = str(data.get("title") or "Notification")
+        body = str(data.get("message") or data.get("body") or "")
+        self.toasts.show(title, body, str(data.get("level") or "info"))
+        self.status_widget.show_message(f"{title}: {body}" if body else title)
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if hasattr(self, "toasts"):
+            self.toasts.reposition()
 
     @Slot(str)
     def _show_error_dialog(self, message: str) -> None:
@@ -177,7 +215,7 @@ class MainWindow(QMainWindow):
         # Show a dialog only for truly critical errors to avoid flooding the user
         if any(kw in message.lower() for kw in ("api key", "no ai provider", "database")):
             msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Cybrix AI — Error")
+            msg_box.setWindowTitle(self.tr("Cybrix AI — Error"))
             msg_box.setIcon(QMessageBox.Critical)
             msg_box.setText(message)
             msg_box.setStandardButtons(QMessageBox.Ok)

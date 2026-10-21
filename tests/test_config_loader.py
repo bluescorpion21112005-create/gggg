@@ -1,8 +1,7 @@
 """Test configuration loader."""
 import yaml
 import tempfile
-import os
-from core.config import ConfigLoader, AppConfig
+from core.config import ConfigLoader
 
 def test_config_from_yaml():
     yaml_data = {

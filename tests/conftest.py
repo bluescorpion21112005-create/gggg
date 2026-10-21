@@ -1,16 +1,20 @@
 """Shared fixtures for all tests."""
 import pytest
-import asyncio
 import tempfile
 import os
-from typing import AsyncGenerator, List
-from unittest.mock import AsyncMock, MagicMock
+
+# Tests must never touch the real per-user directories (settings, DB, logs): see core/paths.py.
+os.environ.setdefault("CYBRIX_HOME", tempfile.mkdtemp(prefix="cybrix-tests-home-"))
+# Same as core/bootstrap.py: ROCm environment (AMD GPU) before any test imports PyTorch.
+from core import accelerator as _accelerator  # noqa: E402
+
+_accelerator.configure_env()
+from typing import AsyncGenerator
+from unittest.mock import AsyncMock
 from domain.interfaces.ai_provider import AIProvider
-from domain.interfaces.repository import Repository
-from domain.entities import AnalysisResult
 from core.config import AppConfig, AIProviderConfig, UIConfig, LoggingConfig, GPUConfig
 from infrastructure.db.sqlite_repository import SQLiteRepository
-from injector import Injector
+from injector import Injector, provider, singleton
 from core.di import CybrixModule
 
 
@@ -53,9 +57,7 @@ def mock_ai_provider():
 async def test_repo(tmp_path):
     """Provide an SQLite repository using a temporary database."""
     db_path = tmp_path / "test_cybrix.db"
-    repo = SQLiteRepository(str(db_path))
-    await repo._init_db()  # Ensure table exists
-    return repo
+    return SQLiteRepository(str(db_path))  # creates the schema in __init__
 
 
 @pytest.fixture

@@ -1,8 +1,8 @@
 """RAG view: file loader, question input, answer with citations."""
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                                QLabel, QTextEdit, QFileDialog, QListWidget,
-                               QListWidgetItem, QSplitter, QProgressBar)
-from PySide6.QtCore import Qt, Slot
+                               QListWidgetItem, QProgressBar)
+from PySide6.QtCore import Slot
 from presentation.viewmodels.rag_viewmodel import RAGViewModel
 from presentation.widgets.markdown_viewer import MarkdownViewer
 
@@ -19,9 +19,9 @@ class RAGView(QWidget):
 
         # Document management
         doc_layout = QHBoxLayout()
-        self.doc_label = QLabel("Knowledge Base Documents:")
+        self.doc_label = QLabel(self.tr("Knowledge Base Documents:"))
         doc_layout.addWidget(self.doc_label)
-        load_btn = QPushButton("Add Documents...")
+        load_btn = QPushButton(self.tr("Add Documents..."))
         load_btn.clicked.connect(self._browse_documents)
         doc_layout.addWidget(load_btn)
         layout.addLayout(doc_layout)
@@ -38,10 +38,10 @@ class RAGView(QWidget):
         # Question area
         q_layout = QHBoxLayout()
         self.question_edit = QTextEdit()
-        self.question_edit.setPlaceholderText("Ask a question about your documents...")
+        self.question_edit.setPlaceholderText(self.tr("Ask a question about your documents..."))
         self.question_edit.setMaximumHeight(80)
         q_layout.addWidget(self.question_edit)
-        self.ask_btn = QPushButton("Ask")
+        self.ask_btn = QPushButton(self.tr("Ask"))
         self.ask_btn.clicked.connect(self._ask_question)
         q_layout.addWidget(self.ask_btn)
         layout.addLayout(q_layout)

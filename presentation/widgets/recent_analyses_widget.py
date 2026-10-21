@@ -1,13 +1,12 @@
 """List of recent analysis results."""
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QListWidget, QListWidgetItem, QLabel
 from PySide6.QtCore import Slot
-from domain.entities import AnalysisResult
 
 class RecentAnalysesWidget(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout(self)
-        title = QLabel("Recent Analyses")
+        title = QLabel(self.tr("Recent Analyses"))
         title.setObjectName("sectionTitle")
         layout.addWidget(title)
         self.list_widget = QListWidget()

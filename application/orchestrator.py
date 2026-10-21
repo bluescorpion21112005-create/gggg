@@ -6,9 +6,8 @@ providers directly.
 """
 from __future__ import annotations
 
-import asyncio
 import logging
-from typing import Any, AsyncGenerator, Dict, List, Optional
+from typing import Any, AsyncGenerator, Dict, List
 
 from injector import inject
 

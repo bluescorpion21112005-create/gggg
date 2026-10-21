@@ -1,10 +1,7 @@
 """A QTextEdit subclass that renders Markdown with syntax highlighting."""
 from PySide6.QtWidgets import QTextEdit
-from PySide6.QtGui import QFont, QTextCursor
+from PySide6.QtGui import QFont
 import markdown
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name, guess_lexer
-from pygments.formatters import HtmlFormatter
 from PySide6.QtCore import Qt
 
 
@@ -13,8 +10,8 @@ class MarkdownViewer(QTextEdit):
         super().__init__()
         self.setReadOnly(True)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        # Use a monospace font for code blocks
-        self.setFont(QFont("Segoe UI", 10))
+        # Bundled techy monospace (falls back to a system mono when absent)
+        self.setFont(QFont("Share Tech Mono", 10))
 
     def setMarkdown(self, text: str):
         html = markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])

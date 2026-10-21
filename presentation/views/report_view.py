@@ -1,7 +1,6 @@
 """Report generation view."""
 from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-                               QLabel, QComboBox, QFileDialog, QTextEdit, QListWidget,
-                               QListWidgetItem, QGroupBox, QFormLayout)
+                               QLabel, QComboBox, QFileDialog, QTextEdit, QGroupBox, QFormLayout)
 from PySide6.QtCore import Slot
 from presentation.viewmodels.report_viewmodel import ReportViewModel
 
@@ -18,41 +17,41 @@ class ReportView(QWidget):
         layout = QVBoxLayout(self)
 
         # Analysis selection
-        group = QGroupBox("Select Analysis")
+        group = QGroupBox(self.tr("Select Analysis"))
         form = QFormLayout()
         self.analysis_combo = QComboBox()
-        form.addRow("Analysis:", self.analysis_combo)
+        form.addRow(self.tr("Analysis:"), self.analysis_combo)
         group.setLayout(form)
         layout.addWidget(group)
 
         # Format selection
-        format_group = QGroupBox("Output Format")
+        format_group = QGroupBox(self.tr("Output Format"))
         format_layout = QHBoxLayout()
         self.format_combo = QComboBox()
         self.format_combo.addItems(["pdf", "markdown", "html"])
-        format_layout.addWidget(QLabel("Format:"))
+        format_layout.addWidget(QLabel(self.tr("Format:")))
         format_layout.addWidget(self.format_combo)
         format_group.setLayout(format_layout)
         layout.addWidget(format_group)
 
         # Output directory
         dir_layout = QHBoxLayout()
-        self.dir_label = QLabel("./reports")
-        dir_layout.addWidget(QLabel("Output Directory:"))
+        self.dir_label = QLabel(self.tr("./reports"))
+        dir_layout.addWidget(QLabel(self.tr("Output Directory:")))
         dir_layout.addWidget(self.dir_label)
-        browse_dir_btn = QPushButton("Browse...")
+        browse_dir_btn = QPushButton(self.tr("Browse..."))
         browse_dir_btn.clicked.connect(self._browse_dir)
         dir_layout.addWidget(browse_dir_btn)
         layout.addLayout(dir_layout)
 
         # Extra notes (optional)
         self.notes_edit = QTextEdit()
-        self.notes_edit.setPlaceholderText("Additional analyst notes (will be expanded by AI)...")
+        self.notes_edit.setPlaceholderText(self.tr("Additional analyst notes (will be expanded by AI)..."))
         self.notes_edit.setMaximumHeight(80)
         layout.addWidget(self.notes_edit)
 
         # Generate button
-        self.generate_btn = QPushButton("Generate Report")
+        self.generate_btn = QPushButton(self.tr("Generate Report"))
         self.generate_btn.clicked.connect(self._generate)
         layout.addWidget(self.generate_btn)
 

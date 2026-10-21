@@ -26,6 +26,7 @@ class DashboardViewModel(BaseViewModel):
     gpu_metrics_updated = Signal(GPUMetrics)
     recent_analyses_updated = Signal(list)
     gpu_ollama_status = Signal(dict)
+    severity_counts_updated = Signal(dict)   # {"critical": n, "high": n, ...} over the stored analyses
 
     @inject
     def __init__(
@@ -118,8 +119,9 @@ class DashboardViewModel(BaseViewModel):
     async def _fetch_recent_analyses(self) -> None:
         """Fetch recent analyses from repository and emit signal."""
         try:
-            analyses = await self._repository.list_analyses(limit=10)
-            self.recent_analyses_updated.emit(analyses)
+            analyses = await self._repository.list_analyses(limit=500)
+            self.recent_analyses_updated.emit(analyses[:10])
+            self.severity_counts_updated.emit(severity_counts(analyses))
         except Exception as exc:
             logger.error("Failed to fetch recent analyses: %s", exc, exc_info=True)
             self.error_occurred.emit(f"Failed to fetch analyses: {exc}")
@@ -135,3 +137,13 @@ class DashboardViewModel(BaseViewModel):
     def run_quick_action(self, action: str) -> None:
         """Dispatch a quick action (e.g., 'New Malware Scan') to the orchestrator."""
         self.status_message.emit(f"Quick action '{action}' triggered.")
+
+
+def severity_counts(analyses) -> dict:
+    """Count analyses per severity (all five levels present, zeros included)."""
+    counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0}
+    for analysis in analyses:
+        level = getattr(getattr(analysis, "severity", None), "value", None)
+        if level in counts:
+            counts[level] += 1
+    return counts

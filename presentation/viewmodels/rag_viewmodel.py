@@ -5,7 +5,7 @@ touches the infrastructure layer (VectorStore, Embedder) directly.
 """
 import os
 import logging
-from PySide6.QtCore import Signal, Slot
+from PySide6.QtCore import Signal
 from qasync import asyncSlot
 from injector import inject
 

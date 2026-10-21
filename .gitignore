@@ -37,3 +37,13 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# Crash core dumps
+core.[0-9]*
+# Keep the plugins folder (PyInstaller bundles it)
+!plugins/README.md
+# Live-test output
+tests_live/artifacts/
+
+# runtime RAG cache
+cache/

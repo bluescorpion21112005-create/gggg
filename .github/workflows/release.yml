@@ -1,0 +1,136 @@
+name: release
+
+# Push a tag v<version> (matching config/settings.yaml app.version) → installers for Linux, Windows
+# and macOS, a draft GitHub release with SHA256 sums, and signed update manifests to import on the
+# server (`manage.py sign_release --import`).
+#
+# Secrets (all optional — without them the builds are unsigned "beta" artifacts):
+#   RELEASE_SIGNING_KEY       Ed25519 PEM for update manifests (from `sign_release --generate-key`)
+#   RELEASE_PUBLIC_KEY        its base64 public key — pinned into the shipped settings.yaml
+#   SENTRY_DSN_DESKTOP        crash reports endpoint (used only if the user opts in)
+#   WINDOWS_CERT_PFX_BASE64 / WINDOWS_CERT_PASSWORD               Authenticode
+#   MACOS_CERT_P12_BASE64 / MACOS_CERT_PASSWORD / MACOS_IDENTITY  Developer ID
+#   APPLE_ID / APPLE_TEAM_ID / APPLE_APP_PASSWORD                 notarization
+#   GPG_PRIVATE_KEY / GPG_KEY_ID                                  Linux signatures
+#   DOWNLOAD_BASE_URL         https base where the installers will be hosted (manifest url)
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-22.04, target: linux}
+          - {os: windows-latest, target: windows}
+          - {os: macos-14, target: macos}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - run: pip install -r requirements-dev.txt
+      - name: version matches tag
+        shell: bash
+        run: |
+          v=$(python -c 'import yaml;print(yaml.safe_load(open("config/settings.yaml"))["app"]["version"])')
+          [ "v$v" = "${GITHUB_REF_NAME}" ] || { echo "tag ${GITHUB_REF_NAME} != settings.yaml $v"; exit 1; }
+          echo "VERSION=$v" >> "$GITHUB_ENV"
+      - name: pin update key and crash endpoint into the shipped settings
+        shell: bash
+        env:
+          PUB: ${{ secrets.RELEASE_PUBLIC_KEY }}
+          DSN: ${{ secrets.SENTRY_DSN_DESKTOP }}
+        run: |
+          python - <<'PY'
+          import os, yaml
+          p = "config/settings.yaml"; d = yaml.safe_load(open(p))
+          d.setdefault("updates", {})["public_key"] = os.environ.get("PUB", "")
+          d.setdefault("diagnostics", {})["sentry_dsn"] = os.environ.get("DSN", "")
+          d["backend"]["allow_insecure"] = False
+          yaml.safe_dump(d, open(p, "w"), sort_keys=False)
+          PY
+
+      - name: build (Linux)
+        if: matrix.target == 'linux'
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y libegl1 libxkbcommon-x11-0 libxcb-cursor0 libfuse2
+          if [ -n "$GPG_PRIVATE_KEY" ]; then echo "$GPG_PRIVATE_KEY" | gpg --batch --import; export GPG_KEY="$GPG_KEY_ID"; fi
+          PYTHON=python scripts/build.sh
+
+      - name: build (Windows)
+        if: matrix.target == 'windows'
+        shell: pwsh
+        env:
+          CERT: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          SIGN_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        run: |
+          choco install innosetup -y --no-progress
+          if ($env:CERT) { [IO.File]::WriteAllBytes("$env:RUNNER_TEMP\cert.pfx", [Convert]::FromBase64String($env:CERT)); $env:SIGN_CERT_PFX = "$env:RUNNER_TEMP\cert.pfx" }
+          $env:PYTHON = "python"; ./scripts/build_windows.ps1
+
+      - name: build (macOS)
+        if: matrix.target == 'macos'
+        env:
+          P12: ${{ secrets.MACOS_CERT_P12_BASE64 }}
+          P12_PASSWORD: ${{ secrets.MACOS_CERT_PASSWORD }}
+          IDENTITY: ${{ secrets.MACOS_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: |
+          if [ -n "$P12" ]; then
+            echo "$P12" | base64 --decode > "$RUNNER_TEMP/cert.p12"
+            security create-keychain -p ci build.keychain && security default-keychain -s build.keychain
+            security unlock-keychain -p ci build.keychain
+            security import "$RUNNER_TEMP/cert.p12" -k build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
+            security set-key-partition-list -S apple-tool:,apple: -s -k ci build.keychain >/dev/null
+            export CODESIGN_IDENTITY="$IDENTITY"
+            xcrun notarytool store-credentials cybrix --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_PASSWORD"
+            export NOTARY_PROFILE=cybrix
+          fi
+          PYTHON=python scripts/build_macos.sh
+
+      - name: sign update manifests
+        shell: bash
+        env:
+          KEY: ${{ secrets.RELEASE_SIGNING_KEY }}
+          BASE: ${{ secrets.DOWNLOAD_BASE_URL }}
+        run: |
+          [ -n "$KEY" ] && [ -n "$BASE" ] || { echo "no RELEASE_SIGNING_KEY/DOWNLOAD_BASE_URL — skipping manifests"; exit 0; }
+          echo "$KEY" > "$RUNNER_TEMP/release.pem"
+          python scripts/sign_manifest.py --key "$RUNNER_TEMP/release.pem" --base-url "$BASE" \
+            --version "$VERSION" --os ${{ matrix.target }} --channel "$([[ $VERSION == *-* ]] && echo beta || echo stable)" dist
+          rm -f "$RUNNER_TEMP/release.pem"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cybrix-${{ matrix.target }}
+          path: |
+            dist/*.AppImage
+            dist/*.deb
+            dist/*.asc
+            dist/*.exe
+            dist/*.dmg
+            dist/SHA256SUMS*
+            dist/*.release.json
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {path: artifacts, merge-multiple: true}
+      - uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: artifacts/*

@@ -2,7 +2,7 @@
 import ipaddress
 import re
 import logging
-from typing import Dict, Optional
+from typing import Dict
 import validators
 
 logger = logging.getLogger(__name__)

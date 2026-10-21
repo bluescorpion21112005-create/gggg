@@ -11,8 +11,8 @@ HAS_EVTX = False
 evtx_parser_class = None
 
 try:
-    from Evtx.Evtx import Evtx
-    from Evtx.Views import evtx_file_xml_view
+    from Evtx.Evtx import Evtx  # noqa: F401 — availability probe
+    from Evtx.Views import evtx_file_xml_view  # noqa: F401
     HAS_EVTX = True
 except ImportError:
     try:
