@@ -22,6 +22,7 @@ a = Analysis(
         ("config/settings.yaml", "config"),                 # seeds the user's settings on first run
         ("plugins", "plugins"),
         ("presentation/theme/*.qss", "presentation/theme"),
+        ("presentation/theme/fonts/*.ttf", "presentation/theme/fonts"),
         ("presentation/assets", "presentation/assets"),
         ("presentation/i18n/*.qm", "presentation/i18n"),
     ],

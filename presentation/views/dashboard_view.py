@@ -24,7 +24,8 @@ class DashboardView(QWidget):
 
         # Welcome header
         title_label = QLabel(self.tr("Security Dashboard"))
-        title_font = QFont("Segoe UI", 18, QFont.Bold)
+        title_label.setObjectName("pageTitle")      # Orbitron neon title from the theme
+        title_font = QFont("Orbitron", 18, QFont.Bold)
         title_label.setFont(title_font)
         main_layout.addWidget(title_label)
 

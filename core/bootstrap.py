@@ -43,6 +43,7 @@ class CybrixApp:
         # ── STEP 1: QApplication MUST be created first.
         # PySide6 requires QApplication before any QObject (including ViewModels) is created.
         self._qt_app = QApplication(sys.argv)
+        ThemeManager.load_fonts()      # register bundled Orbitron / Share Tech Mono before any widget
 
         # ── STEP 2: Load configuration (+ preferences saved from the UI: server, theme, language…)
         from infrastructure.remote.agent_settings import apply_user_overrides

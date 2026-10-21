@@ -1189,6 +1189,11 @@ Install it now?</source>
             <source>Error</source>
             <translation>Ошибка</translation>
         </message>
+        <message>
+            <location filename="../views/pentest_view.py" line="0" />
+            <source>Pentest Lab</source>
+            <translation>Пентест-лаборатория</translation>
+        </message>
     </context>
     <context>
         <name>PentestViewModel</name>

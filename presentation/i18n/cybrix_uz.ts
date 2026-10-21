@@ -1189,6 +1189,11 @@ Hozir o‘rnatilsinmi?</translation>
             <source>Error</source>
             <translation>Xatolik</translation>
         </message>
+        <message>
+            <location filename="../views/pentest_view.py" line="0" />
+            <source>Pentest Lab</source>
+            <translation>Pentest laboratoriyasi</translation>
+        </message>
     </context>
     <context>
         <name>PentestViewModel</name>

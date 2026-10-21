@@ -221,3 +221,34 @@ QLabel#toastBody  { color: #4a5866; }
 QGroupBox#card QLabel, QGroupBox#card QCheckBox {
     background: transparent;
 }
+
+/* Selectors added to match dark_theme.qss (kept visually calm for the light theme) */
+QLineEdit:focus, QTextEdit:focus, QPlainTextEdit:focus {
+    border: 1px solid #0078d4;
+}
+QScrollBar::handle:vertical:hover {
+    background: #0078d4;
+}
+QListWidget#navList {
+    background-color: #f5f7fa;
+    border: none;
+    border-right: 1px solid #d0d7de;
+    outline: 0;
+}
+QListWidget#navList::item {
+    padding: 12px 14px;
+    border-left: 3px solid transparent;
+}
+QListWidget#navList::item:hover {
+    background-color: #e8eef6;
+    color: #0b6fb8;
+}
+QListWidget#navList::item:selected {
+    background-color: #e3edf7;
+    color: #0b6fb8;
+    border-left: 3px solid #0078d4;
+}
+QPushButton#dangerButton:hover {
+    background-color: #fbdada;
+    color: #991b1b;
+}

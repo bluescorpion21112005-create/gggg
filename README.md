@@ -197,6 +197,15 @@ analysis backend and as an MCP server for coding agents.
 
 Use REA only on software you own or are authorised to examine (see `third_party/rea/DISCLAIMER.md`).
 
+## Look & feel
+
+The desktop app ships a **futuristic cyberpunk dark theme** — near-black panels with neon
+cyan/magenta/violet accents, gradient buttons and progress bars, and a neon sidebar. Headings and
+the navigation use **Orbitron**, body text uses **Share Tech Mono** (both bundled under
+`presentation/theme/fonts/`, OFL, registered by `ThemeManager.load_fonts()`); when the fonts are
+missing the QSS falls back to a system monospace. A clean light theme is also available
+(Settings → appearance). Styling is all in `presentation/theme/*.qss`.
+
 ## Running it
 
 > **Python version:** use **Python 3.13** (3.10–3.13 supported). On Python 3.14 the
@@ -282,4 +291,6 @@ feeding the Dashboard and the Markdown report generator.
 ## License
 
 MIT — see [`LICENSE`](LICENSE). Third-party components keep their own licenses: REA (`third_party/rea`) is MIT
-(© morluto); PySide6/Qt is LGPLv3, so the installers ship the Qt libraries as separate shared libraries.
+(© morluto); PySide6/Qt is LGPLv3, so the installers ship the Qt libraries as separate shared libraries;
+the bundled fonts Orbitron and Share Tech Mono are under the SIL Open Font License
+(`presentation/theme/fonts/OFL.txt`).

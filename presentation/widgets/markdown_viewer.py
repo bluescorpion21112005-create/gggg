@@ -10,8 +10,8 @@ class MarkdownViewer(QTextEdit):
         super().__init__()
         self.setReadOnly(True)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        # Use a monospace font for code blocks
-        self.setFont(QFont("Segoe UI", 10))
+        # Bundled techy monospace (falls back to a system mono when absent)
+        self.setFont(QFont("Share Tech Mono", 10))
 
     def setMarkdown(self, text: str):
         html = markdown.markdown(text, extensions=["fenced_code", "codehilite", "tables"])

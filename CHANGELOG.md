@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Futuristic cyberpunk dark theme**: near-black panels with neon cyan/magenta/violet accents,
+  gradient primary buttons and progress bars, a neon sidebar, and bundled display fonts (Orbitron
+  for headings/nav, Share Tech Mono for body — OFL, loaded by `ThemeManager.load_fonts()`). The
+  light theme stays clean; selector parity is preserved.
 - **Pentest Lab (desktop, real tools)**: a new tab that runs an A2A chain of security-tool agents
   (nmap, nmap `--script vuln`, whatweb, HTTP security headers, nikto, sslscan, nuclei, gobuster,
   wpscan, sqlmap, dnsrecon) against a scope-checked local target, maps findings to the OWASP Top 10
