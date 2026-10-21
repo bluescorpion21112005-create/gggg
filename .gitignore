@@ -44,3 +44,6 @@ core.[0-9]*
 !plugins/README.md
 # Live-test output
 tests_live/artifacts/
+
+# runtime RAG cache
+cache/
