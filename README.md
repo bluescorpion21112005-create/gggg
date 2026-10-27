@@ -101,6 +101,31 @@ weaknesses in your own site/app as possible. The engine, agents and safety live 
 For authorised local lab / CTF / own-systems use only — defensive and educational, not for
 attacking third-party systems.
 
+### Roster (24 agents) + headless automation
+
+The roster now covers recon, web, TLS, SMB and exploit-mapping: **nmap**, **masscan** (manual),
+nmap `--script vuln`, **subfinder**, **amass**, **theHarvester**, **dnsrecon**, **whatweb**,
+**httpx**, **wafw00f**, HTTP security headers, **nikto**, **nuclei**, **gobuster**, **feroxbuster**,
+**sslscan**, **testssl.sh**, **SMB enum** (enum4linux), **wpscan**, **sqlmap**, **dalfox** (XSS),
+**searchsploit** (Exploit-DB), **hydra** (manual) and the OWASP Top 10 aggregator. The auto-chain
+routes by context; `masscan`/`hydra` are manual-only (privileged / intrusive) and never fire
+automatically. Missing tools fall back to a labelled simulation. Check/install them with
+`scripts/install-pentest-tools.sh`.
+
+Run it headless (no GUI) from the terminal — the whole pentest package is Qt-free:
+
+```bash
+python -m application.pentest.cli 127.0.0.1                 # full auto chain + Markdown/JSON report
+scripts/pentest-scan.sh http://localhost:8080 --agents nmap,nikto,nuclei
+scripts/pentest-scan.sh 127.0.0.1 --no-conclusion          # no LLM key needed
+scripts/pentest-batch.sh targets.txt                       # one report per target
+python -m application.pentest.cli --list-agents            # see the roster
+```
+
+Reports (`report.md` + `report.json`) group findings by severity and OWASP category and include the
+AI conclusion. Private/loopback targets only unless `--allow-remote` (for systems you may test).
+Code: `application/pentest/{agents,engine,cli,report}.py`.
+
 ## AMD ecosystem integration
 
 - **Default provider is Fireworks AI** (`config/settings.yaml`, `backend/main.py`), backed
