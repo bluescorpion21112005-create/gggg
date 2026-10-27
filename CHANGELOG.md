@@ -5,6 +5,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Pentest Lab expanded to 24 agents + headless automation**: added masscan, subfinder, amass,
+  theHarvester, httpx, wafw00f, feroxbuster, dalfox (XSS), testssl.sh, SMB enum (enum4linux),
+  searchsploit (Exploit-DB) and hydra; masscan/hydra are manual-only. New headless CLI
+  `python -m application.pentest.cli` (Qt-free) writes Markdown + JSON reports, plus
+  `scripts/pentest-scan.sh`, `scripts/pentest-batch.sh` and `scripts/install-pentest-tools.sh`.
+  The GUI Pentest Lab picks up the new agents automatically.
 - **Futuristic cyberpunk dark theme**: near-black panels with neon cyan/magenta/violet accents,
   gradient primary buttons and progress bars, a neon sidebar, and bundled display fonts (Orbitron
   for headings/nav, Share Tech Mono for body — OFL, loaded by `ThemeManager.load_fonts()`). The
