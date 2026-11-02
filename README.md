@@ -204,6 +204,21 @@ ollama run llama3.2:3b "hello" && ollama ps   # PROCESSOR column → "100% GPU"
 Without the ROCm extras nothing breaks: everything runs on the CPU and the ML section is skipped.
 `settings.yaml → gpu:` has `device` (auto | rocm | cpu), `hsa_override` and `visible_devices`.
 
+## YARA file / directory scanner
+
+Scan a file or a whole folder for malware signatures with YARA, independently of the signed
+rule-bundle pipeline:
+
+```bash
+python -m infrastructure.analyzers.yara_scanner /path/to/dir            # built-in detection rules
+python -m infrastructure.analyzers.yara_scanner /path --rules my.yar    # your own rules (.yar file or dir)
+python -m infrastructure.analyzers.yara_scanner /path --json            # machine-readable output
+```
+
+Built-in rules are detection-only (EICAR test string, common PHP-webshell and obfuscated-PowerShell
+markers). The scanner only reads the files (never executes them) and caps large files. Code:
+`infrastructure/analyzers/yara_scanner.py`.
+
 ## REA — reverse engineering (github.com/morluto/rea)
 
 [REA](https://github.com/morluto/rea) ("Reverse Engineer Anything", MIT) is integrated as a static

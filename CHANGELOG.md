@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **YARA file / directory scanner** (`infrastructure/analyzers/yara_scanner.py`): scan a file or a whole
+  folder tree against YARA rules — a rules file/dir you supply, or built-in detection-only rules (EICAR
+  test string, PHP webshell / obfuscated-PowerShell markers). Read-only (never executes the files), caps
+  big files. CLI: `python -m infrastructure.analyzers.yara_scanner <path> [--rules R] [--json]`.
 - **Report export (HTML + PDF) and scan diff**: `--format md,json,html,pdf` writes the pentest report
   in the chosen formats (styled HTML page; PDF via ReportLab), and `--diff BASELINE.json` compares a
   scan to an earlier `report.json` and prints the new / fixed / persistent findings (for recurring
