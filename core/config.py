@@ -107,6 +107,8 @@ class PentestConfig:
     # Only private/loopback targets by default. Turn on ONLY for systems you own or may test.
     allow_remote_targets: bool = False
     tool_timeout: float = 120.0       # seconds per tool run
+    profile: str = "normal"           # fast | normal | deep (scan aggressiveness)
+    wordlist: str = ""                # explicit content-discovery wordlist path (else auto)
 
 
 @dataclass(frozen=True)
@@ -270,6 +272,8 @@ class ConfigLoader:
             enabled=bool(pentest_raw.get("enabled", True)),
             allow_remote_targets=bool(pentest_raw.get("allow_remote_targets", False)),
             tool_timeout=float(pentest_raw.get("tool_timeout", PentestConfig.tool_timeout)),
+            profile=str(pentest_raw.get("profile", "normal") or "normal").lower(),
+            wordlist=str(pentest_raw.get("wordlist", "") or ""),
         )
 
         app_section = raw.get("app", {})

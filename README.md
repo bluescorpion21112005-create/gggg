@@ -121,7 +121,13 @@ scripts/pentest-scan.sh 127.0.0.1 --no-conclusion          # no LLM key needed
 scripts/pentest-batch.sh targets.txt                       # one report per target
 python -m application.pentest.cli --list-agents            # see the roster
 python -m application.pentest.cli 127.0.0.1 --ai           # AI-driven: the LLM picks each next agent
+python -m application.pentest.cli 127.0.0.1 --deep         # deep profile: big wordlist, full nuclei, more ports
 ```
+
+**Scan profiles** (`--profile fast|normal|deep`, or `--deep`): a profile scales aggressiveness —
+Nmap port count, Nuclei severities / full template set, per-tool timeouts, and content-discovery
+wordlist. `deep` auto-selects a big system wordlist (SecLists/dirb) with recursion; `--wordlist PATH`
+forces a specific one. Config: `pentest.profile` / `pentest.wordlist`. Code: `application/pentest/profiles.py`.
 
 **AI-driven mode** (`--ai`, or the "AI-driven" checkbox in the GUI): instead of the fixed chain, the
 LLM reads the state after each step and picks the most useful next agent — chaining findings the way a

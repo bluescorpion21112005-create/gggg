@@ -50,3 +50,5 @@ pentest:
   enabled: true                     # the local pentest lab (Pentest Lab tab)
   allow_remote_targets: false       # false = private/loopback targets only. Enable ONLY for systems you own or may test.
   tool_timeout: 120                 # seconds per tool (nmap, nikto, nuclei, ...)
+  profile: normal                   # fast | normal | deep (scan aggressiveness; CLI --deep sets deep)
+  wordlist: ""                      # explicit content-discovery wordlist path ("" = auto: SecLists/dirb, else built-in)
