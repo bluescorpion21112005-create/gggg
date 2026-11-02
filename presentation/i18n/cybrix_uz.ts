@@ -1194,6 +1194,11 @@ Hozir o‘rnatilsinmi?</translation>
             <source>Pentest Lab</source>
             <translation>Pentest laboratoriyasi</translation>
         </message>
+        <message>
+            <location filename="../views/pentest_view.py" line="0" />
+            <source>AI-driven (the LLM picks each next agent)</source>
+            <translation>AI-boshqaruvchi (LLM har keyingi agentni tanlaydi)</translation>
+        </message>
     </context>
     <context>
         <name>PentestViewModel</name>

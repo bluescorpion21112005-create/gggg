@@ -1194,6 +1194,11 @@ Install it now?</source>
             <source>Pentest Lab</source>
             <translation>Пентест-лаборатория</translation>
         </message>
+        <message>
+            <location filename="../views/pentest_view.py" line="0" />
+            <source>AI-driven (the LLM picks each next agent)</source>
+            <translation>AI-управление (LLM выбирает каждого следующего агента)</translation>
+        </message>
     </context>
     <context>
         <name>PentestViewModel</name>

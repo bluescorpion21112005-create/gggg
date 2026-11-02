@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **AI-driven (agentic) pentest mode** (`--ai` CLI flag / GUI checkbox): the LLM reads the context after
+  each step and picks the next agent, chaining findings instead of running a fixed order. It may only
+  choose from the safe agent allowlist (never raw commands); masscan/hydra are excluded; falls back to
+  the deterministic chain without an LLM. Code: `application/pentest/ai_orchestrator.py`.
 - **Pentest Lab expanded to 24 agents + headless automation**: added masscan, subfinder, amass,
   theHarvester, httpx, wafw00f, feroxbuster, dalfox (XSS), testssl.sh, SMB enum (enum4linux),
   searchsploit (Exploit-DB) and hydra; masscan/hydra are manual-only. New headless CLI
