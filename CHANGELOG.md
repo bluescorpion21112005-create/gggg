@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Scan profiles (fast/normal/deep)** for the Pentest Lab (`--profile` / `--deep` CLI, `pentest.profile`
+  config): a profile scales Nmap port count, Nuclei severities/full templates, per-tool timeouts, and the
+  content-discovery wordlist. `deep` auto-picks a big system wordlist (SecLists/dirb) with recursion;
+  `--wordlist` forces one. Code: `application/pentest/profiles.py`.
 - **AI-driven (agentic) pentest mode** (`--ai` CLI flag / GUI checkbox): the LLM reads the context after
   each step and picks the next agent, chaining findings instead of running a fixed order. It may only
   choose from the safe agent allowlist (never raw commands); masscan/hydra are excluded; falls back to
