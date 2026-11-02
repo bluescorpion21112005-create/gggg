@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Report export (HTML + PDF) and scan diff**: `--format md,json,html,pdf` writes the pentest report
+  in the chosen formats (styled HTML page; PDF via ReportLab), and `--diff BASELINE.json` compares a
+  scan to an earlier `report.json` and prints the new / fixed / persistent findings (for recurring
+  scans). Code: `application/pentest/report.py`.
 - **Scan profiles (fast/normal/deep)** for the Pentest Lab (`--profile` / `--deep` CLI, `pentest.profile`
   config): a profile scales Nmap port count, Nuclei severities/full templates, per-tool timeouts, and the
   content-discovery wordlist. `deep` auto-picks a big system wordlist (SecLists/dirb) with recursion;

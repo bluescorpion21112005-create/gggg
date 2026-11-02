@@ -122,7 +122,14 @@ scripts/pentest-batch.sh targets.txt                       # one report per targ
 python -m application.pentest.cli --list-agents            # see the roster
 python -m application.pentest.cli 127.0.0.1 --ai           # AI-driven: the LLM picks each next agent
 python -m application.pentest.cli 127.0.0.1 --deep         # deep profile: big wordlist, full nuclei, more ports
+python -m application.pentest.cli 127.0.0.1 --format md,json,html,pdf   # shareable HTML + PDF reports
+python -m application.pentest.cli 127.0.0.1 --diff last/report.json     # compare to a previous scan
 ```
+
+**Report formats & diff:** `--format md,json,html,pdf` writes the report in the chosen formats
+(HTML is a styled page, PDF via ReportLab). `--diff BASELINE.json` compares the scan to an earlier
+`report.json` and prints what is **new / fixed / persistent** — handy for recurring scans.
+Code: `application/pentest/report.py`.
 
 **Scan profiles** (`--profile fast|normal|deep`, or `--deep`): a profile scales aggressiveness —
 Nmap port count, Nuclei severities / full template set, per-tool timeouts, and content-discovery
