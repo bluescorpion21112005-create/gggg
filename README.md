@@ -120,7 +120,14 @@ scripts/pentest-scan.sh http://localhost:8080 --agents nmap,nikto,nuclei
 scripts/pentest-scan.sh 127.0.0.1 --no-conclusion          # no LLM key needed
 scripts/pentest-batch.sh targets.txt                       # one report per target
 python -m application.pentest.cli --list-agents            # see the roster
+python -m application.pentest.cli 127.0.0.1 --ai           # AI-driven: the LLM picks each next agent
 ```
+
+**AI-driven mode** (`--ai`, or the "AI-driven" checkbox in the GUI): instead of the fixed chain, the
+LLM reads the state after each step and picks the most useful next agent — chaining findings the way a
+tester would (WhatWeb → WordPress → WPScan → Searchsploit). It may only choose from the safe agent
+allowlist (never raw commands); intrusive agents (masscan, hydra) are excluded; without an LLM it falls
+back to the deterministic chain. Code: `application/pentest/ai_orchestrator.py`.
 
 Reports (`report.md` + `report.json`) group findings by severity and OWASP category and include the
 AI conclusion. Private/loopback targets only unless `--allow-remote` (for systems you may test).
