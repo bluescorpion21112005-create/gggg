@@ -126,6 +126,11 @@ python -m application.pentest.cli 127.0.0.1 --format md,json,html,pdf   # sharea
 python -m application.pentest.cli 127.0.0.1 --diff last/report.json     # compare to a previous scan
 ```
 
+**Recurring scheduler:** `python -m application.pentest.scheduler schedule.json [--once] [--out DIR]`
+runs scans on a repeating interval from a small JSON schedule (`[{"target": "127.0.0.1", "every": 3600}]`),
+writes a timestamped report per run and diffs each run against the target's previous one. Use `--once`
+from cron, or leave it running. Code: `application/pentest/scheduler.py`.
+
 **Report formats & diff:** `--format md,json,html,pdf` writes the report in the chosen formats
 (HTML is a styled page, PDF via ReportLab). `--diff BASELINE.json` compares the scan to an earlier
 `report.json` and prints what is **new / fixed / persistent** — handy for recurring scans.

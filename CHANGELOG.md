@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **Recurring pentest scheduler** (`application/pentest/scheduler.py`): runs scans on a repeating
+  interval from a small JSON schedule, writes a timestamped report per run and diffs each run against
+  the target's previous one (watch a system over time). Run it long-lived or `--once` for cron. Reuses
+  the same service, report writer and scope checks as the CLI.
 - **PCAP (network capture) analyzer** (`infrastructure/analyzers/pcap_analyzer.py`): parses the classic
   libpcap format with the standard library only (no scapy/tshark) — Ethernet/raw-IP → IPv4 → TCP/UDP/ICMP.
   Aggregates talkers, ports, protocols and DNS queries, and flags cleartext HTTP and a horizontal-port-scan
