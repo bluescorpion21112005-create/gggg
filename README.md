@@ -204,6 +204,20 @@ ollama run llama3.2:3b "hello" && ollama ps   # PROCESSOR column → "100% GPU"
 Without the ROCm extras nothing breaks: everything runs on the CPU and the ML section is skipped.
 `settings.yaml → gpu:` has `device` (auto | rocm | cpu), `hsa_override` and `visible_devices`.
 
+## PCAP network-capture analyzer
+
+Analyze a packet capture with the standard library only — no scapy/tshark:
+
+```bash
+python -m infrastructure.analyzers.pcap_analyzer capture.pcap          # summary + findings
+python -m infrastructure.analyzers.pcap_analyzer capture.pcap --json   # machine-readable
+```
+
+Parses the classic libpcap format (Ethernet/raw-IP → IPv4 → TCP/UDP/ICMP), aggregates top talkers,
+ports, protocols and DNS queries, and flags cleartext HTTP and a horizontal-port-scan heuristic. It
+only reads the file (never replays traffic); pcapng is reported as unsupported. Code:
+`infrastructure/analyzers/pcap_analyzer.py`.
+
 ## YARA file / directory scanner
 
 Scan a file or a whole folder for malware signatures with YARA, independently of the signed

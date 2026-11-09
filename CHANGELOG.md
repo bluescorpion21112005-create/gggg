@@ -5,6 +5,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/), versions follow [SemVer
 ## [Unreleased] — closed beta readiness
 
 ### Added
+- **PCAP (network capture) analyzer** (`infrastructure/analyzers/pcap_analyzer.py`): parses the classic
+  libpcap format with the standard library only (no scapy/tshark) — Ethernet/raw-IP → IPv4 → TCP/UDP/ICMP.
+  Aggregates talkers, ports, protocols and DNS queries, and flags cleartext HTTP and a horizontal-port-scan
+  heuristic. Read-only; pcapng is reported as unsupported. CLI:
+  `python -m infrastructure.analyzers.pcap_analyzer <file.pcap> [--json]`.
 - **YARA file / directory scanner** (`infrastructure/analyzers/yara_scanner.py`): scan a file or a whole
   folder tree against YARA rules — a rules file/dir you supply, or built-in detection-only rules (EICAR
   test string, PHP webshell / obfuscated-PowerShell markers). Read-only (never executes the files), caps
